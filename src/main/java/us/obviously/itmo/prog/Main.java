@@ -3,8 +3,5 @@ package us.obviously.itmo.prog;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
-        //just testing
-        //ok ok bad test
-        //second test
     }
 }
