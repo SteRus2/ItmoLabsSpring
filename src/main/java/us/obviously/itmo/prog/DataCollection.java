@@ -1,24 +1,28 @@
 package us.obviously.itmo.prog;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.exceptions.UsedKeyException;
 import us.obviously.itmo.prog.model.StudyGroup;
 import us.obviously.itmo.prog.reader.DataReader;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DataCollection {
+    private DataReader dataReader;
     private HashMap<Integer, StudyGroup> data;
     private String type;
     private Date initDate;
     private int count;
 
-    public DataCollection(DataReader dataReader) throws JsonProcessingException {
+    public DataCollection(DataReader dataReader) throws JsonProcessingException, IncorrectValueException {
+        this.dataReader = dataReader;
         this.data = dataReader.getData();
-        type = data.getClass().toString();
+        type = StudyGroup.class.getName();
         initDate = new Date();
     }
     public DataInfo getInfo(){
@@ -42,11 +46,16 @@ public class DataCollection {
         }
         data.put(key, item);
     }
-    public void removeItem(int key){
+    public void removeItem(int key) throws NoSuchIdException {
+        if (!data.containsKey(key)){
+            throw new NoSuchIdException("Объекта с таким id нет в коллекции");
+        }
         data.remove(key);
     }
     public void clearData(){
         data.clear();
     }
-
+    public void saveData() throws IOException {
+        dataReader.saveData(data);
+    }
 }
