@@ -17,14 +17,14 @@ public class StudyGroupValidation {
     HashMap<String, Semester> semesters;
     StudyGroup.Builder builder;
 
-    public void validateList(List<StudyGroup> studyGroups) throws IncorrectValueException {
+    public static void validateList(List<StudyGroup> studyGroups) throws IncorrectValueException {
         for (StudyGroup studyGroup : studyGroups) {
-            this.validate(studyGroup);
+            validate(studyGroup);
         }
         validateIdUnique(studyGroups);
     }
 
-    public void validate(StudyGroup studyGroup) throws IncorrectValueException {
+    public static void validate(StudyGroup studyGroup) throws IncorrectValueException {
         validateId(studyGroup.getId());
         validateName(studyGroup.getName());
         validateCoordinates(studyGroup.getCoordinates());
@@ -33,7 +33,7 @@ public class StudyGroupValidation {
         validateSemesterEnum(studyGroup.getSemesterEnum());
     }
 
-    public void validateIdUnique(List<StudyGroup> studyGroups) throws IncorrectValueException {
+    public static void validateIdUnique(List<StudyGroup> studyGroups) throws IncorrectValueException {
         Set<Integer> ids = new HashSet<>();
         for (StudyGroup studyGroup : studyGroups) {
             var id = studyGroup.getId();
@@ -44,31 +44,31 @@ public class StudyGroupValidation {
         }
     }
 
-    public void validateId(Integer value) throws IncorrectValueException {
+    public static void validateId(Integer value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле id не может быть null.");
         if (value <= 0) throw new IncorrectValueException("Поле id должно быть больше 0.");
     }
 
 
-    public void validateName(String value) throws IncorrectValueException {
+    public static void validateName(String value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле name не может быть null.");
         if (value.equals("")) throw new IncorrectValueException("Поле name не может быть пустым.");
     }
 
-    public void validateCoordinates(Coordinates coordinates) throws IncorrectValueException {
+    public static void validateCoordinates(Coordinates coordinates) throws IncorrectValueException {
         CoordinatesValidation.validate(coordinates);
     }
 
-    public void validateStudentsCount(Integer value) throws IncorrectValueException {
+    public static void validateStudentsCount(Integer value) throws IncorrectValueException {
         if (value == null) return;
         if (value <= 0) throw new IncorrectValueException("Поле studentsCount должно быть больше 0.");
     }
 
-    public void validateFormOfEducation(FormOfEducation value) throws IncorrectValueException {
+    public static void validateFormOfEducation(FormOfEducation value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле formOfEducation не может быть null.");
     }
 
-    public void validateSemesterEnum(Semester value) throws IncorrectValueException {
+    public static void validateSemesterEnum(Semester value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле semesterEnum не может быть null.");
     }
 }
