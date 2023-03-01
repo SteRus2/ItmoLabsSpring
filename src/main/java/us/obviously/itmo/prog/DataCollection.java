@@ -80,8 +80,18 @@ public class DataCollection {
             }
         }
     }
-    public void groupCountingByName(){
-
+    public Map<String, List<StudyGroup>> groupCountingByName(){
+        HashMap<String, List<StudyGroup>> localData = new HashMap<>();
+        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()){
+            if(!localData.containsKey(pair.getValue().getName())){
+                localData.put(pair.getValue().getName(), new ArrayList<>(List.of(pair.getValue())));
+            } else {
+                List<StudyGroup> llsg = localData.get(pair.getValue().getName());
+                llsg.add(pair.getValue());
+                localData.put(pair.getValue().getName(), llsg);
+            }
+        }
+        return localData;
     }
     public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin){
         List<StudyGroup> local = new ArrayList<>();
