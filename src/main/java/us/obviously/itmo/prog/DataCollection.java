@@ -4,13 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.exceptions.UsedKeyException;
+import us.obviously.itmo.prog.model.Person;
+import us.obviously.itmo.prog.model.Semester;
 import us.obviously.itmo.prog.model.StudyGroup;
 import us.obviously.itmo.prog.reader.DataReader;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DataCollection {
     private DataReader dataReader;
@@ -57,5 +57,53 @@ public class DataCollection {
     }
     public void saveData() throws IOException {
         dataReader.saveData(data);
+    }
+    public void replaceIfGreater(int key, StudyGroup item) throws NoSuchIdException {
+        if(!data.containsKey(key)){
+            throw new NoSuchIdException("Объекта с таким id нет в коллекции");
+        }
+        if (data.get(key).compareTo(item) > 0){
+            data.put(key, item);
+        }
+    }
+    public void removeGreaterKey(int key){
+        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()){
+            if (pair.getKey() > key){
+                data.remove(pair.getKey());
+            }
+        }
+    }
+    public void removeLowerKey(int key){
+        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()){
+            if (pair.getKey() < key){
+                data.remove(pair.getKey());
+            }
+        }
+    }
+    public void groupCountingByName(){
+
+    }
+    public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin){
+        List<StudyGroup> local = new ArrayList<>();
+        for(Map.Entry<Integer, StudyGroup> pair : data.entrySet()){
+            if(pair.getValue().getGroupAdmin().compareTo(groupAdmin) > 0){
+                local.add(pair.getValue());
+            }
+        }
+        return local;
+    }
+    public List<Semester> printFieldAscendingSemesterEnum(){
+        List<StudyGroup> local = new ArrayList<>(data.values());
+        List<Semester> result = new ArrayList<>();
+        local.sort(new Comparator<StudyGroup>() {
+            @Override
+            public int compare(StudyGroup o1, StudyGroup o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        for(StudyGroup sg : local){
+            result.add(sg.getSemesterEnum());
+        }
+        return result;
     }
 }

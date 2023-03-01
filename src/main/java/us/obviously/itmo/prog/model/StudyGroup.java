@@ -55,7 +55,7 @@ public class StudyGroup implements Comparable{
 
     @Override
     public int compareTo(Object o) {
-        if (!o.getClass().getName().equals(this.getClass().getName())){
+        if (!(o instanceof StudyGroup)){
             return 1;
         }
         if (!this.name.equals(((StudyGroup) o).name)){
