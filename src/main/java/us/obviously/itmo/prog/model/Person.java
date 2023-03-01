@@ -13,12 +13,63 @@ public class Person {
     private Color hairColor; //Поле может быть null
     private Country nationality; //Поле может быть null
 
-    public Person(){}
-    public Person(String name, ZonedDateTime birthday, Color eyeColor, Color hairColor, Country nationality) {
-        this.name = name;
-        this.birthday = birthday;
-        this.eyeColor = eyeColor;
-        this.hairColor = hairColor;
-        this.nationality = nationality;
+    public static Builder newBuilder() {
+        return new Person().new Builder();
+    }
+
+    public Country getNationality() {
+        return nationality;
+    }
+
+    public Color getHairColor() {
+        return hairColor;
+    }
+
+    public Color getEyeColor() {
+        return eyeColor;
+    }
+
+    public ZonedDateTime getBirthday() {
+        return birthday;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public class Builder {
+        public Builder setName(String name) {
+            Person.this.name = name;
+
+            return this;
+        }
+
+        public Builder setBirthday(ZonedDateTime birthday) {
+            Person.this.birthday = birthday;
+
+            return this;
+        }
+
+        public Builder setEyeColor(Color eyeColorЯ) {
+            Person.this.eyeColor = eyeColor;
+
+            return this;
+        }
+
+        public Builder setHairColor(Color hairColor) {
+            Person.this.hairColor = hairColor;
+
+            return this;
+        }
+
+        public Builder setNationality(Country nationality) {
+            Person.this.nationality = nationality;
+
+            return this;
+        }
+
+        public Person build() {
+            return Person.this;
+        }
     }
 }
