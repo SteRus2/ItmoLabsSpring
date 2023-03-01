@@ -3,6 +3,7 @@ package us.obviously.itmo.prog.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 public class Person implements Comparable{
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -85,5 +86,18 @@ public class Person implements Comparable{
         public Person build() {
             return Person.this;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(name, person.name) && Objects.equals(birthday, person.birthday) && eyeColor == person.eyeColor && hairColor == person.hairColor && nationality == person.nationality;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, birthday, eyeColor, hairColor, nationality);
     }
 }
