@@ -3,12 +3,12 @@ package us.obviously.itmo.prog.parser;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import us.obviously.itmo.prog.exceptions.FailedToDumpsEx;
+import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.model.StudyGroup;
+import us.obviously.itmo.prog.validation.StudyGroupValidation;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,10 +24,14 @@ public class XMLParser extends Parser{
 
     }
     @Override
-    public HashMap<Integer, StudyGroup> loads(String value) throws JsonProcessingException {
+    public HashMap<Integer, StudyGroup> loads(String value) throws JsonProcessingException, IncorrectValueException {
         List<StudyGroup> l1 = xmlMapper.readValue(value, new TypeReference<>() {});
-
-        return null;
+        StudyGroupValidation.validateList(l1);
+        HashMap<Integer, StudyGroup> result = new HashMap<>();
+        for (StudyGroup sg : l1){
+            result.put(sg.getId(), sg);
+        }
+        return result;
     }
 
     @Override
