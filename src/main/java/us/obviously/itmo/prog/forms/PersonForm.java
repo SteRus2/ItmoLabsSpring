@@ -1,12 +1,9 @@
 package us.obviously.itmo.prog.forms;
 
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.fields.DateField;
-import us.obviously.itmo.prog.fields.StringField;
 import us.obviously.itmo.prog.model.Color;
 import us.obviously.itmo.prog.model.Country;
 import us.obviously.itmo.prog.model.Person;
-import us.obviously.itmo.prog.model.Semester;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
@@ -55,21 +52,24 @@ public class PersonForm {
     public void setEyeColor(String value) throws IncorrectValueException {
         if (value == null) return;
         Color color = this.colors.get(value);
-        if (color == null) throw new IncorrectValueException("%s не является допустимым значением color.".formatted(value));
+        if (color == null)
+            throw new IncorrectValueException("%s не является допустимым значением color.".formatted(value));
         this.builder.setEyeColor(color);
     }
 
     public void setHairColor(String value) throws IncorrectValueException {
         if (value == null) return;
         Color color = this.colors.get(value);
-        if (color == null) throw new IncorrectValueException("%s не является допустимым значением color.".formatted(value));
+        if (color == null)
+            throw new IncorrectValueException("%s не является допустимым значением color.".formatted(value));
         this.builder.setHairColor(color);
     }
 
     public void setNationality(String value) throws IncorrectValueException {
         if (value == null) return;
         Country nationality = this.nationalities.get(value);
-        if (nationality == null) throw new IncorrectValueException("%s не является допустимым значением nationality.".formatted(value));
+        if (nationality == null)
+            throw new IncorrectValueException("%s не является допустимым значением nationality.".formatted(value));
         this.builder.setNationality(nationality);
     }
 

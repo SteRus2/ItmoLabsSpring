@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
-public class StudyGroup {
+public class StudyGroup implements Comparable{
     private Integer id; // Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; // Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; // Поле не может быть null
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private java.util.Date creationDate; // Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Integer studentsCount; // Значение поля должно быть больше 0, Поле может быть null
     private FormOfEducation formOfEducation; // Поле не может быть null
@@ -50,6 +51,20 @@ public class StudyGroup {
 
     public Person getGroupAdmin() {
         return groupAdmin;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (!o.getClass().getName().equals(this.getClass().getName())){
+            return 1;
+        }
+        if (!this.name.equals(((StudyGroup) o).name)){
+            return this.name.compareToIgnoreCase(((StudyGroup) o).name);
+        }
+        if (!this.studentsCount.equals(((StudyGroup) o).studentsCount)){
+            return this.studentsCount.compareTo(((StudyGroup) o).studentsCount);
+        }
+        return this.id.compareTo(((StudyGroup) o).id);
     }
 
     public class Builder {
