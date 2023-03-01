@@ -2,10 +2,25 @@ package us.obviously.itmo.prog.model;
 
 public class Coordinates {
     private Long x; //Поле не может быть null
-    private float y; //Значение поля должно быть больше -373
-    public Coordinates(){}
-    public Coordinates(Long x, float y) {
+    private Float y; //Значение поля должно быть больше -373
+
+    public Coordinates(Long x, Float y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Coordinates(Long x) {
+        this.x = x;
+        this.y = null;
+    }
+    
+    public Coordinates() {}
+
+    public Long getX() {
+        return x;
+    }
+
+    public Float getY() {
+        return y;
     }
 }
