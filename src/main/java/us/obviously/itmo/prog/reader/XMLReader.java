@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.reader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.model.StudyGroup;
 import us.obviously.itmo.prog.parser.XMLParser;
 
@@ -19,7 +20,7 @@ public class XMLReader extends FileReader{
     }
 
     @Override
-    public HashMap<Integer, StudyGroup> getData() throws JsonProcessingException {
+    public HashMap<Integer, StudyGroup> getData() throws JsonProcessingException, IncorrectValueException {
         while (scanner.hasNextLine()){
             String line = scanner.nextLine().trim();
             strings.add(line);
