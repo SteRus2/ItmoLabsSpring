@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.ZonedDateTime;
 
-public class Person {
+public class Person implements Comparable{
     private String name; //Поле не может быть null, Строка не может быть пустой
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 
@@ -35,6 +35,20 @@ public class Person {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (!(o instanceof Person)){
+            return 1;
+        }
+        if (!this.name.equals(((Person) o).getName())){
+            return this.name.compareToIgnoreCase(((Person) o).getName());
+        }
+        if (!this.birthday.equals(((Person) o).getBirthday())){
+            return this.birthday.compareTo(((Person) o).getBirthday());
+        }
+        return 0;
     }
 
     public class Builder {
