@@ -75,18 +75,26 @@ public class DataCollection {
     }
 
     public void removeGreaterKey(int key) {
+        List<Integer> ids = new ArrayList<>();
         for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
             if (pair.getKey() > key) {
-                data.remove(pair.getKey());
+                ids.add(pair.getKey());
             }
+        }
+        for (Integer k : ids){
+            data.remove(k);
         }
     }
 
     public void removeLowerKey(int key) {
+        List<Integer> ids = new ArrayList<>();
         for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
             if (pair.getKey() < key) {
-                data.remove(pair.getKey());
+                ids.add(pair.getKey());
             }
+        }
+        for (Integer k : ids){
+            data.remove(k);
         }
     }
 
