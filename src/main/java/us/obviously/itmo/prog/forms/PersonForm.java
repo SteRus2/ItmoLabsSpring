@@ -8,7 +8,6 @@ import us.obviously.itmo.prog.model.Person;
 import us.obviously.itmo.prog.validation.PersonValidation;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
 
@@ -56,14 +55,7 @@ public class PersonForm extends Form {
 
     public void setBirthday(ZonedDateTime value) throws IncorrectValueException {
         PersonValidation.validateBirthday(value);
-//        try {
-//            String[] parts = value.split("/+");
-//            String datetime = parts[0] + "T00:00:00+" + parts[1];
-//            var birthday = ZonedDateTime.parse(datetime);
-            this.builder.setBirthday(value);
-//        } catch (DateTimeParseException e) {
-//            throw new IncorrectValueException("Невалидная дата. Воспользуйтесь шаблоном dd-mm-yyyy.");
-//        }
+        this.builder.setBirthday(value);
     }
 
     public void setEyeColor(Color value) throws IncorrectValueException {
@@ -78,9 +70,6 @@ public class PersonForm extends Form {
 
     public void setNationality(Country value) throws IncorrectValueException {
         PersonValidation.validateNationality(value);
-//        Country nationality = this.nationalities.get(value);
-//        if (nationality == null)
-//            throw new IncorrectValueException("%s не является допустимым значением nationality.".formatted(value));
         this.builder.setNationality(value);
     }
 
