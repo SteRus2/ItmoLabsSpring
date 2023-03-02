@@ -1,5 +1,6 @@
 package us.obviously.itmo.prog.commands;
 
+import us.obviously.itmo.prog.console.TablesPrinter;
 import us.obviously.itmo.prog.manager.Management;
 
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class ShowCommand extends AbstractCommand {
      */
     @Override
     public void execute(HashMap<String, String> args) {
-
+        var hs = this.manager.getDataCollection().getData();
+        TablesPrinter.printStudyGroups(hs);
     }
 }

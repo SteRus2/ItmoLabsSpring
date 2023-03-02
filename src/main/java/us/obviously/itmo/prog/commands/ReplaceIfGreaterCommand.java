@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class ReplaceIfGreaterCommand extends AbstractCommand {
     public ReplaceIfGreaterCommand(Management manager) {
         super(manager, "replace_if_greater", "Заменить значение по ключу, если новое значение больше старого");
-        addParameter("key", "Key ъыъ");
+        addParameter("key", "Значение ID");
 
     }
 
@@ -18,6 +18,5 @@ public class ReplaceIfGreaterCommand extends AbstractCommand {
     public void execute(HashMap<String, String> args) {
 
     }
-//     null {element}
 
 }

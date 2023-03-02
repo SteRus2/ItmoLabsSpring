@@ -1,7 +1,9 @@
 package us.obviously.itmo.prog.commands;
 
+import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.manager.Management;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 public class ExecuteScriptCommand extends AbstractCommand {
@@ -15,11 +17,17 @@ public class ExecuteScriptCommand extends AbstractCommand {
      * TODO: FILL
      */
     @Override
-    public void execute(HashMap<String, String> args) throws Exception {
-        var fileName = args.get("file_name");
-        if (fileName == null || fileName.equals("")) {
-            throw new Exception("fsf");
+    public void execute(HashMap<String, String> args) {
+        var filepath = args.get("file_name");
+        if (filepath == null || filepath.equals("")) {
+            System.out.println(ConsoleColors.YELLOW + "file_name " + ConsoleColors.RESET +
+                    "- обязательное поле.");
+            return;
         }
-        this.manager.executeScript(fileName);
+        try {
+            this.manager.executeScript(filepath);
+        } catch (FileNotFoundException e) {
+            System.out.println("Файл не найден.");
+        }
     }
 }

@@ -2,7 +2,6 @@ package us.obviously.itmo.prog.validation;
 
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.model.Coordinates;
-import us.obviously.itmo.prog.model.Person;
 
 
 public class CoordinatesValidation {

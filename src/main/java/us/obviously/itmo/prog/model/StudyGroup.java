@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Objects;
 
-public class StudyGroup implements Comparable{
+public class StudyGroup implements Comparable {
     private Integer id; // Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; // Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; // Поле не может быть null
@@ -16,11 +16,12 @@ public class StudyGroup implements Comparable{
     private Semester semesterEnum; // Поле не может быть null
     private Person groupAdmin; // Поле не может быть null
 
+    public StudyGroup() {
+    }
+
     public static StudyGroup.Builder newBuilder() {
         return new StudyGroup().new Builder();
     }
-
-    public StudyGroup(){}
 
     public Integer getId() {
         return id;
@@ -56,28 +57,16 @@ public class StudyGroup implements Comparable{
 
     @Override
     public int compareTo(Object o) {
-        if (!(o instanceof StudyGroup)){
+        if (!(o instanceof StudyGroup)) {
             return 1;
         }
-        if (!this.name.equals(((StudyGroup) o).name)){
+        if (!this.name.equals(((StudyGroup) o).name)) {
             return this.name.compareToIgnoreCase(((StudyGroup) o).name);
         }
-        if (!this.studentsCount.equals(((StudyGroup) o).studentsCount)){
+        if (!this.studentsCount.equals(((StudyGroup) o).studentsCount)) {
             return this.studentsCount.compareTo(((StudyGroup) o).studentsCount);
         }
         return this.id.compareTo(((StudyGroup) o).id);
-    }
-
-    public class Builder {
-        public Builder setId(Integer id) {
-            StudyGroup.this.id = id;
-
-            return this;
-        }
-
-        public StudyGroup build() {
-            return StudyGroup.this;
-        }
     }
 
     @Override
@@ -91,5 +80,54 @@ public class StudyGroup implements Comparable{
     @Override
     public int hashCode() {
         return Objects.hash(id, name, coordinates, creationDate, studentsCount, formOfEducation, semesterEnum, groupAdmin);
+    }
+
+    public class Builder {
+        public Builder setId(Integer id) {
+            StudyGroup.this.id = id;
+
+            return this;
+        }
+
+        public Builder setName(String name) {
+            StudyGroup.this.name = name;
+
+            return this;
+        }
+
+        public Builder setCoordinates(Coordinates coordinates) {
+            StudyGroup.this.coordinates = coordinates;
+
+            return this;
+        }
+
+        public Builder setStudentsCount(Integer studentsCount) {
+            StudyGroup.this.studentsCount = studentsCount;
+
+            return this;
+        }
+
+        public Builder setFormOfEducation(FormOfEducation formOfEducation) {
+            StudyGroup.this.formOfEducation = formOfEducation;
+
+            return this;
+        }
+
+        public Builder setSemesterEnum(Semester semesterEnum) {
+            StudyGroup.this.semesterEnum = semesterEnum;
+
+            return this;
+        }
+
+        public Builder setGroupAdmin(Person groupAdmin) {
+            StudyGroup.this.groupAdmin = groupAdmin;
+
+            return this;
+        }
+
+        public StudyGroup build() {
+            StudyGroup.this.creationDate = new Date();
+            return StudyGroup.this;
+        }
     }
 }
