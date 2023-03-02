@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
-public class Person implements Comparable{
+public class Person implements Comparable {
     private String name; //Поле не может быть null, Строка не может быть пустой
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 
@@ -40,16 +40,30 @@ public class Person implements Comparable{
 
     @Override
     public int compareTo(Object o) {
-        if (!(o instanceof Person)){
+        if (!(o instanceof Person)) {
             return 1;
         }
-        if (!this.name.equals(((Person) o).getName())){
+
+        if (!this.name.equals(((Person) o).getName())) {
             return this.name.compareToIgnoreCase(((Person) o).getName());
         }
-        if (!this.birthday.equals(((Person) o).getBirthday())){
+        if (!this.birthday.equals(((Person) o).getBirthday())) {
             return this.birthday.compareTo(((Person) o).getBirthday());
         }
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(name, person.name) && Objects.equals(birthday, person.birthday) && eyeColor == person.eyeColor && hairColor == person.hairColor && nationality == person.nationality;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, birthday, eyeColor, hairColor, nationality);
     }
 
     public class Builder {
@@ -65,7 +79,7 @@ public class Person implements Comparable{
             return this;
         }
 
-        public Builder setEyeColor(Color eyeColorЯ) {
+        public Builder setEyeColor(Color eyeColor) {
             Person.this.eyeColor = eyeColor;
 
             return this;
@@ -86,18 +100,5 @@ public class Person implements Comparable{
         public Person build() {
             return Person.this;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(name, person.name) && Objects.equals(birthday, person.birthday) && eyeColor == person.eyeColor && hairColor == person.hairColor && nationality == person.nationality;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, birthday, eyeColor, hairColor, nationality);
     }
 }

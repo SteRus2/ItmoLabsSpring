@@ -37,6 +37,7 @@ public class SelectFormField<T> extends FormField<T> {
 
     @Override
     public T convert(String value) throws IncorrectValueException {
+        if (value.equals("")) return null;
         boolean containsKey = this.choices.containsKey(value);
         if (!containsKey) throw new IncorrectValueException("Неизвестный ключ");
         this.selectedChoice = this.choices.get(value);

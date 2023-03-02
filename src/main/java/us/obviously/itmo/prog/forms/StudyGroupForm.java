@@ -4,7 +4,6 @@ import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.*;
-import us.obviously.itmo.prog.validation.CoordinatesValidation;
 import us.obviously.itmo.prog.validation.StudyGroupValidation;
 
 import java.util.HashMap;
@@ -45,7 +44,6 @@ public class StudyGroupForm extends Form {
         new StringFormField(manager, "name", this::setName).run();
         new SelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters).run();
         new SelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation).run();
-        new StringFormField(manager, "coordinates", this::setCoordinates).run();
         new IntegerFormField(manager, "studentCount", this::setStudentsCount).run();
 
         var personForm = new PersonForm(manager);
@@ -61,8 +59,14 @@ public class StudyGroupForm extends Form {
         new StringFormField(manager, "name", this::setName).run();
         new SelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters).run();
         new SelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation).run();
-        new StringFormField(manager, "coordinates", this::setCoordinates).run();
         new IntegerFormField(manager, "studentCount", this::setStudentsCount).run();
+
+        var coordinatesForm = new CoordinatesForm(manager);
+        System.out.println("\n" + ConsoleColors.BLACK_BRIGHT +
+                "Заполнение coordinates..." + ConsoleColors.RESET);
+        coordinatesForm.run();
+        Coordinates coordinates = coordinatesForm.build();
+        this.setCoordinates(coordinates);
 
         var personForm = new PersonForm(manager);
         System.out.println("\n" + ConsoleColors.BLACK_BRIGHT +
@@ -98,23 +102,8 @@ public class StudyGroupForm extends Form {
         this.builder.setName(value);
     }
 
-    public void setCoordinates(String value) throws IncorrectValueException {
-        String[] coordinates = value.split(" ");
-        if (coordinates.length > 2)
-            throw new IncorrectValueException("Поле coordinates не соответствует шаблону <x:Long> или <x:Long>, <y:float>.");
-
-        try {
-            Long x = Long.parseLong(coordinates[0]);
-            Float y = null;
-            if (coordinates.length == 2) {
-                y = Float.parseFloat(coordinates[1]);
-            }
-            CoordinatesValidation.validateX(x);
-            CoordinatesValidation.validateY(y);
-            this.builder.setCoordinates(new Coordinates(x, y));
-        } catch (NumberFormatException e) {
-            throw new IncorrectValueException("Поле coordinates не соответствует шаблону <x:Long> или <x:Long> <y:float>.");
-        }
+    public void setCoordinates(Coordinates coordinates) {
+        this.builder.setCoordinates(coordinates);
     }
 
     public void setStudentsCount(Integer value) throws IncorrectValueException {

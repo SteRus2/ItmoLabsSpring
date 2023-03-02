@@ -7,6 +7,7 @@ public class StringFormField extends FormField<String> {
     public StringFormField(Management manager, String key, Callback<String> callback, String defaultInput) {
         super(manager, key, callback, defaultInput);
     }
+
     public StringFormField(Management manager, String key, Callback<String> callback) {
         super(manager, key, callback, null);
     }
@@ -22,6 +23,8 @@ public class StringFormField extends FormField<String> {
 
     @Override
     public String convert(String value) {
+
+        if (value.equals("")) return null;
         return value;
     }
 }

@@ -32,6 +32,7 @@ public class DateFormField extends FormField<ZonedDateTime> {
 
     @Override
     public ZonedDateTime convert(String value) throws IncorrectValueException {
+        if (value.equals("")) return null;
 
         String[] parts = value.split("\\+");
         if (parts.length != 2) {
