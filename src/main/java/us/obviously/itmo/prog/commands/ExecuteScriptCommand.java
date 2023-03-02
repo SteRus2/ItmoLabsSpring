@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.commands;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.exceptions.RecurrentExecuteScripts;
 import us.obviously.itmo.prog.manager.Management;
 
 import java.io.FileNotFoundException;
@@ -28,6 +29,8 @@ public class ExecuteScriptCommand extends AbstractCommand {
             this.manager.executeScript(filepath);
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден.");
+        } catch (RecurrentExecuteScripts e) {
+            System.out.println(ConsoleColors.RED + "Пропущен вызов скрипта: " + e.getMessage() + ConsoleColors.RESET);
         }
     }
 }
