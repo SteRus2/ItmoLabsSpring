@@ -47,6 +47,7 @@ public class DataCollection {
         if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }
+        item.setCreationDate(data.get(key).getCreationDate());
         data.put(key, item);
     }
 
@@ -115,7 +116,7 @@ public class DataCollection {
     public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin) {
         List<StudyGroup> local = new ArrayList<>();
         for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
-            if (pair.getValue().getGroupAdmin().compareTo(groupAdmin) > 0) {
+            if (pair.getValue().getGroupAdmin().compareTo(groupAdmin) < 0) {
                 local.add(pair.getValue());
             }
         }
