@@ -2,6 +2,7 @@ package us.obviously.itmo.prog.manager;
 
 import us.obviously.itmo.prog.DataCollection;
 import us.obviously.itmo.prog.commands.AbstractCommand;
+import us.obviously.itmo.prog.exceptions.RecurrentExecuteScripts;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public interface Management {
 
     void save() throws IOException;
 
-    void executeScript(String fileName) throws FileNotFoundException;
+    void executeScript(String fileName) throws FileNotFoundException, RecurrentExecuteScripts;
 
     void addCommand(AbstractCommand abstractCommand);
 

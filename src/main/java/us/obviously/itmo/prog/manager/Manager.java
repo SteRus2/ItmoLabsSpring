@@ -5,6 +5,7 @@ import us.obviously.itmo.prog.DataCollection;
 import us.obviously.itmo.prog.commands.*;
 import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.exceptions.RecurrentExecuteScripts;
 import us.obviously.itmo.prog.exceptions.UnexpectedArgumentException;
 import us.obviously.itmo.prog.reader.DataReader;
 
@@ -19,6 +20,7 @@ public class Manager<T> implements Management {
     private final DataCollection dataCollection;
     private final HashMap<String, AbstractCommand> commands;
     private final List<AbstractCommand> commandsList;
+    private final List<String> loadedScripts = new ArrayList<>();
     private Scanner fileScanner;
     private Boolean active;
 
@@ -66,6 +68,7 @@ public class Manager<T> implements Management {
             System.out.println(ConsoleColors.GREEN_BOLD + line + ConsoleColors.RESET);
             return line;
         }
+        this.loadedScripts.clear();
         return this.scanner.nextLine();
     }
 
@@ -92,9 +95,12 @@ public class Manager<T> implements Management {
      * @param filepath
      */
     @Override
-    public void executeScript(String filepath) throws FileNotFoundException {
+    public void executeScript(String filepath) throws FileNotFoundException, RecurrentExecuteScripts {
+        if (this.loadedScripts.contains(filepath))
+            throw new RecurrentExecuteScripts("Скрипт " + filepath + " начал вызываться рекуррентно.");
         var file = new File(filepath);
         this.fileScanner = new Scanner(file);
+        this.loadedScripts.add(filepath);
     }
 
     private void semanticError() {
