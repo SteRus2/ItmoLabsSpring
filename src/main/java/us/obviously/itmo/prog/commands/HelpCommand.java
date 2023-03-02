@@ -35,7 +35,7 @@ public class HelpCommand extends AbstractCommand {
     private String commonHelp() {
         var builder = new StringBuilder();
         builder.append("Для получения сведений об определенной команде наберите help <имя команды>%n".formatted());
-        this.manager.getCommands().forEach((key, command) -> {
+        this.manager.getCommands().forEach((command) -> {
             builder.append(command.getDescription()).append("%n".formatted());
         });
         return builder.toString();

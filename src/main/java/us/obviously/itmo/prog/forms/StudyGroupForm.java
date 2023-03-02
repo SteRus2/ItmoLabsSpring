@@ -4,163 +4,132 @@ import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.*;
+import us.obviously.itmo.prog.validation.CoordinatesValidation;
+import us.obviously.itmo.prog.validation.StudyGroupValidation;
 
 import java.util.HashMap;
 
-public class StudyGroupForm {
+public class StudyGroupForm extends Form {
 
     StudyGroup value;
-    Management manager;
-    Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; //Поле не может быть null
-    private java.util.Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    private Integer studentsCount; //Значение поля должно быть больше 0, Поле может быть null
-    private FormOfEducation formOfEducation; //Поле не может быть null
-    private Semester semesterEnum; //Поле не может быть null
-    private Person groupAdmin; //Поле не может быть null
-
-    HashMap<String, FormOfEducation> formsOfEducation;
-    HashMap<String, Semester> semesters;
+    HashMap<String, SelectChoice<FormOfEducation>> formsOfEducation;
+    HashMap<String, SelectChoice<Semester>> semesters;
     StudyGroup.Builder builder;
+
     public StudyGroupForm(Management manager, StudyGroup group) {
-        this.manager = manager;
+        super(manager);
         this.value = group;
         this.builder = StudyGroup.newBuilder();
         this.formsOfEducation = new HashMap<>();
 
-        this.formsOfEducation.put("1", FormOfEducation.FULL_TIME_EDUCATION);
-        this.formsOfEducation.put("2", FormOfEducation.DISTANCE_EDUCATION);
-        this.formsOfEducation.put("3", FormOfEducation.EVENING_CLASSES);
+        this.formsOfEducation.put("1", new SelectChoice<>(FormOfEducation.FULL_TIME_EDUCATION.name, FormOfEducation.FULL_TIME_EDUCATION));
+        this.formsOfEducation.put("2", new SelectChoice<>(FormOfEducation.DISTANCE_EDUCATION.name, FormOfEducation.DISTANCE_EDUCATION));
+        this.formsOfEducation.put("3", new SelectChoice<>(FormOfEducation.EVENING_CLASSES.name, FormOfEducation.EVENING_CLASSES));
 
         this.semesters = new HashMap<>();
 
-        this.semesters.put("2", Semester.SECOND);
-        this.semesters.put("3", Semester.THIRD);
-        this.semesters.put("5", Semester.FIFTH);
-        this.semesters.put("7", Semester.SEVENTH);
-        this.semesters.put("8", Semester.EIGHTH);
+        this.semesters.put("2", new SelectChoice<>(Semester.SECOND.name, Semester.SECOND));
+        this.semesters.put("3", new SelectChoice<>(Semester.THIRD.name, Semester.THIRD));
+        this.semesters.put("5", new SelectChoice<>(Semester.FIFTH.name, Semester.FIFTH));
+        this.semesters.put("7", new SelectChoice<>(Semester.SEVENTH.name, Semester.SEVENTH));
+        this.semesters.put("8", new SelectChoice<>(Semester.EIGHTH.name, Semester.EIGHTH));
+
     }
 
     public StudyGroupForm(Management manager) {
         this(manager, new StudyGroup());
     }
 
-    public void run(String key) {
+    public void update(String key) {
+        new IntegerFormField(manager, "id", this::findId, key).run();
+        new StringFormField(manager, "name", this::setName).run();
+        new SelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters).run();
+        new SelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation).run();
+        new StringFormField(manager, "coordinates", this::setCoordinates).run();
+        new IntegerFormField(manager, "studentCount", this::setStudentsCount).run();
 
-        var scanner = this.manager.getScanner();
-
-        while (true) {
-            try {
-                this.setId(key);
-                break;
-            } catch (final IncorrectValueException e) {
-                System.out.println("Ошибка при вводе id: " + e.getMessage());
-                System.out.print("Введите id: ");
-                key = scanner.nextLine();
-            }
-        }
-
-        while (true) {
-            try {
-                System.out.print("Введите name: ");
-                var value = scanner.nextLine();
-                this.setName(value);
-                break;
-            } catch (final IncorrectValueException e) {
-                System.out.println("Ошибка при вводе name: " + e.getMessage());
-            }
-        }
-
-        var personForm = new PersonForm();
+        var personForm = new PersonForm(manager);
         System.out.println("\n" + ConsoleColors.BLACK_BRIGHT +
                 "Заполнение groupAdmin'а..." + ConsoleColors.RESET);
-
-        while (true) {
-            try {
-                System.out.print("Введите name: ");
-                var value = scanner.nextLine();
-                personForm.setName(value);
-                break;
-            } catch (final IncorrectValueException e) {
-                System.out.println("Ошибка при вводе name: " + e.getMessage());
-            }
-        }
-
-        while (true) {
-            try {
-                System.out.print("Введите birthday: ");
-                var value = scanner.nextLine();
-                personForm.setBirthday(value);
-                break;
-            } catch (final IncorrectValueException e) {
-                System.out.println("Ошибка при вводе birthday: " + e.getMessage());
-            }
-        }
-
+        personForm.run();
         Person person = personForm.build();
+        this.setGroupAdmin(person);
+    }
+
+    public void run(String key) {
+        new IntegerFormField(manager, "id", this::setId, key).run();
+        new StringFormField(manager, "name", this::setName).run();
+        new SelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters).run();
+        new SelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation).run();
+        new StringFormField(manager, "coordinates", this::setCoordinates).run();
+        new IntegerFormField(manager, "studentCount", this::setStudentsCount).run();
+
+        var personForm = new PersonForm(manager);
+        System.out.println("\n" + ConsoleColors.BLACK_BRIGHT +
+                "Заполнение groupAdmin'а..." + ConsoleColors.RESET);
+        personForm.run();
+        Person person = personForm.build();
+        this.setGroupAdmin(person);
+    }
+
+    public void setGroupAdmin(Person value) {
+        this.builder.setGroupAdmin(value);
+    }
+
+
+    public void findId(Integer value) throws IncorrectValueException {
+        StudyGroupValidation.validateId(value);
+        Integer id = this.value.getId();
+        if (id != null && id.equals(value)) return;
+        if (!this.manager.isIdExists(value)) throw new IncorrectValueException("Не удалось найти группу с таким id.");
+        this.builder.setId(value);
     }
 
     public void setId(Integer value) throws IncorrectValueException {
-        if (value == null) throw new IncorrectValueException("Поле id не может быть null.");
-        if (value <= 0) throw new IncorrectValueException("Поле id должно быть больше 0.");
-        if (this.id != null && this.id.equals(value)) return;
+        StudyGroupValidation.validateId(value);
+        Integer id = this.value.getId();
+        if (id != null && id.equals(value)) return;
         if (this.manager.isIdExists(value)) throw new IncorrectValueException("Поле id должно быть уникальным.");
-        this.id = value;
+        this.builder.setId(value);
     }
-
-    public void setId(String value) throws IncorrectValueException {
-        try {
-            Integer id = Integer.parseInt(value);
-            this.setId(id);
-        } catch (NumberFormatException e) {
-            throw new IncorrectValueException("Некорректно указан ключ");
-        }
-    }
-
 
     public void setName(String value) throws IncorrectValueException {
-        if (value == null) throw new IncorrectValueException("Поле name не может быть null.");
-        if (value.equals("")) throw new IncorrectValueException("Поле name не может быть пустым.");
-        this.name = value;
+        StudyGroupValidation.validateName(value);
+        this.builder.setName(value);
     }
 
     public void setCoordinates(String value) throws IncorrectValueException {
         String[] coordinates = value.split(",");
-        if (coordinates.length > 2) throw new IncorrectValueException("Поле coordinates не соответствует шаблону <x:Long> или <x:Long>, <y:float>.");
+        if (coordinates.length > 2)
+            throw new IncorrectValueException("Поле coordinates не соответствует шаблону <x:Long> или <x:Long>, <y:float>.");
+
         try {
             Long x = Long.parseLong(coordinates[0]);
             Float y = null;
             if (coordinates.length == 2) {
                 y = Float.parseFloat(coordinates[1]);
-                if (y <= -373) {
-                    throw new IncorrectValueException("Поле coordinates.y должно быть больше -373.");
-                }
             }
-            this.coordinates = new Coordinates(x, y);
+            CoordinatesValidation.validateX(x);
+            CoordinatesValidation.validateY(y);
+            this.builder.setCoordinates(new Coordinates(x, y));
         } catch (NumberFormatException e) {
             throw new IncorrectValueException("Поле coordinates не соответствует шаблону <x:Long> или <x:Long>, <y:float>.");
         }
     }
 
     public void setStudentsCount(Integer value) throws IncorrectValueException {
-        if (value == null) return;
-        if (value <= 0) throw new IncorrectValueException("Поле studentsCount должно быть больше 0.");
-        this.studentsCount = value;
+        StudyGroupValidation.validateStudentsCount(value);
+        this.builder.setStudentsCount(value);
     }
 
-    public void setFormOfEducation(String value) throws IncorrectValueException {
-        if (value == null) throw new IncorrectValueException("Поле formOfEducation не может быть null.");
-        FormOfEducation formOfEducation = this.formsOfEducation.get(value);
-        if (formOfEducation == null) throw new IncorrectValueException("%s не является допустимым значением formOfEducation.".formatted(value));
-        this.formOfEducation = formOfEducation;
+    public void setFormOfEducation(FormOfEducation value) throws IncorrectValueException {
+        StudyGroupValidation.validateFormOfEducation(value);
+        this.builder.setFormOfEducation(value);
     }
 
-    public void setSemesterEnum(String value) throws IncorrectValueException {
-        if (value == null) throw new IncorrectValueException("Поле semesterEnum не может быть null.");
-        Semester semesterEnum = this.semesters.get(value);
-        if (semesterEnum == null) throw new IncorrectValueException("%s не является допустимым значением semesterEnum.".formatted(value));
-        this.semesterEnum = semesterEnum;
+    public void setSemesterEnum(Semester value) throws IncorrectValueException {
+        StudyGroupValidation.validateSemesterEnum(value);
+        this.builder.setSemesterEnum(value);
     }
 
     public StudyGroup build() {

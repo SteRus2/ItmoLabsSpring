@@ -1,34 +1,36 @@
-    package us.obviously.itmo.prog.commands;
+package us.obviously.itmo.prog.commands;
 
 
-    import us.obviously.itmo.prog.exceptions.IncorrectValueException;
-    import us.obviously.itmo.prog.forms.PersonForm;
-    import us.obviously.itmo.prog.forms.PersonFormFields;
-    import us.obviously.itmo.prog.forms.StudyGroupForm;
-    import us.obviously.itmo.prog.manager.Management;
-    import us.obviously.itmo.prog.model.Person;
-    import us.obviously.itmo.prog.model.StudyGroup;
+import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.exceptions.UsedKeyException;
+import us.obviously.itmo.prog.forms.StudyGroupForm;
+import us.obviously.itmo.prog.manager.Management;
+import us.obviously.itmo.prog.model.StudyGroup;
 
-    import java.util.HashMap;
-    import java.util.Scanner;
+import java.util.HashMap;
 
-    public class InsertCommand extends AbstractCommand {
-        public InsertCommand(Management manager) {
-            super(manager, "insert", "Добавить новый элемент с заданным ключом");
-            addParameter("key", "");
-        }
-
-        /**
-         *
-         */
-        @Override
-        public void execute(HashMap<String, String> args) {
-            var studyGroupForm = new StudyGroupForm(this.manager);
-            var key = args.get("key");
-            studyGroupForm.run(key);
-            StudyGroup studyGroup = studyGroupForm.build();
-            this.manager.insertData(studyGroup);
-        }
-        // null {element}
-
+public class InsertCommand extends AbstractCommand {
+    public InsertCommand(Management manager) {
+        super(manager, "insert", "Добавить новый элемент с заданным ключом");
+        addParameter("key", "Значение ID");
     }
+
+    /**
+     *
+     */
+    @Override
+    public void execute(HashMap<String, String> args) {
+        var studyGroupForm = new StudyGroupForm(this.manager);
+        var key = args.get("key");
+        studyGroupForm.run(key);
+        StudyGroup studyGroup = studyGroupForm.build();
+        try {
+            this.manager.getDataCollection().insertItem(studyGroup, studyGroup.getId());
+            System.out.println(ConsoleColors.BLUE +
+                    "Новый studyGroup сохранён под id %s".formatted(studyGroup.getId()) +
+                    ConsoleColors.RESET);
+        } catch (UsedKeyException e) {
+            System.out.println(ConsoleColors.RED + "Ошибка при сохранении: " + e.getMessage() + ConsoleColors.RESET);
+        }
+    }
+}

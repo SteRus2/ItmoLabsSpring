@@ -25,65 +25,75 @@ public class DataCollection {
         type = StudyGroup.class.getName();
         initDate = new Date();
     }
-    public DataInfo getInfo(){
+
+    public DataInfo getInfo() {
         count = data.size();
         return new DataInfo(type, initDate, count);
     }
+
     public HashMap<Integer, StudyGroup> getData() {
         return data;
     }
 
-    public void insertItem(StudyGroup item, int key) throws UsedKeyException{
-        if (data.containsKey(key)){
+    public void insertItem(StudyGroup item, int key) throws UsedKeyException {
+        if (data.containsKey(key)) {
             throw new UsedKeyException("К сожалению, ключ уже используется");
         } else {
             data.put(key, item);
         }
     }
+
     public void updateItem(StudyGroup item, int key) throws NoSuchIdException {
-        if (!data.containsKey(key)){
+        if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }
         data.put(key, item);
     }
+
     public void removeItem(int key) throws NoSuchIdException {
-        if (!data.containsKey(key)){
+        if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }
         data.remove(key);
     }
-    public void clearData(){
+
+    public void clearData() {
         data.clear();
     }
+
     public void saveData() throws IOException {
         dataReader.saveData(data);
     }
+
     public void replaceIfGreater(int key, StudyGroup item) throws NoSuchIdException {
-        if(!data.containsKey(key)){
+        if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }
-        if (data.get(key).compareTo(item) > 0){
+        if (data.get(key).compareTo(item) > 0) {
             data.put(key, item);
         }
     }
-    public void removeGreaterKey(int key){
-        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()){
-            if (pair.getKey() > key){
+
+    public void removeGreaterKey(int key) {
+        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
+            if (pair.getKey() > key) {
                 data.remove(pair.getKey());
             }
         }
     }
-    public void removeLowerKey(int key){
-        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()){
-            if (pair.getKey() < key){
+
+    public void removeLowerKey(int key) {
+        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
+            if (pair.getKey() < key) {
                 data.remove(pair.getKey());
             }
         }
     }
-    public Map<String, List<StudyGroup>> groupCountingByName(){
+
+    public Map<String, List<StudyGroup>> groupCountingByName() {
         HashMap<String, List<StudyGroup>> localData = new HashMap<>();
-        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()){
-            if(!localData.containsKey(pair.getValue().getName())){
+        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
+            if (!localData.containsKey(pair.getValue().getName())) {
                 localData.put(pair.getValue().getName(), new ArrayList<>(List.of(pair.getValue())));
             } else {
                 List<StudyGroup> llsg = localData.get(pair.getValue().getName());
@@ -93,16 +103,18 @@ public class DataCollection {
         }
         return localData;
     }
-    public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin){
+
+    public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin) {
         List<StudyGroup> local = new ArrayList<>();
-        for(Map.Entry<Integer, StudyGroup> pair : data.entrySet()){
-            if(pair.getValue().getGroupAdmin().compareTo(groupAdmin) > 0){
+        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
+            if (pair.getValue().getGroupAdmin().compareTo(groupAdmin) > 0) {
                 local.add(pair.getValue());
             }
         }
         return local;
     }
-    public List<Semester> printFieldAscendingSemesterEnum(){
+
+    public List<Semester> printFieldAscendingSemesterEnum() {
         List<StudyGroup> local = new ArrayList<>(data.values());
         List<Semester> result = new ArrayList<>();
         local.sort(new Comparator<StudyGroup>() {
@@ -111,7 +123,7 @@ public class DataCollection {
                 return o1.compareTo(o2);
             }
         });
-        for(StudyGroup sg : local){
+        for (StudyGroup sg : local) {
             result.add(sg.getSemesterEnum());
         }
         return result;

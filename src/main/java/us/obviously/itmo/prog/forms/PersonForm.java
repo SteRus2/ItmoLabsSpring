@@ -1,37 +1,50 @@
 package us.obviously.itmo.prog.forms;
 
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.Color;
 import us.obviously.itmo.prog.model.Country;
 import us.obviously.itmo.prog.model.Person;
+import us.obviously.itmo.prog.validation.PersonValidation;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
 
-public class PersonForm {
+public class PersonForm extends Form {
     private final Person.Builder builder;
-    HashMap<String, Color> colors;
-    HashMap<String, Country> nationalities;
+    HashMap<String, SelectChoice<Color>> colors;
+    HashMap<String, SelectChoice<Country>> nationalities;
 
-    public PersonForm() {
+    public PersonForm(Management manager) {
+        super(manager);
         this.builder = Person.newBuilder();
         this.colors = new HashMap<>();
 
-        this.colors.put("1", Color.ORANGE);
-        this.colors.put("2", Color.RED);
-        this.colors.put("3", Color.WHITE);
-        this.colors.put("4", Color.YELLOW);
+        this.colors.put("0", new SelectChoice<>("Не определено", null));
+        this.colors.put("1", new SelectChoice<>(Color.ORANGE.name, Color.ORANGE));
+        this.colors.put("2", new SelectChoice<>(Color.RED.name, Color.RED));
+        this.colors.put("3", new SelectChoice<>(Color.WHITE.name, Color.WHITE));
+        this.colors.put("4", new SelectChoice<>(Color.YELLOW.name, Color.YELLOW));
 
 
         this.nationalities = new HashMap<>();
 
-        this.nationalities.put("1", Country.FRANCE);
-        this.nationalities.put("2", Country.INDIA);
-        this.nationalities.put("3", Country.JAPAN);
-        this.nationalities.put("4", Country.THAILAND);
-        this.nationalities.put("5", Country.VATICAN);
+        this.nationalities.put("0", new SelectChoice<>("Не определено", null));
+        this.nationalities.put("1", new SelectChoice<>(Country.FRANCE.name, Country.FRANCE));
+        this.nationalities.put("2", new SelectChoice<>(Country.INDIA.name, Country.INDIA));
+        this.nationalities.put("3", new SelectChoice<>(Country.JAPAN.name, Country.JAPAN));
+        this.nationalities.put("4", new SelectChoice<>(Country.THAILAND.name, Country.THAILAND));
+        this.nationalities.put("5", new SelectChoice<>(Country.VATICAN.name, Country.VATICAN));
+    }
+
+    @Override
+    public void run() {
+        new StringFormField(manager, "name", this::setName).run();
+        new DateFormField(manager, "birthday", this::setBirthday).run();
+        new SelectFormField<>(manager, "hairColor", this::setHairColor, this.colors).run();
+        new SelectFormField<>(manager, "eyeColor", this::setEyeColor, this.colors).run();
+        new SelectFormField<>(manager, "nationality", this::setNationality, this.nationalities).run();
     }
 
     public void setName(String value) throws IncorrectValueException {
@@ -40,37 +53,24 @@ public class PersonForm {
         this.builder.setName(value);
     }
 
-    public void setBirthday(String value) throws IncorrectValueException {
-        try {
-            var birthday = ZonedDateTime.parse(value);
-            this.builder.setBirthday(birthday);
-        } catch (DateTimeParseException e) {
-            throw new IncorrectValueException("Невалидная дата. Воспользуйтесь шаблоном dd-mm-yyyy.");
-        }
+    public void setBirthday(ZonedDateTime value) throws IncorrectValueException {
+        PersonValidation.validateBirthday(value);
+        this.builder.setBirthday(value);
     }
 
-    public void setEyeColor(String value) throws IncorrectValueException {
-        if (value == null) return;
-        Color color = this.colors.get(value);
-        if (color == null)
-            throw new IncorrectValueException("%s не является допустимым значением color.".formatted(value));
-        this.builder.setEyeColor(color);
+    public void setEyeColor(Color value) throws IncorrectValueException {
+        PersonValidation.validateEyeColor(value);
+        this.builder.setEyeColor(value);
     }
 
-    public void setHairColor(String value) throws IncorrectValueException {
-        if (value == null) return;
-        Color color = this.colors.get(value);
-        if (color == null)
-            throw new IncorrectValueException("%s не является допустимым значением color.".formatted(value));
-        this.builder.setHairColor(color);
+    public void setHairColor(Color value) throws IncorrectValueException {
+        PersonValidation.validateHairColor(value);
+        this.builder.setEyeColor(value);
     }
 
-    public void setNationality(String value) throws IncorrectValueException {
-        if (value == null) return;
-        Country nationality = this.nationalities.get(value);
-        if (nationality == null)
-            throw new IncorrectValueException("%s не является допустимым значением nationality.".formatted(value));
-        this.builder.setNationality(nationality);
+    public void setNationality(Country value) throws IncorrectValueException {
+        PersonValidation.validateNationality(value);
+        this.builder.setNationality(value);
     }
 
     public Person build() {

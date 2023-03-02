@@ -1,9 +1,15 @@
 package us.obviously.itmo.prog.model;
 
 public enum Country {
-    FRANCE,
-    INDIA,
-    VATICAN,
-    THAILAND,
-    JAPAN;
+    FRANCE ("Франция"),
+    INDIA ("Индия"),
+    VATICAN ("Ватикан"),
+    THAILAND ("Таиланд"),
+    JAPAN ("Япония");
+
+    public final String name;
+
+    Country(String name) {
+        this.name = name;
+    }
 }

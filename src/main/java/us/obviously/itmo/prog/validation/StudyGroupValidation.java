@@ -1,11 +1,7 @@
 package us.obviously.itmo.prog.validation;
 
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.forms.Form;
-import us.obviously.itmo.prog.model.Coordinates;
-import us.obviously.itmo.prog.model.FormOfEducation;
-import us.obviously.itmo.prog.model.Semester;
-import us.obviously.itmo.prog.model.StudyGroup;
+import us.obviously.itmo.prog.model.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +27,7 @@ public class StudyGroupValidation {
         validateStudentsCount(studyGroup.getStudentsCount());
         validateFormOfEducation(studyGroup.getFormOfEducation());
         validateSemesterEnum(studyGroup.getSemesterEnum());
+        validateGroupAdmin(studyGroup.getGroupAdmin());
     }
 
     public static void validateIdUnique(List<StudyGroup> studyGroups) throws IncorrectValueException {
@@ -70,5 +67,9 @@ public class StudyGroupValidation {
 
     public static void validateSemesterEnum(Semester value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле semesterEnum не может быть null.");
+    }
+
+    public static void validateGroupAdmin(Person value) throws IncorrectValueException {
+        PersonValidation.validate(value);
     }
 }
