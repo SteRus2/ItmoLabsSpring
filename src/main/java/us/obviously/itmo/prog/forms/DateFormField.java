@@ -26,6 +26,11 @@ public class DateFormField extends FormField<ZonedDateTime> {
     }
 
     @Override
+    void printLoopMessage() {
+        System.out.printf("Введите %s в формате yyyy-MM-dd+HH-mm : ", this.getKey());
+    }
+
+    @Override
     public ZonedDateTime convert(String value) throws IncorrectValueException {
 
         String[] parts = value.split("\\+");

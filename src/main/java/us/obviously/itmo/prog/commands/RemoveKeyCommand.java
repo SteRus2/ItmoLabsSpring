@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.commands;
 
 
+import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.manager.Management;
 
@@ -25,7 +26,7 @@ public class RemoveKeyCommand extends AbstractCommand {
         } catch (NumberFormatException e) {
             System.out.printf("Ключ должен быть представлен натуральным числом.%n");
         } catch (NoSuchIdException e) {
-            throw new RuntimeException(e);
+            System.out.println(ConsoleColors.RED + e + ConsoleColors.RESET);
         }
     }
 }

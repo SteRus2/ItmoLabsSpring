@@ -99,7 +99,7 @@ public class StudyGroupForm extends Form {
     }
 
     public void setCoordinates(String value) throws IncorrectValueException {
-        String[] coordinates = value.split(",");
+        String[] coordinates = value.split(" ");
         if (coordinates.length > 2)
             throw new IncorrectValueException("Поле coordinates не соответствует шаблону <x:Long> или <x:Long>, <y:float>.");
 
@@ -113,7 +113,7 @@ public class StudyGroupForm extends Form {
             CoordinatesValidation.validateY(y);
             this.builder.setCoordinates(new Coordinates(x, y));
         } catch (NumberFormatException e) {
-            throw new IncorrectValueException("Поле coordinates не соответствует шаблону <x:Long> или <x:Long>, <y:float>.");
+            throw new IncorrectValueException("Поле coordinates не соответствует шаблону <x:Long> или <x:Long> <y:float>.");
         }
     }
 
