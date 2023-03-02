@@ -35,6 +35,10 @@ public class StudyGroup implements Comparable {
         return coordinates;
     }
 
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }
