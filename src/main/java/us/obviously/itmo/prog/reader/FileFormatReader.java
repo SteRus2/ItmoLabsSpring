@@ -4,6 +4,7 @@ import us.obviously.itmo.prog.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.exceptions.IncorrectValuesTypeException;
 import us.obviously.itmo.prog.model.StudyGroup;
+import us.obviously.itmo.prog.parser.JsonParser;
 import us.obviously.itmo.prog.parser.XMLParser;
 
 import java.io.FileNotFoundException;
@@ -12,11 +13,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class XMLReader extends FileReader{
+public class FileFormatReader extends FileReader{
 
-    public XMLReader(String filePath) throws FileNotFoundException {
+    public FileFormatReader(String filePath, FileFormat ff) throws FileNotFoundException {
         super(filePath);
-        parser = new XMLParser();
+        parser = switch (ff){
+            case XML -> new XMLParser();
+            case JSON -> new JsonParser();
+        };
         scanner = new Scanner(file);
     }
 
