@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import us.obviously.itmo.prog.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.exceptions.FailedToDumpsEx;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.exceptions.IncorrectValuesTypeException;
 import us.obviously.itmo.prog.model.StudyGroup;
 import us.obviously.itmo.prog.validation.StudyGroupValidation;
 
@@ -24,11 +27,19 @@ public class XMLParser extends Parser{
 
     }
     @Override
-    public HashMap<Integer, StudyGroup> loads(String value) throws JsonProcessingException, IncorrectValueException {
-        List<StudyGroup> l1 = xmlMapper.readValue(value, new TypeReference<>() {});
+    public HashMap<Integer, StudyGroup> loads(String value) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
+        List<StudyGroup> l1;
+        try {
+            l1 = xmlMapper.readValue(value, new TypeReference<>() {
+            });
+        } catch (JsonMappingException e) {
+            throw new IncorrectValuesTypeException("Данные в файле имеют некорректный тип");
+        } catch (JsonProcessingException e) {
+            throw new CantParseDataException("Файл сломан");
+        }
         StudyGroupValidation.validateList(l1);
         HashMap<Integer, StudyGroup> result = new HashMap<>();
-        for (StudyGroup sg : l1){
+        for (StudyGroup sg : l1) {
             result.put(sg.getId(), sg);
         }
         return result;
@@ -39,7 +50,7 @@ public class XMLParser extends Parser{
         Collection<StudyGroup> values = value.values();
         dataList = new ArrayList<>(values);
         String result;
-        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();) {
+        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             xmlMapper.writer().withRootName("StudyGroups").writeValue(byteArrayOutputStream, dataList);
             result = byteArrayOutputStream.toString();
             return result;
