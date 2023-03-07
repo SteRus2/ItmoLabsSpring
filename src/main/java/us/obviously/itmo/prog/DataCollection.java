@@ -1,9 +1,7 @@
 package us.obviously.itmo.prog;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import us.obviously.itmo.prog.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.exceptions.NoSuchIdException;
-import us.obviously.itmo.prog.exceptions.UsedKeyException;
+import us.obviously.itmo.prog.exceptions.*;
 import us.obviously.itmo.prog.model.Person;
 import us.obviously.itmo.prog.model.Semester;
 import us.obviously.itmo.prog.model.StudyGroup;
@@ -19,7 +17,7 @@ public class DataCollection {
     private Date initDate;
     private int count;
 
-    public DataCollection(DataReader dataReader) throws JsonProcessingException, IncorrectValueException {
+    public DataCollection(DataReader dataReader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
         this.dataReader = dataReader;
         this.data = dataReader.getData();
         type = StudyGroup.class.getName();
