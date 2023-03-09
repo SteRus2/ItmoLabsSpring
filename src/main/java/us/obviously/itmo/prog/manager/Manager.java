@@ -85,7 +85,7 @@ public class Manager<T> implements Management {
      *
      */
     @Override
-    public void save() throws IOException {
+    public void save() throws FailedToDumpsEx, CantWriteDataException {
         this.dataCollection.saveData();
     }
 

@@ -60,7 +60,7 @@ public class DataCollection {
         data.clear();
     }
 
-    public void saveData() throws IOException {
+    public void saveData() throws FailedToDumpsEx, CantWriteDataException {
         dataReader.saveData(data);
     }
 

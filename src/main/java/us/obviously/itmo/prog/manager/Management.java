@@ -2,6 +2,8 @@ package us.obviously.itmo.prog.manager;
 
 import us.obviously.itmo.prog.DataCollection;
 import us.obviously.itmo.prog.commands.AbstractCommand;
+import us.obviously.itmo.prog.exceptions.CantWriteDataException;
+import us.obviously.itmo.prog.exceptions.FailedToDumpsEx;
 import us.obviously.itmo.prog.exceptions.RecurrentExecuteScripts;
 
 import java.io.FileNotFoundException;
@@ -15,7 +17,7 @@ public interface Management {
 
     void stop();
 
-    void save() throws IOException;
+    void save() throws FailedToDumpsEx, CantWriteDataException;
 
     void executeScript(String fileName) throws FileNotFoundException, RecurrentExecuteScripts;
 

@@ -1,8 +1,6 @@
 package us.obviously.itmo.prog.reader;
 
-import us.obviously.itmo.prog.exceptions.CantParseDataException;
-import us.obviously.itmo.prog.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.exceptions.IncorrectValuesTypeException;
+import us.obviously.itmo.prog.exceptions.*;
 import us.obviously.itmo.prog.model.StudyGroup;
 import us.obviously.itmo.prog.parser.JsonParser;
 import us.obviously.itmo.prog.parser.XMLParser;
@@ -36,11 +34,13 @@ public class FileFormatReader extends FileReader{
     }
 
     @Override
-    public void saveData(HashMap<Integer, StudyGroup> data) throws IOException {
+    public void saveData(HashMap<Integer, StudyGroup> data) throws CantWriteDataException, FailedToDumpsEx {
         mainString = parser.dumps(data);
         try(FileOutputStream fos = new FileOutputStream(file)){
             byte[] buffer = mainString.getBytes();
             fos.write(buffer, 0, buffer.length);
+        } catch (IOException e){
+            throw new CantWriteDataException("Не удалось сохранить данные");
         }
     }
 }
