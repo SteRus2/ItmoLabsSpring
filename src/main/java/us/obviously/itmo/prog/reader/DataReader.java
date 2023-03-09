@@ -10,6 +10,6 @@ import java.util.HashMap;
 
 public abstract class DataReader {
     protected Parser parser;
-    public abstract HashMap<Integer, StudyGroup> getData() throws  IncorrectValueException, IncorrectValuesTypeException, CantParseDataException;
+    public abstract HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException;
     public abstract void saveData(HashMap<Integer, StudyGroup> data) throws FailedToDumpsEx, CantWriteDataException;
 }

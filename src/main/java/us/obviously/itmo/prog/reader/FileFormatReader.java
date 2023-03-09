@@ -13,22 +13,27 @@ import java.util.Scanner;
 
 public class FileFormatReader extends FileReader{
 
-    public FileFormatReader(String filePath, FileFormat ff) throws FileNotFoundException {
+    public FileFormatReader(String filePath, FileFormat ff) {
         super(filePath);
         parser = switch (ff){
             case XML -> new XMLParser();
             case JSON -> new JsonParser();
         };
-        scanner = new Scanner(file);
     }
 
     @Override
-    public HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
-        while (scanner.hasNextLine()){
-            String line = scanner.nextLine().trim();
-            strings.add(line);
+    public HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException {
+        try {
+            scanner = new Scanner(file);
+            while (scanner.hasNextLine()){
+                String line = scanner.nextLine().trim();
+                strings.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            throw new CantFindFileException("Файл не найден");
+        } finally {
+            scanner.close();
         }
-        scanner.close();
         mainString = String.join("", strings);
         return parser.loads(mainString);
     }

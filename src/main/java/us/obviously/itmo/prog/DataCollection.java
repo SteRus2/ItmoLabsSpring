@@ -17,7 +17,7 @@ public class DataCollection {
     private Date initDate;
     private int count;
 
-    public DataCollection(DataReader dataReader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
+    public DataCollection(DataReader dataReader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException {
         this.dataReader = dataReader;
         this.data = dataReader.getData();
         type = StudyGroup.class.getName();

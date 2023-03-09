@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.exceptions.CantFindFileException;
 import us.obviously.itmo.prog.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.exceptions.IncorrectValuesTypeException;
@@ -24,7 +25,7 @@ public class Main {
             DataReader reader = new FileFormatReader(args[0], FileFormat.JSON); //TODO обработать использование парсера по названию файла
             Management manager = new Manager<StudyGroup>(reader);
             manager.run();
-        } catch (FileNotFoundException e) {
+        } catch (CantFindFileException e) {
             System.out.println(ConsoleColors.RED + "Файл не найден. Убедитесь в правильности пути и повторите попытку." + ConsoleColors.RESET);
         } catch (IncorrectValueException | IncorrectValuesTypeException e) {
             System.out.println(ConsoleColors.RED + "Невалидные данные. " + e.getMessage() + ConsoleColors.RESET);
