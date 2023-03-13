@@ -1,13 +1,16 @@
 package us.obviously.itmo.prog;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.exceptions.CantFindFileException;
+import us.obviously.itmo.prog.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.exceptions.IncorrectValuesTypeException;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.manager.Manager;
 import us.obviously.itmo.prog.model.StudyGroup;
 import us.obviously.itmo.prog.reader.DataReader;
-import us.obviously.itmo.prog.reader.XMLReader;
+import us.obviously.itmo.prog.reader.FileFormat;
+import us.obviously.itmo.prog.reader.FileFormatReader;
 
 import java.io.FileNotFoundException;
 
@@ -19,15 +22,15 @@ public class Main {
             return;
         }
         try {
-            DataReader reader = new XMLReader(args[0]);
+            DataReader reader = new FileFormatReader(args[0], FileFormat.JSON); //TODO обработать использование парсера по названию файла
             Management manager = new Manager<StudyGroup>(reader);
             manager.run();
-        } catch (FileNotFoundException e) {
+        } catch (CantFindFileException e) {
             System.out.println(ConsoleColors.RED + "Файл не найден. Убедитесь в правильности пути и повторите попытку." + ConsoleColors.RESET);
-        } catch (JsonProcessingException e) {
-            System.out.println(ConsoleColors.RED + "Файл нечитаем. Убедитесь, что соблюдается что там надо." + ConsoleColors.RESET);
-        } catch (IncorrectValueException e) {
+        } catch (IncorrectValueException | IncorrectValuesTypeException e) {
             System.out.println(ConsoleColors.RED + "Невалидные данные. " + e.getMessage() + ConsoleColors.RESET);
+        } catch (CantParseDataException e) {
+            System.out.println(ConsoleColors.RED + "Файл нечитаем. " + e.getMessage() + ConsoleColors.RESET);
         }
     }
 }
