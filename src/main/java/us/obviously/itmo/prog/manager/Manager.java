@@ -1,6 +1,5 @@
 package us.obviously.itmo.prog.manager;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import us.obviously.itmo.prog.DataCollection;
 import us.obviously.itmo.prog.commands.*;
 import us.obviously.itmo.prog.console.ConsoleColors;
@@ -9,7 +8,6 @@ import us.obviously.itmo.prog.reader.DataReader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 
 
@@ -138,12 +136,24 @@ public class Manager<T> implements Management {
 
     private boolean waitCommand() {
         System.out.print("> ");
-        String line = this.nextLine();
-        String[] words = line.split(" ");
-        String commandName = words[0];
-        var command = this.commands.get(commandName.toLowerCase());
+        String line = this.nextLine().trim();
+        String[] words = line.split("\\s+");
+        AbstractCommand command = null;
+        String commandName = "";
+        if (words.length > 0) {
+            commandName = words[0];
+            command = this.commands.get(commandName.toLowerCase());
+        }
         if (command == null) {
-            System.out.printf("\"%s\" не является командой. Введите help для просмотра текущих команд.%n", commandName);
+            if (commandName.equals("")) {
+                System.out.printf("Введите " +
+                        ConsoleColors.GREEN + "help" + ConsoleColors.RESET +
+                        " для просмотра текущих команд.%n");
+            } else {
+                System.out.printf("\"%s\" не является командой. Введите " +
+                        ConsoleColors.GREEN + "help" + ConsoleColors.RESET +
+                        " для просмотра текущих команд.%n", commandName);
+            }
             this.semanticError();
             return false;
         }
