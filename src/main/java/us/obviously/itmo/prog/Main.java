@@ -12,8 +12,6 @@ import us.obviously.itmo.prog.reader.DataReader;
 import us.obviously.itmo.prog.reader.FileFormat;
 import us.obviously.itmo.prog.reader.FileFormatReader;
 
-import java.io.FileNotFoundException;
-
 public class Main {
     public static void main(String[] args) {
 
@@ -22,7 +20,7 @@ public class Main {
             return;
         }
         try {
-            DataReader reader = new FileFormatReader(args[0], FileFormat.JSON); //TODO обработать использование парсера по названию файла
+            DataReader reader = new FileFormatReader(args[0], FileFormat.XML); //TODO обработать использование парсера по названию файла
             Management manager = new Manager<StudyGroup>(reader);
             manager.run();
         } catch (CantFindFileException e) {
