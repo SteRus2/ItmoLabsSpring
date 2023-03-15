@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.commands;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.manager.Management;
 
 import java.util.HashMap;
@@ -14,8 +15,8 @@ public class InfoCommand extends AbstractCommand {
     @Override
     public void execute(HashMap<String, String> args) {
         var info = this.manager.getDataCollection().getInfo();
-        System.out.println("Количество: " + ConsoleColors.BLUE + info.getCount() + ConsoleColors.RESET);
-        System.out.println("       Тип: " + ConsoleColors.BLUE + info.getType() + ConsoleColors.RESET);
-        System.out.println("      Дата: " + ConsoleColors.BLUE + info.getDate() + ConsoleColors.RESET);
+        Messages.printStatement("Количество: " + ConsoleColors.BLUE + info.getCount() + ConsoleColors.RESET);
+        Messages.printStatement("       Тип: " + ConsoleColors.BLUE + info.getType() + ConsoleColors.RESET);
+        Messages.printStatement("      Дата: " + ConsoleColors.BLUE + info.getDate() + ConsoleColors.RESET);
     }
 }

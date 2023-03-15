@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.forms;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.manager.Management;
 
@@ -64,7 +65,7 @@ abstract public class FormField<T> {
             this.value = this.convert(line);
             this.callback.callback(this.value);
         } catch (IncorrectValueException e) {
-            System.out.println(ConsoleColors.RED + "Ошибка: " + e.getMessage() + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.RED + "Ошибка: " + e.getMessage() + ConsoleColors.RESET);
             return false;
         }
         return true;
@@ -74,7 +75,7 @@ abstract public class FormField<T> {
     }
 
     void printLoopMessage() {
-        System.out.printf("Введите %s: ", this.key);
+        Messages.print("Введите %s: ", this.key);
     }
 
     abstract void printSuccessMessage(T value);

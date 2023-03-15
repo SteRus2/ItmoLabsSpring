@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.commands;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.console.TablesPrinter;
 import us.obviously.itmo.prog.manager.Management;
 
@@ -16,9 +17,9 @@ public class GroupCountingByNameCommand extends AbstractCommand {
     public void execute(HashMap<String, String> args) {
         var res = this.manager.getDataCollection().groupCountingByName();
         res.forEach((key, list) -> {
-            System.out.println(ConsoleColors.BLUE + key + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.BLUE + key + ConsoleColors.RESET);
             TablesPrinter.printStudyGroups(list);
-            System.out.printf("%n%n");
+            Messages.print("%n%n");
         });
     }
 }

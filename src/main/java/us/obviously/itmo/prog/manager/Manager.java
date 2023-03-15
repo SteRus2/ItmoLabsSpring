@@ -3,6 +3,7 @@ package us.obviously.itmo.prog.manager;
 import us.obviously.itmo.prog.DataCollection;
 import us.obviously.itmo.prog.commands.*;
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.*;
 import us.obviously.itmo.prog.reader.DataReader;
 
@@ -52,7 +53,7 @@ public class Manager<T> implements Management {
     public String nextChar() {
         if (this.fileScanner != null && this.fileScanner.hasNext()) {
             String line = this.fileScanner.next();
-            System.out.print(ConsoleColors.GREEN_BOLD + line + ConsoleColors.RESET);
+            Messages.print(ConsoleColors.GREEN_BOLD + line + ConsoleColors.RESET);
             return line;
         }
         return this.scanner.next();
@@ -61,7 +62,7 @@ public class Manager<T> implements Management {
     public String nextLine() {
         if (this.fileScanner != null && this.fileScanner.hasNextLine()) {
             String line = this.fileScanner.nextLine();
-            System.out.println(ConsoleColors.GREEN_BOLD + line + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN_BOLD + line + ConsoleColors.RESET);
             return line;
         }
         this.loadedScripts.clear();
@@ -135,7 +136,7 @@ public class Manager<T> implements Management {
     }
 
     private boolean waitCommand() {
-        System.out.print("> ");
+        Messages.print("> ");
         String line = this.nextLine().trim();
         String[] words = line.split("\\s+");
         AbstractCommand command = null;
@@ -146,11 +147,11 @@ public class Manager<T> implements Management {
         }
         if (command == null) {
             if (commandName.equals("")) {
-                System.out.printf("Введите " +
+                Messages.print("Введите " +
                         ConsoleColors.GREEN + "help" + ConsoleColors.RESET +
                         " для просмотра текущих команд.%n");
             } else {
-                System.out.printf("\"%s\" не является командой. Введите " +
+                Messages.print("\"%s\" не является командой. Введите " +
                         ConsoleColors.GREEN + "help" + ConsoleColors.RESET +
                         " для просмотра текущих команд.%n", commandName);
             }
@@ -168,7 +169,7 @@ public class Manager<T> implements Management {
             }
 
         } catch (UnexpectedArgumentException e) {
-            System.out.println(e.getMessage());
+            Messages.printStatement(e.getMessage());
         }
         return false;
     }

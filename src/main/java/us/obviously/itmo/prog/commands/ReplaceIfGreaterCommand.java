@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.commands;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.forms.StudyGroupForm;
 import us.obviously.itmo.prog.manager.Management;
@@ -26,11 +27,11 @@ public class ReplaceIfGreaterCommand extends AbstractCommand {
         StudyGroup studyGroup = studyGroupForm.build();
         try {
             this.manager.getDataCollection().replaceIfGreater(studyGroup.getId(), studyGroup);
-            System.out.println(ConsoleColors.BLUE +
+            Messages.printStatement(ConsoleColors.BLUE +
                     "Если это было необходимо, studyGroup обновлён под id %s".formatted(studyGroup.getId()) +
                     ConsoleColors.RESET);
         } catch (NoSuchIdException e) {
-            System.out.println(ConsoleColors.RED + "Ошибка при сохранении: " + e.getMessage() + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.RED + "Ошибка при сохранении: " + e.getMessage() + ConsoleColors.RESET);
         }
     }
 

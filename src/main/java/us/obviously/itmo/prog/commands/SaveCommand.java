@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.commands;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.CantWriteDataException;
 import us.obviously.itmo.prog.exceptions.FailedToDumpsEx;
 import us.obviously.itmo.prog.manager.Management;
@@ -23,9 +24,9 @@ public class SaveCommand extends AbstractCommand {
     public void execute(HashMap<String, String> args) {
         try {
             this.manager.save();
-            System.out.println(ConsoleColors.GREEN + "Успешно сохранено!" + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN + "Успешно сохранено!" + ConsoleColors.RESET);
         } catch (FailedToDumpsEx | CantWriteDataException e) {
-            System.out.println("Ошибка при сохранении: " + e.getMessage());
+            Messages.printStatement("Ошибка при сохранении: " + e.getMessage());
         }
     }
 }

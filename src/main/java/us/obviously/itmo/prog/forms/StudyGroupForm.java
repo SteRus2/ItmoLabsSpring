@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.forms;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.*;
@@ -47,7 +48,7 @@ public class StudyGroupForm extends Form {
         new IntegerFormField(manager, "studentCount", this::setStudentsCount).run();
 
         var personForm = new PersonForm(manager);
-        System.out.println("\n" + ConsoleColors.BLACK_BRIGHT +
+        Messages.printStatement("\n" + ConsoleColors.BLACK_BRIGHT +
                 "Заполнение groupAdmin'а..." + ConsoleColors.RESET);
         personForm.run();
         Person person = personForm.build();
@@ -62,14 +63,14 @@ public class StudyGroupForm extends Form {
         new IntegerFormField(manager, "studentCount", this::setStudentsCount).run();
 
         var coordinatesForm = new CoordinatesForm(manager);
-        System.out.println("\n" + ConsoleColors.BLACK_BRIGHT +
+        Messages.printStatement("\n" + ConsoleColors.BLACK_BRIGHT +
                 "Заполнение coordinates..." + ConsoleColors.RESET);
         coordinatesForm.run();
         Coordinates coordinates = coordinatesForm.build();
         this.setCoordinates(coordinates);
 
         var personForm = new PersonForm(manager);
-        System.out.println("\n" + ConsoleColors.BLACK_BRIGHT +
+        Messages.printStatement("\n" + ConsoleColors.BLACK_BRIGHT +
                 "Заполнение groupAdmin'а..." + ConsoleColors.RESET);
         personForm.run();
         Person person = personForm.build();

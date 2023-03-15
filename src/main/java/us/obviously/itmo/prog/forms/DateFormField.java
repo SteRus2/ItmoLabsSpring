@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.forms;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.manager.Management;
 
@@ -19,15 +20,15 @@ public class DateFormField extends FormField<ZonedDateTime> {
     @Override
     void printSuccessMessage(ZonedDateTime value) {
         if (value == null) {
-            System.out.println(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано null.".formatted(this.getKey()) + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано null.".formatted(this.getKey()) + ConsoleColors.RESET);
         } else {
-            System.out.println(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано %s.".formatted(this.getKey(), value) + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано %s.".formatted(this.getKey(), value) + ConsoleColors.RESET);
         }
     }
 
     @Override
     void printLoopMessage() {
-        System.out.printf("Введите %s в формате yyyy-MM-dd+HH-mm : ", this.getKey());
+        Messages.print("Введите %s в формате yyyy-MM-dd+HH-mm : ", this.getKey());
     }
 
     @Override

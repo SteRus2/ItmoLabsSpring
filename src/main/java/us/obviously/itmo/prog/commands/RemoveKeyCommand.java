@@ -2,6 +2,7 @@ package us.obviously.itmo.prog.commands;
 
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.manager.Management;
 
@@ -22,11 +23,11 @@ public class RemoveKeyCommand extends AbstractCommand {
         try {
             int intKey = Integer.parseInt(key);
             this.manager.getDataCollection().removeItem(intKey);
-            System.out.printf("Элемент %s успешно удалён.%n", key);
+            Messages.print("Элемент %s успешно удалён.%n", key);
         } catch (NumberFormatException e) {
-            System.out.printf("Ключ должен быть представлен натуральным числом.%n");
+            Messages.print("Ключ должен быть представлен натуральным числом.%n");
         } catch (NoSuchIdException e) {
-            System.out.println(ConsoleColors.RED + e + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.RED + e + ConsoleColors.RESET);
         }
     }
 }

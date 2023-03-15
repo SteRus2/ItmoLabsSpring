@@ -2,6 +2,7 @@ package us.obviously.itmo.prog.commands;
 
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.exceptions.UsedKeyException;
 import us.obviously.itmo.prog.forms.IntegerFormField;
@@ -28,11 +29,11 @@ public class UpdateCommand extends AbstractCommand {
         StudyGroup studyGroup = studyGroupForm.build();
         try {
             this.manager.getDataCollection().updateItem(studyGroup, studyGroup.getId());
-            System.out.println(ConsoleColors.BLUE +
+            Messages.printStatement(ConsoleColors.BLUE +
                     "studyGroup обновлён под id %s".formatted(studyGroup.getId()) +
                     ConsoleColors.RESET);
         } catch (NoSuchIdException e) {
-            System.out.println(ConsoleColors.RED + "Ошибка при сохранении: " + e.getMessage() + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.RED + "Ошибка при сохранении: " + e.getMessage() + ConsoleColors.RESET);
         }
     }
 }

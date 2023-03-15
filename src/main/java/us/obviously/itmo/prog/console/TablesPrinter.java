@@ -59,7 +59,7 @@ public class TablesPrinter {
 
             line(builder, width);
         });
-        System.out.println(builder);
+        Messages.printStatement(builder.toString());
     }
 
     public static void printStudyGroups(List<StudyGroup> data) {
@@ -78,7 +78,7 @@ public class TablesPrinter {
             builder.append("| ").append(("%-" + (width - 4) + "s").formatted(semester.name)).append(" |%n".formatted());
             line(builder, width);
         }));
-        System.out.println(builder);
+        Messages.printStatement(builder.toString());
     }
 
     private static StringBuilder line(StringBuilder builder, Integer symbols) {

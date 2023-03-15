@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.commands;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.manager.Management;
 
 import java.util.HashMap;
@@ -16,9 +17,9 @@ public class HelpCommand extends AbstractCommand {
     public void execute(HashMap<String, String> args) {
         var commandName = args.get("command");
         if (commandName != null && !commandName.equals("")) {
-            System.out.println(specificHelp(commandName));
+            Messages.printStatement(specificHelp(commandName));
         } else {
-            System.out.println(commonHelp());
+            Messages.printStatement(commonHelp());
         }
     }
 

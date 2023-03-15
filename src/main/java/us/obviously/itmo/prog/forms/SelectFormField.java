@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.forms;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.manager.Management;
 
@@ -22,16 +23,16 @@ public class SelectFormField<T> extends FormField<T> {
     @Override
     void printIntroMessage() {
         this.choices.forEach((choiceKey, choice) -> {
-            System.out.printf("%s - %s%n", choiceKey, choice.description());
+            Messages.print("%s - %s%n", choiceKey, choice.description());
         });
     }
 
     @Override
     void printSuccessMessage(T value) {
         if (value == null) {
-            System.out.println(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано null.".formatted(this.getKey()) + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано null.".formatted(this.getKey()) + ConsoleColors.RESET);
         } else {
-            System.out.println(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано %s.".formatted(this.getKey(), this.selectedChoice.description()) + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано %s.".formatted(this.getKey(), this.selectedChoice.description()) + ConsoleColors.RESET);
         }
     }
 
