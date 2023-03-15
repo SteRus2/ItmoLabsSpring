@@ -17,6 +17,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * {@inheritDoc}
+ * <br> Формат строки - XML
+ */
 public class XMLParser extends Parser{
     private List<StudyGroup> dataList;
     private XmlMapper xmlMapper;
@@ -26,6 +30,9 @@ public class XMLParser extends Parser{
         xmlMapper.findAndRegisterModules();
 
     }
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HashMap<Integer, StudyGroup> loads(String value) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
         List<StudyGroup> l1;
@@ -45,6 +52,9 @@ public class XMLParser extends Parser{
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String dumps(HashMap<Integer, StudyGroup> value) throws FailedToDumpsEx {
         Collection<StudyGroup> values = value.values();
