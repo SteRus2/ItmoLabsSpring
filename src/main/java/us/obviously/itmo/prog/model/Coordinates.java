@@ -4,6 +4,11 @@ public class Coordinates {
     private Long x; //Поле не может быть null
     private Float y; //Значение поля должно быть больше -373
 
+    /**
+     * Конструктор, устанавливающий параметры координат
+     * @param x Координата x - Long
+     * @param y Координата y - Float
+     */
     public Coordinates(Long x, Float y) {
         this.x = x;
         this.y = y;

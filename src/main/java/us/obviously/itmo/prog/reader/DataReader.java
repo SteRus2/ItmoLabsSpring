@@ -8,8 +8,29 @@ import us.obviously.itmo.prog.parser.Parser;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * Класс, позволяющий получать данные в некотором представлении и переводить их в готовую коллекцию
+ * @see FileReader
+ * @see FileFormatReader
+ */
 public abstract class DataReader {
     protected Parser parser;
+
+    /**
+     * Метод, который считывает данные и переводит их в коллекцию
+     * @return Возвращает коллекцию
+     * @throws IncorrectValueException Выбросит исключение, если данные не пройдут валидацию
+     * @throws IncorrectValuesTypeException Выбросит исключение, если данные будут в неправильном формате
+     * @throws CantParseDataException Выбросит исключение, если не сможет перевести дынные в нужный формат
+     * @throws CantFindFileException Выбросит исключение, если не сможет найти путь до данных
+     */
     public abstract HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException;
+
+    /**
+     * Метод, позволяющий сохранять коллекцию
+     * @param data Исходная коллекция
+     * @throws FailedToDumpsEx Выбросит исключение, если не сможет перевести коллекцию в нужный формат
+     * @throws CantWriteDataException Выбросит исключение, если не сможет записать данные
+     */
     public abstract void saveData(HashMap<Integer, StudyGroup> data) throws FailedToDumpsEx, CantWriteDataException;
 }

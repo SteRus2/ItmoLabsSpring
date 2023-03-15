@@ -20,6 +20,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * {@inheritDoc}
+ * <br> Формат строки - json
+ */
 public class JsonParser extends Parser{
     private List<StudyGroup> dataList;
     private ObjectMapper objectMapper;
@@ -28,6 +32,10 @@ public class JsonParser extends Parser{
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         objectMapper.findAndRegisterModules();
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HashMap<Integer, StudyGroup> loads(String value) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
         List<StudyGroup> l1;
@@ -47,6 +55,9 @@ public class JsonParser extends Parser{
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String dumps(HashMap<Integer, StudyGroup> value) throws FailedToDumpsEx {
         Collection<StudyGroup> values = value.values();

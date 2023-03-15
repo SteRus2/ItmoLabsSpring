@@ -38,6 +38,11 @@ public class Person implements Comparable {
         return name;
     }
 
+    /**
+     * Позволяет сравнивать админов, сначала по имени, потом по возрасту
+     * @param o the object to be compared.
+     * @return Число, говорящее о том, какой админ "больше"
+     */
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof Person)) {

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Класс, объектами которого управляет коллекция
+ */
 public class StudyGroup implements Comparable {
     private Integer id; // Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; // Поле не может быть null, Строка не может быть пустой
@@ -23,42 +26,83 @@ public class StudyGroup implements Comparable {
         return new StudyGroup().new Builder();
     }
 
+    /**
+     * Возвращает id
+     * @return id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Возвращает название группы
+     * @return Название группы
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Возвращает координаты
+     * @return координаты
+     */
     public Coordinates getCoordinates() {
         return coordinates;
     }
 
+    /**
+     * Устанавливает дату создания
+     * @param creationDate дата создания группы
+     */
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
+    /**
+     * Возвращает дату создания группы
+     * @return Дата создания группы
+     */
     public Date getCreationDate() {
         return creationDate;
     }
 
+    /**
+     * Возвращает количество студентов
+     * @return Количество студентов
+     */
     public Integer getStudentsCount() {
         return studentsCount;
     }
 
+    /**
+     * Возвращает форму обучения
+     * @return Форма обучения
+     */
     public FormOfEducation getFormOfEducation() {
         return formOfEducation;
     }
 
+    /**
+     * Возвращает семестр
+     * @return Семемтр
+     */
     public Semester getSemesterEnum() {
         return semesterEnum;
     }
 
+    /**
+     * Возвращает админа группы
+     * @return Админ группы
+     */
     public Person getGroupAdmin() {
         return groupAdmin;
     }
 
+    /**
+     * Позволяет сравнивать группы, сначала по количеству студентов, потом по id
+     * @param o the object to be compared.
+     * @return Число, говорящее о том, какая группа "больше"
+     */
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof StudyGroup)) {
