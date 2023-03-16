@@ -29,7 +29,7 @@ public class IntegerFormField extends FormField<Integer> {
         try {
             var maxLen = String.valueOf(Integer.MAX_VALUE).length() - 1;
             if (value.length() > maxLen) {
-                throw new IncorrectValueException("Слишком большое число. Наши системы не поддерживают работу с целыми числами, большими 999,999,999.");
+                throw new IncorrectValueException("Слишком большое число. Наши системы не поддерживают работу с целыми числами, по модулю большими 999,999,999.");
             }
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {

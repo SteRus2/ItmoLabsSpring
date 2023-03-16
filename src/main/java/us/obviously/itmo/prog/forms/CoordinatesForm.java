@@ -31,7 +31,7 @@ public class CoordinatesForm extends Form<Coordinates> {
 
     public void create() throws FormInterruptException {
         new LongFormField(manager, "x", this::setX).run();
-        new FloatFormField(manager, "y", this::setY, true, null, null).run();
+        new FloatFormField(manager, "y", this::setY, true).run();
     }
 
     public void setX(Long value) throws IncorrectValueException {
