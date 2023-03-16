@@ -7,7 +7,7 @@ import us.obviously.itmo.prog.validation.PersonValidation;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
-public class Person implements Comparable {
+public class Person implements Comparable<Person> {
     private String name; //Поле не может быть null, Строка не может быть пустой
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 
@@ -47,11 +47,7 @@ public class Person implements Comparable {
      * @return Число, говорящее о том, какой админ "больше"
      */
     @Override
-    public int compareTo(Object o) {
-        if (!(o instanceof Person)) {
-            return 1;
-        }
-
+    public int compareTo(Person o) {
         if (!this.name.equals(((Person) o).getName())) {
             return this.name.compareToIgnoreCase(((Person) o).getName());
         }

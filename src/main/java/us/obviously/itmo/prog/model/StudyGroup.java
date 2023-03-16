@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Класс, объектами которого управляет коллекция
  */
-public class StudyGroup implements Comparable {
+public class StudyGroup implements Comparable<StudyGroup> {
     private Integer id; // Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; // Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; // Поле не может быть null
@@ -116,10 +116,7 @@ public class StudyGroup implements Comparable {
      * @return Число, говорящее о том, какая группа "больше"
      */
     @Override
-    public int compareTo(Object o) {
-        if (!(o instanceof StudyGroup)) {
-            return 1;
-        }
+    public int compareTo(StudyGroup o) {
         if (!this.name.equals(((StudyGroup) o).name)) {
             return this.name.compareToIgnoreCase(((StudyGroup) o).name);
         }
@@ -141,6 +138,7 @@ public class StudyGroup implements Comparable {
     public int hashCode() {
         return Objects.hash(id, name, coordinates, creationDate, studentsCount, formOfEducation, semesterEnum, groupAdmin);
     }
+
 
     public class Builder {
         public Builder setId(Integer id) {

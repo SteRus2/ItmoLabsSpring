@@ -45,7 +45,9 @@ public class FileFormatReader extends FileReader {
         } catch (FileNotFoundException e) {
             throw new CantFindFileException("Файл не найден");
         } finally {
-            scanner.close();
+            if (scanner != null) {
+                scanner.close();
+            }
         }
         mainString = String.join("", strings);
         return parser.loads(mainString);
