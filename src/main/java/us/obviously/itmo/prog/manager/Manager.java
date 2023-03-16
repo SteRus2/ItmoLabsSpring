@@ -53,7 +53,7 @@ public class Manager<T> implements Management {
     public String nextChar() {
         if (this.fileScanner != null && this.fileScanner.hasNext()) {
             String line = this.fileScanner.next();
-            Messages.print(ConsoleColors.GREEN_BOLD + line + ConsoleColors.RESET);
+            Messages.print(ConsoleColors.GREEN_BOLD + line + "~=");
             return line;
         }
         return this.scanner.next();
@@ -62,7 +62,7 @@ public class Manager<T> implements Management {
     public String nextLine() {
         if (this.fileScanner != null && this.fileScanner.hasNextLine()) {
             String line = this.fileScanner.nextLine();
-            Messages.printStatement(ConsoleColors.GREEN_BOLD + line + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN_BOLD + line + "~=");
             return line;
         }
         this.loadedScripts.clear();
@@ -148,11 +148,11 @@ public class Manager<T> implements Management {
         if (command == null) {
             if (commandName.equals("")) {
                 Messages.print("Введите " +
-                        ConsoleColors.GREEN + "help" + ConsoleColors.RESET +
+                        ConsoleColors.GREEN + "help~=" +
                         " для просмотра текущих команд.%n");
             } else {
                 Messages.print("\"%s\" не является командой. Введите " +
-                        ConsoleColors.GREEN + "help" + ConsoleColors.RESET +
+                        ConsoleColors.GREEN + "help~=" +
                         " для просмотра текущих команд.%n", commandName);
             }
             this.semanticError();

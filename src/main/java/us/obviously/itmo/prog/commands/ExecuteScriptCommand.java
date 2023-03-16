@@ -22,7 +22,7 @@ public class ExecuteScriptCommand extends AbstractCommand {
     public void execute(HashMap<String, String> args) {
         var filepath = args.get("file_name");
         if (filepath == null || filepath.equals("")) {
-            Messages.printStatement(ConsoleColors.YELLOW + "file_name " + ConsoleColors.RESET +
+            Messages.printStatement("~yefile_name ~=" +
                     "- обязательное поле.");
             return;
         }
@@ -31,7 +31,7 @@ public class ExecuteScriptCommand extends AbstractCommand {
         } catch (FileNotFoundException e) {
             Messages.printStatement("Файл не найден.");
         } catch (RecurrentExecuteScripts e) {
-            Messages.printStatement(ConsoleColors.RED + "Пропущен вызов скрипта: " + e.getMessage() + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.RED + "Произошла рекурсия. Пропущен вызов скрипта: " + e.getMessage() + "~=");
         }
     }
 }

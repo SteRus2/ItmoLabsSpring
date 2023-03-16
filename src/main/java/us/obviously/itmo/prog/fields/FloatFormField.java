@@ -1,4 +1,4 @@
-package us.obviously.itmo.prog.forms;
+package us.obviously.itmo.prog.fields;
 
 import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.console.Messages;
@@ -6,19 +6,19 @@ import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.manager.Management;
 
 public class FloatFormField extends FormField<Float> {
-    public FloatFormField(Management manager, String key, Callback<Float> callback, String defaultInput) {
-        super(manager, key, callback, defaultInput);
+    public FloatFormField(Management manager, String key, Callback<Float> callback, Boolean nil, Float defaultInput, String autofill) {
+        super(manager, key, callback, nil, defaultInput, defaultInput.toString(), autofill);
     }
     public FloatFormField(Management manager, String key, Callback<Float> callback) {
-        super(manager, key, callback, null);
+        super(manager, key, callback, false, null, null, null);
     }
 
     @Override
     void printSuccessMessage(Float value) {
         if (value == null) {
-            Messages.printStatement(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано null.".formatted(this.getKey()) + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано null.".formatted(this.getKey()) + "~=");
         } else {
-            Messages.printStatement(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано %s.".formatted(this.getKey(), value) + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN_BOLD + "В поле %s успешно записано %s.".formatted(this.getKey(), value) + "~=");
         }
     }
 

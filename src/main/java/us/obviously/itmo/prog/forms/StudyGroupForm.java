@@ -1,15 +1,17 @@
 package us.obviously.itmo.prog.forms;
 
-import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.console.Messages;
+import us.obviously.itmo.prog.console.TablesPrinter;
+import us.obviously.itmo.prog.exceptions.FormInterruptException;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.fields.*;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.*;
 import us.obviously.itmo.prog.validation.StudyGroupValidation;
 
 import java.util.HashMap;
 
-public class StudyGroupForm extends Form {
+public class StudyGroupForm extends Form<StudyGroup> {
 
     StudyGroup value;
     HashMap<String, SelectChoice<FormOfEducation>> formsOfEducation;
@@ -33,48 +35,80 @@ public class StudyGroupForm extends Form {
         this.semesters.put("5", new SelectChoice<>(Semester.FIFTH.name, Semester.FIFTH));
         this.semesters.put("7", new SelectChoice<>(Semester.SEVENTH.name, Semester.SEVENTH));
         this.semesters.put("8", new SelectChoice<>(Semester.EIGHTH.name, Semester.EIGHTH));
-
     }
 
     public StudyGroupForm(Management manager) {
         this(manager, new StudyGroup());
     }
 
-    public void update(String key) {
-        new IntegerFormField(manager, "id", this::findId, key).run();
-        new StringFormField(manager, "name", this::setName).run();
-        new SelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters).run();
-        new SelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation).run();
-        new IntegerFormField(manager, "studentCount", this::setStudentsCount).run();
+    public void update(StudyGroup group) throws FormInterruptException {
+        new IntegerFormField(manager, "id", this::findId, false, group.getId(), null).run();
+        new StringFormField(manager, "name", this::setName, false, group.getName(), null).run();
+        new DropdownSelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters, false, group.getSemesterEnum(), group.getSemesterEnum().name(), null).run();
+        new DropdownSelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation, false, group.getFormOfEducation(), group.getFormOfEducation().name(), null).run();
+        new IntegerFormField(manager, "studentCount", this::setStudentsCount, true, group.getStudentsCount(), null).run();
 
-        var personForm = new PersonForm(manager);
-        Messages.printStatement("\n" + ConsoleColors.BLACK_BRIGHT +
-                "Заполнение groupAdmin'а..." + ConsoleColors.RESET);
-        personForm.run();
-        Person person = personForm.build();
-        this.setGroupAdmin(person);
+        FormField.Callback<CommonAnswer> updateCoordinates = (CommonAnswer answer) -> {
+            if (answer == CommonAnswer.YES) {
+                var coordinatesForm = new CoordinatesForm(manager);
+                Messages.printStatement("%n~0bkЗаполнение coordinates...~=");
+                coordinatesForm.update(group.getCoordinates());
+                Coordinates coordinates = coordinatesForm.build();
+                this.setCoordinates(coordinates);
+            } else {
+                this.setCoordinates(group.getCoordinates());
+            }
+        };
+
+        TablesPrinter.printTableDelimiter();
+
+        var fillCoordinatesQuestion = new YesNoSelectFormField(manager, "Изменить координаты?", updateCoordinates);
+        fillCoordinatesQuestion.mute();
+        fillCoordinatesQuestion.run();
+
+
+        FormField.Callback<CommonAnswer> updateGroupAdmin = (CommonAnswer answer) -> {
+            if (answer == CommonAnswer.YES) {
+                var personForm = new PersonForm(manager);
+                Messages.printStatement("%n~0bkЗаполнение groupAdmin'а...~=");
+                personForm.update(group.getGroupAdmin());
+                Person person = personForm.build();
+                this.setGroupAdmin(person);
+            } else {
+                this.setGroupAdmin(group.getGroupAdmin());
+            }
+        };
+
+        TablesPrinter.printTableDelimiter();
+
+        var fillGroupAdminQuestion = new YesNoSelectFormField(manager, "Изменить админа?", updateGroupAdmin);
+        fillGroupAdminQuestion.mute();
+        fillGroupAdminQuestion.run();
+
     }
 
-    public void run(String key) {
-        new IntegerFormField(manager, "id", this::setId, key).run();
+    public void create(String key) throws IncorrectValueException, FormInterruptException {
+        FormField.exited = false;
+        Messages.printStatement("Для прерывания введите ~gr/exit~=");
+        Messages.printStatement("~0bkЗаполнение стади группы...~=");
+        new IntegerFormField(manager, "id", this::setId, false, null, key).run();
         new StringFormField(manager, "name", this::setName).run();
-        new SelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters).run();
-        new SelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation).run();
-        new IntegerFormField(manager, "studentCount", this::setStudentsCount).run();
+        new DropdownSelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters).run();
+        new DropdownSelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation).run();
+        new IntegerFormField(manager, "studentCount", this::setStudentsCount, true, null, null).run();
 
         var coordinatesForm = new CoordinatesForm(manager);
-        Messages.printStatement("\n" + ConsoleColors.BLACK_BRIGHT +
-                "Заполнение coordinates..." + ConsoleColors.RESET);
-        coordinatesForm.run();
+        Messages.printStatement("%n~0bkЗаполнение coordinates...~=");
+        coordinatesForm.create();
         Coordinates coordinates = coordinatesForm.build();
         this.setCoordinates(coordinates);
 
         var personForm = new PersonForm(manager);
-        Messages.printStatement("\n" + ConsoleColors.BLACK_BRIGHT +
-                "Заполнение groupAdmin'а..." + ConsoleColors.RESET);
-        personForm.run();
+        Messages.printStatement("%n~0bkЗаполнение groupAdmin'а...~=");
+        personForm.create();
         Person person = personForm.build();
         this.setGroupAdmin(person);
+
     }
 
     public void setGroupAdmin(Person value) {
@@ -122,7 +156,7 @@ public class StudyGroupForm extends Form {
         this.builder.setSemesterEnum(value);
     }
 
-    public StudyGroup build() {
+    public StudyGroup build() throws IncorrectValueException {
         return this.builder.build();
     }
 }

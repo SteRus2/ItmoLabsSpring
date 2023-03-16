@@ -1,8 +1,9 @@
 package us.obviously.itmo.prog.commands;
 
 
-import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.console.Messages;
+import us.obviously.itmo.prog.exceptions.FormInterruptException;
+import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.exceptions.UsedKeyException;
 import us.obviously.itmo.prog.forms.StudyGroupForm;
 import us.obviously.itmo.prog.manager.Management;
@@ -23,15 +24,19 @@ public class InsertCommand extends AbstractCommand {
     public void execute(HashMap<String, String> args) {
         var studyGroupForm = new StudyGroupForm(this.manager);
         var key = args.get("key");
-        studyGroupForm.run(key);
-        StudyGroup studyGroup = studyGroupForm.build();
         try {
-            this.manager.getDataCollection().insertItem(studyGroup, studyGroup.getId());
-            Messages.printStatement(ConsoleColors.BLUE +
-                    "Новый studyGroup сохранён под id %s".formatted(studyGroup.getId()) +
-                    ConsoleColors.RESET);
-        } catch (UsedKeyException e) {
-            Messages.printStatement(ConsoleColors.RED + "Ошибка при сохранении: " + e.getMessage() + ConsoleColors.RESET);
+            studyGroupForm.create(key);
+            StudyGroup studyGroup = studyGroupForm.build();
+            try {
+                this.manager.getDataCollection().insertItem(studyGroup, studyGroup.getId());
+                Messages.printStatement("~blНовый studyGroup сохранён под id %s~=", studyGroup.getId());
+            } catch (UsedKeyException e) {
+                Messages.printStatement("~reОшибка при сохранении: " + e.getMessage() + "~=");
+            }
+        } catch (IncorrectValueException e) {
+            Messages.printStatement("~reЧто-то криво заполнили: " + e.getMessage() + "~=");
+        } catch (FormInterruptException e) {
+            Messages.printStatement("~blПрервано пользователем.~=");
         }
     }
 }

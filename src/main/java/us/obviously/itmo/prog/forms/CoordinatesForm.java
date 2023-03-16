@@ -1,20 +1,19 @@
 package us.obviously.itmo.prog.forms;
 
+import us.obviously.itmo.prog.exceptions.FormInterruptException;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.fields.FloatFormField;
+import us.obviously.itmo.prog.fields.LongFormField;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.Color;
-import us.obviously.itmo.prog.model.Country;
 import us.obviously.itmo.prog.model.Coordinates;
-import us.obviously.itmo.prog.validation.CoordinatesValidation;
 
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 
 public class CoordinatesForm extends Form {
     private final Coordinates.Builder builder;
     HashMap<String, SelectChoice<Color>> colors;
-    HashMap<String, SelectChoice<Country>> nationalities;
 
     public CoordinatesForm(Management manager) {
         super(manager);
@@ -22,10 +21,14 @@ public class CoordinatesForm extends Form {
         this.colors = new HashMap<>();
     }
 
-    @Override
-    public void run() {
+    public void update(Coordinates coordinates) throws FormInterruptException {
+        new LongFormField(manager, "x", this::setX, false, coordinates.getX(), null).run();
+        new FloatFormField(manager, "y", this::setY, true, coordinates.getY(), null).run();
+    }
+
+    public void create() throws FormInterruptException {
         new LongFormField(manager, "x", this::setX).run();
-        new FloatFormField(manager, "y", this::setY).run();
+        new FloatFormField(manager, "y", this::setY, true, null, null).run();
     }
 
     public void setX(Long value) throws IncorrectValueException {
@@ -39,7 +42,7 @@ public class CoordinatesForm extends Form {
         this.builder.setY(value);
     }
 
-    public Coordinates build() {
+    public Coordinates build() throws IncorrectValueException {
         return this.builder.build();
     }
 }

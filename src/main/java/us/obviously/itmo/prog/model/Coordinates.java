@@ -1,5 +1,8 @@
 package us.obviously.itmo.prog.model;
 
+import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.validation.CoordinatesValidation;
+
 public class Coordinates {
     private Long x; //Поле не может быть null
     private Float y; //Значение поля должно быть больше -373
@@ -50,7 +53,8 @@ public class Coordinates {
             return this;
         }
 
-        public Coordinates build() {
+        public Coordinates build() throws IncorrectValueException {
+            CoordinatesValidation.validate(Coordinates.this);
             return Coordinates.this;
         }
     }

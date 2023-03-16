@@ -1,6 +1,6 @@
 package us.obviously.itmo.prog;
 
-import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.ConsoleColor;
 import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.exceptions.CantFindFileException;
 import us.obviously.itmo.prog.exceptions.CantParseDataException;
@@ -15,6 +15,7 @@ import us.obviously.itmo.prog.reader.FileFormatReader;
 
 public class Main {
     public static void main(String[] args) {
+        ConsoleColor.initColors();
 
         if (args.length != 1) {
             Messages.printStatement("Программа принимает единственный обязательный аргумент - путь к файлу.");
@@ -25,11 +26,11 @@ public class Main {
             Management manager = new Manager<StudyGroup>(reader);
             manager.run();
         } catch (CantFindFileException e) {
-            Messages.printStatement(ConsoleColors.RED + "Файл не найден. Убедитесь в правильности пути и повторите попытку." + ConsoleColors.RESET);
+            Messages.printStatement("~reФайл не найден. Убедитесь в правильности пути и повторите попытку.~=");
         } catch (IncorrectValueException | IncorrectValuesTypeException e) {
-            Messages.printStatement(ConsoleColors.RED + "Невалидные данные. " + e.getMessage() + ConsoleColors.RESET);
+            Messages.printStatement("~reНевалидные данные. " + e.getMessage() + "~=");
         } catch (CantParseDataException e) {
-            Messages.printStatement(ConsoleColors.RED + "Файл нечитаем. " + e.getMessage() + ConsoleColors.RESET);
+            Messages.printStatement("~reФайл нечитаем. " + e.getMessage() + "~=");
         }
     }
 }

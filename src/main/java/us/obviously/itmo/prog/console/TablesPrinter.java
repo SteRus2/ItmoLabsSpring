@@ -18,10 +18,10 @@ public class TablesPrinter {
             StringBuilder builder1 = new StringBuilder();
             builder1.append("| ");
             var coordinates = "{ %d; %f }".formatted(group.getCoordinates().getX(), group.getCoordinates().getY());
-            var space1 = width - 4 - coordinates.length() + 22;
+            var space1 = width - 4 - coordinates.length() + 14;
             var title = (
-                    ConsoleColors.BLUE + "%s" + ConsoleColors.RESET + " "
-                            + ConsoleColors.YELLOW + "%s" + ConsoleColors.RESET)
+                    "~bl%s~=" + " "
+                            + ConsoleColors.YELLOW + "%s~=")
                     .formatted(group.getName(), group.getId());
             var left = ("%-" + space1 + "s").formatted(title);
             builder1.append(left).append(coordinates);
@@ -64,9 +64,7 @@ public class TablesPrinter {
 
     public static void printStudyGroups(List<StudyGroup> data) {
         HashMap<Integer, StudyGroup> map = new HashMap<>();
-        data.forEach((item) -> {
-            map.put(item.getId(), item);
-        });
+        data.forEach((item) -> map.put(item.getId(), item));
         printStudyGroups(map);
     }
 
@@ -79,6 +77,10 @@ public class TablesPrinter {
             line(builder, width);
         }));
         Messages.printStatement(builder.toString());
+    }
+
+    public static void printTableDelimiter() {
+        Messages.printStatement("%n~0bk~~~~~~~~=%n");
     }
 
     private static StringBuilder line(StringBuilder builder, Integer symbols) {

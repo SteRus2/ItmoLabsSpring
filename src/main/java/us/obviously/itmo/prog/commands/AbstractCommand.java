@@ -1,6 +1,5 @@
 package us.obviously.itmo.prog.commands;
 
-import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.exceptions.UnexpectedArgumentException;
 import us.obviously.itmo.prog.manager.Management;
 
@@ -21,8 +20,8 @@ public abstract class AbstractCommand {
         this.name = name;
         this.description = description;
         this.manager.addCommand(this);
-        this.parameters = new HashMap<String, Parameter>();
-        this.indexParameters = new ArrayList<Parameter>();
+        this.parameters = new HashMap<>();
+        this.indexParameters = new ArrayList<>();
     }
 
     public abstract void execute(HashMap<String, String> args) throws Exception;
@@ -40,19 +39,19 @@ public abstract class AbstractCommand {
     }
 
     final public String getDescription() {
-        return String.format("%-40s%s", this.name, this.description);
+        return String.format("~gr%-40s~=%s", this.name, this.description);
     }
 
     final public String getHelp() {
         var builder = new StringBuilder();
         builder.append(this.description).append("%n%n".formatted());
-        builder.append(this.name);
+        builder.append("~gr").append(this.name).append("~=");
         this.parameters.forEach((key, param) -> {
             builder.append(" ");
             if (param.required)
-                builder.append(param.name);
+                builder.append("~ye").append(param.name).append("~=");
             else
-                builder.append("[").append(param.name).append("]");
+                builder.append("~0bk").append("[").append(param.name).append("]").append("~=");
         });
         if (!this.parameters.isEmpty()) {
             builder.append("%n%n".formatted());
@@ -75,7 +74,7 @@ public abstract class AbstractCommand {
         if (givenCommandsNumber > maxCommandsNumber) {
             throw new UnexpectedArgumentException(("Команда \"%s\" ожидала не более %d параметров, " +
                     "передано %d. Введите " +
-                    ConsoleColors.GREEN + "help %s" + ConsoleColors.RESET +
+                    "~grhelp %s~=" +
                     " для просмотра возможных параметров.")
                     .formatted(this.name, maxCommandsNumber, givenCommandsNumber, this.name));
         }
@@ -83,7 +82,7 @@ public abstract class AbstractCommand {
         if (givenCommandsNumber < requiredCommandsNumber) {
             throw new UnexpectedArgumentException(("Команда \"%s\" ожидала %d обязательных параметров, " +
                     "передано %d. Введите " +
-                    ConsoleColors.GREEN + "help %s" + ConsoleColors.RESET +
+                    "~grhelp %s~=" +
                     " для просмотра возможных параметров.")
                     .formatted(this.name, maxCommandsNumber, givenCommandsNumber, this.name));
         }

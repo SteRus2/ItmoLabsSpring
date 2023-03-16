@@ -1,13 +1,11 @@
 package us.obviously.itmo.prog;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import us.obviously.itmo.prog.exceptions.*;
 import us.obviously.itmo.prog.model.Person;
 import us.obviously.itmo.prog.model.Semester;
 import us.obviously.itmo.prog.model.StudyGroup;
 import us.obviously.itmo.prog.reader.DataReader;
 
-import java.io.IOException;
 import java.util.*;
 
 /**

@@ -6,7 +6,6 @@ import us.obviously.itmo.prog.exceptions.CantWriteDataException;
 import us.obviously.itmo.prog.exceptions.FailedToDumpsEx;
 import us.obviously.itmo.prog.manager.Management;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 public class SaveCommand extends AbstractCommand {
@@ -24,7 +23,7 @@ public class SaveCommand extends AbstractCommand {
     public void execute(HashMap<String, String> args) {
         try {
             this.manager.save();
-            Messages.printStatement(ConsoleColors.GREEN + "Успешно сохранено!" + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.GREEN + "Успешно сохранено!~=");
         } catch (FailedToDumpsEx | CantWriteDataException e) {
             Messages.printStatement("Ошибка при сохранении: " + e.getMessage());
         }

@@ -1,13 +1,12 @@
 package us.obviously.itmo.prog.commands;
 
-import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
 import us.obviously.itmo.prog.console.TablesPrinter;
-import us.obviously.itmo.prog.exceptions.UsedKeyException;
+import us.obviously.itmo.prog.exceptions.FormInterruptException;
+import us.obviously.itmo.prog.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.forms.PersonForm;
-import us.obviously.itmo.prog.forms.StudyGroupForm;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.Person;
-import us.obviously.itmo.prog.model.StudyGroup;
 
 import java.util.HashMap;
 
@@ -23,10 +22,16 @@ public class FilterGreaterThanGroupAdminCommand extends AbstractCommand {
     public void execute(HashMap<String, String> args) {
 
         var personForm = new PersonForm(this.manager);
-        personForm.run();
-        Person person = personForm.build();
-        var res = this.manager.getDataCollection().filterGreaterThanGroupAdmin(person);
-        TablesPrinter.printStudyGroups(res);
+        try {
+            personForm.create();
+            Person person = personForm.build();
+            var res = this.manager.getDataCollection().filterGreaterThanGroupAdmin(person);
+            TablesPrinter.printStudyGroups(res);
+        } catch (IncorrectValueException e) {
+            Messages.printStatement("~reЧто-то криво заполнили: " + e.getMessage() + "~=");
+        }  catch (FormInterruptException e) {
+            Messages.printStatement("~blПрервано пользователем.~=");
+        }
     }
 }
 

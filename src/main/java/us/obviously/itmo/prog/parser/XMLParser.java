@@ -15,7 +15,10 @@ import us.obviously.itmo.prog.validation.StudyGroupValidation;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * {@inheritDoc}

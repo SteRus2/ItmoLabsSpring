@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.validation.StudyGroupValidation;
 
 import java.util.Date;
 import java.util.Objects;
@@ -173,8 +175,9 @@ public class StudyGroup implements Comparable {
             return this;
         }
 
-        public StudyGroup build() {
+        public StudyGroup build() throws IncorrectValueException {
             StudyGroup.this.creationDate = new Date();
+            StudyGroupValidation.validate(StudyGroup.this);
             return StudyGroup.this;
         }
     }

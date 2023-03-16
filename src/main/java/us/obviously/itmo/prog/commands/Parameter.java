@@ -12,6 +12,9 @@ public class Parameter {
     }
 
     public String getHelp() {
-        return String.format("\t%s - %s", this.name, this.description);
+        if (required) {
+            return String.format("\t~ye%s~= - %s", this.name, this.description);
+        }
+        return String.format("\t~0bk%s~= - %s", this.name, this.description);
     }
 }

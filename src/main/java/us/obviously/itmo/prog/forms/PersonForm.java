@@ -1,6 +1,11 @@
 package us.obviously.itmo.prog.forms;
 
+import us.obviously.itmo.prog.console.ConsoleColors;
+import us.obviously.itmo.prog.console.Messages;
+import us.obviously.itmo.prog.console.TablesPrinter;
+import us.obviously.itmo.prog.exceptions.FormInterruptException;
 import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.fields.*;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.Color;
 import us.obviously.itmo.prog.model.Country;
@@ -11,7 +16,7 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 
-public class PersonForm extends Form {
+public class PersonForm extends Form<Person> {
     private final Person.Builder builder;
     HashMap<String, SelectChoice<Color>> colors;
     HashMap<String, SelectChoice<Country>> nationalities;
@@ -38,13 +43,52 @@ public class PersonForm extends Form {
         this.nationalities.put("5", new SelectChoice<>(Country.VATICAN.name, Country.VATICAN));
     }
 
-    @Override
-    public void run() {
+    public void update(Person person) throws FormInterruptException {
+        new StringFormField(manager, "name", this::setName, false, person.getName(), null).run();
+
+        FormField.Callback<CommonAnswer> updateCoordinates = (CommonAnswer answer) -> {
+            if (answer == CommonAnswer.YES) {
+                Messages.printStatement("\n" + ConsoleColors.BLACK_BRIGHT +
+                        "Заполнение birthday'а...~=");
+                var dateForm = new DateForm(manager);
+                dateForm.create();
+                try {
+                    this.setBirthday(dateForm.build());
+                } catch (IncorrectValueException e) {
+                    Messages.printStatement(e.getMessage());
+                }
+            } else {
+                this.setBirthday(person.getBirthday());
+            }
+        };
+
+        TablesPrinter.printTableDelimiter();
+
+        var fillCoordinatesQuestion = new YesNoSelectFormField(manager, "Изменить дату рождения?", updateCoordinates);
+        fillCoordinatesQuestion.mute();
+        fillCoordinatesQuestion.run();
+
+        new DropdownSelectFormField<>(manager, "hairColor", this::setHairColor, this.colors).run();
+        new DropdownSelectFormField<>(manager, "eyeColor", this::setEyeColor, this.colors).run();
+        new DropdownSelectFormField<>(manager, "nationality", this::setNationality, this.nationalities).run();
+    }
+
+    public void create() throws FormInterruptException {
         new StringFormField(manager, "name", this::setName).run();
-        new DateFormField(manager, "birthday", this::setBirthday).run();
-        new SelectFormField<>(manager, "hairColor", this::setHairColor, this.colors).run();
-        new SelectFormField<>(manager, "eyeColor", this::setEyeColor, this.colors).run();
-        new SelectFormField<>(manager, "nationality", this::setNationality, this.nationalities).run();
+
+        Messages.printStatement("\n" + ConsoleColors.BLACK_BRIGHT +
+                "Заполнение birthday'а...~=");
+        var dateForm = new DateForm(manager);
+        dateForm.create();
+        try {
+            this.setBirthday(dateForm.build());
+        } catch (IncorrectValueException e) {
+            Messages.printStatement(e.getMessage());
+        }
+
+        new DropdownSelectFormField<>(manager, "hairColor", this::setHairColor, this.colors).run();
+        new DropdownSelectFormField<>(manager, "eyeColor", this::setEyeColor, this.colors).run();
+        new DropdownSelectFormField<>(manager, "nationality", this::setNationality, this.nationalities).run();
     }
 
     public void setName(String value) throws IncorrectValueException {
@@ -73,7 +117,7 @@ public class PersonForm extends Form {
         this.builder.setNationality(value);
     }
 
-    public Person build() {
+    public Person build() throws IncorrectValueException {
         return this.builder.build();
     }
 }

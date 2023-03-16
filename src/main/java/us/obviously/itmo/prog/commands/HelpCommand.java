@@ -27,7 +27,7 @@ public class HelpCommand extends AbstractCommand {
         var command = this.manager.getCommand(commandName);
         if (command == null) {
             return ("В качестве аргумента передано недействительное значение. \"%s\" не является командой. Введите " +
-                    ConsoleColors.GREEN + "help" + ConsoleColors.RESET +
+                    ConsoleColors.GREEN + "help~=" +
                     " для просмотра всех возможных команд. %n").formatted(commandName);
         } else
             return command.getHelp();
@@ -35,7 +35,7 @@ public class HelpCommand extends AbstractCommand {
 
     private String commonHelp() {
         var builder = new StringBuilder();
-        builder.append("Для получения сведений об определенной команде наберите help <имя команды>%n".formatted());
+        builder.append("Для получения сведений об определенной команде наберите ~grhelp <имя команды>~=%n".formatted());
         this.manager.getCommands().forEach((command) -> {
             builder.append(command.getDescription()).append("%n".formatted());
         });

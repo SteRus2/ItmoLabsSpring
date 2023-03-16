@@ -22,8 +22,8 @@ public class RemoveGreaterKeyCommand extends AbstractCommand {
             var key = Integer.parseInt(rawKey);
             this.manager.getDataCollection().removeGreaterKey(key);
             Messages.printStatement("Все элементы с ключом большим, чем %s, были удалены. ".formatted(key) +
-                            "Введите " + ConsoleColors.GREEN + "show" + ConsoleColors.RESET + ", чтобы просмотреть. \n" +
-                    "Введите " + ConsoleColors.GREEN + "save" + ConsoleColors.RESET + ", чтобы сохранить изменения.");
+                            "Введите " + ConsoleColors.GREEN + "show~=" + ", чтобы просмотреть. \n" +
+                    "Введите " + ConsoleColors.GREEN + "save~=" + ", чтобы сохранить изменения.");
         } catch (NumberFormatException e) {
             Messages.printStatement("Не получается чето");
         }

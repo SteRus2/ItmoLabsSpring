@@ -27,7 +27,7 @@ public class RemoveKeyCommand extends AbstractCommand {
         } catch (NumberFormatException e) {
             Messages.print("Ключ должен быть представлен натуральным числом.%n");
         } catch (NoSuchIdException e) {
-            Messages.printStatement(ConsoleColors.RED + e + ConsoleColors.RESET);
+            Messages.printStatement(ConsoleColors.RED + e + "~=");
         }
     }
 }

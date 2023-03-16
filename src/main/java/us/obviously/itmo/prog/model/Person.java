@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import us.obviously.itmo.prog.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.validation.PersonValidation;
 
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -102,7 +104,8 @@ public class Person implements Comparable {
             return this;
         }
 
-        public Person build() {
+        public Person build() throws IncorrectValueException {
+            PersonValidation.validate(Person.this);
             return Person.this;
         }
     }
