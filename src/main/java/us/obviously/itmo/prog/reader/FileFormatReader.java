@@ -60,7 +60,7 @@ public class FileFormatReader extends FileReader {
         }
         mainString = String.join("", strings);
         if (mainString.trim().equals("")){
-            mainString = "<StudyGroups></Syt>";
+            mainString = baseString;
         }
         return parser.loads(mainString);
     }
