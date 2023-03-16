@@ -24,7 +24,7 @@ public class Manager<T> implements Management {
     private Scanner fileScanner;
     private Boolean active;
 
-    public Manager(DataReader reader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException {
+    public Manager(DataReader reader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
         this.dataCollection = new DataCollection(reader);
         this.scanner = new Scanner(System.in);
 
