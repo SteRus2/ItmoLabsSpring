@@ -8,6 +8,9 @@ import us.obviously.itmo.prog.manager.Management;
 import java.time.ZonedDateTime;
 
 
+/**
+ * Форма Даты
+ */
 public class DateForm extends Form<ZonedDateTime> {
     Integer year = null;
     Integer month = null;
@@ -20,6 +23,10 @@ public class DateForm extends Form<ZonedDateTime> {
         super(manager);
     }
 
+
+    /**
+     * Форма создания новой Даты
+     */
     public void create() {
         try {
             new IntegerFormField(manager, "year", this::setYear).run();
@@ -31,6 +38,11 @@ public class DateForm extends Form<ZonedDateTime> {
         }
     }
 
+    /**
+     * Валидация года и сохранение в переменную
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setYear(Integer value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле year не может быть null.");
         if (value > 2023) throw new IncorrectValueException("Нельзя было родиться после этого года.");
@@ -38,6 +50,11 @@ public class DateForm extends Form<ZonedDateTime> {
         this.year = value;
     }
 
+    /**
+     * Валидация месяця и сохранение в переменную
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setMonth(Integer value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле month не может быть null.");
         if (value > 12) throw new IncorrectValueException("В году двенадцать месяцев.");
@@ -45,6 +62,11 @@ public class DateForm extends Form<ZonedDateTime> {
         this.month = value;
     }
 
+    /**
+     * Валидация дня и сохранение в переменную
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setDay(Integer value) throws IncorrectValueException {
         assert year != null && month != null;
         Integer maxDays = days[month - 1];
@@ -55,6 +77,11 @@ public class DateForm extends Form<ZonedDateTime> {
         this.day = value;
     }
 
+    /**
+     * Валидация часов и сохранение в переменную
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setHours(Integer value) throws IncorrectValueException {
         if (value == null) {
             this.hours = 0;
@@ -65,6 +92,11 @@ public class DateForm extends Form<ZonedDateTime> {
         this.hours = value;
     }
 
+    /**
+     * Валидация минут и сохранение в переменную
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setMinutes(Integer value) throws IncorrectValueException {
         if (value == null) {
             this.minutes = 0;
@@ -75,7 +107,11 @@ public class DateForm extends Form<ZonedDateTime> {
         this.minutes = value;
     }
 
-
+    /**
+     * Валидация готовой формы и сборка новой Даты
+     *
+     * @return Готовая Дата
+     */
     public ZonedDateTime build() {
         return ZonedDateTime.parse("%04d-%02d-%02dT00:00:00+%02d:%02d".formatted(year, month, day, hours, minutes));
     }

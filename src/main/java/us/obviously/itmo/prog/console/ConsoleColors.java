@@ -1,5 +1,12 @@
 package us.obviously.itmo.prog.console;
 
+/**
+ * Класс для подстановки цветов в вывод.
+ *
+ * @see ConsoleColor
+ * @deprecated
+ */
+@Deprecated
 public class ConsoleColors {
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset

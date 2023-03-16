@@ -11,6 +11,9 @@ import us.obviously.itmo.prog.validation.StudyGroupValidation;
 
 import java.util.HashMap;
 
+/**
+ * Форма Учебной Группы
+ */
 public class StudyGroupForm extends Form<StudyGroup> {
 
     StudyGroup value;
@@ -41,6 +44,11 @@ public class StudyGroupForm extends Form<StudyGroup> {
         this(manager, new StudyGroup());
     }
 
+    /**
+     * Форма обновления Учебный Группы
+     *
+     * @throws FormInterruptException Выбросит исключение, если пользователь введёт команду прерывания заполнения формы
+     */
     public void update(StudyGroup group) throws FormInterruptException {
         new IntegerFormField(manager, "id", this::findId, false, group.getId(), null).run();
         new StringFormField(manager, "name", this::setName, false, group.getName(), null).run();
@@ -87,6 +95,11 @@ public class StudyGroupForm extends Form<StudyGroup> {
 
     }
 
+    /**
+     * Форма создания новой Учебной Группы
+     *
+     * @throws FormInterruptException Выбросит исключение, если пользователь введёт команду прерывания заполнения формы
+     */
     public void create(String key) throws IncorrectValueException, FormInterruptException {
         FormField.exited = false;
         Messages.printStatement("Для прерывания введите ~gr/exit~=");
@@ -111,11 +124,18 @@ public class StudyGroupForm extends Form<StudyGroup> {
 
     }
 
+    /**
+     * Валидация администратора и обновление билдера
+     */
     public void setGroupAdmin(Person value) {
         this.builder.setGroupAdmin(value);
     }
 
-
+    /**
+     * Проверка существует ли группы для обновления
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void findId(Integer value) throws IncorrectValueException {
         StudyGroupValidation.validateId(value);
         Integer id = this.value.getId();
@@ -124,6 +144,11 @@ public class StudyGroupForm extends Form<StudyGroup> {
         this.builder.setId(value);
     }
 
+    /**
+     * Валидация id и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setId(Integer value) throws IncorrectValueException {
         StudyGroupValidation.validateId(value);
         Integer id = this.value.getId();
@@ -132,30 +157,59 @@ public class StudyGroupForm extends Form<StudyGroup> {
         this.builder.setId(value);
     }
 
+    /**
+     * Валидация имени и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setName(String value) throws IncorrectValueException {
         StudyGroupValidation.validateName(value);
         this.builder.setName(value);
     }
 
+    /**
+     * Валидация координат и обновление билдера
+     */
     public void setCoordinates(Coordinates coordinates) {
         this.builder.setCoordinates(coordinates);
     }
 
+    /**
+     * Валидация количества студентов и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setStudentsCount(Integer value) throws IncorrectValueException {
         StudyGroupValidation.validateStudentsCount(value);
         this.builder.setStudentsCount(value);
     }
 
+    /**
+     * Валидация формы обучение и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setFormOfEducation(FormOfEducation value) throws IncorrectValueException {
         StudyGroupValidation.validateFormOfEducation(value);
         this.builder.setFormOfEducation(value);
     }
 
+    /**
+     * Валидация семестра и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setSemesterEnum(Semester value) throws IncorrectValueException {
         StudyGroupValidation.validateSemesterEnum(value);
         this.builder.setSemesterEnum(value);
     }
 
+    /**
+     * Валидация готовой формы и сборка новой Учебной Группы
+     *
+     * @return Готовая Группа
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public StudyGroup build() throws IncorrectValueException {
         return this.builder.build();
     }

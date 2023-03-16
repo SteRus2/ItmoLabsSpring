@@ -8,6 +8,9 @@ import us.obviously.itmo.prog.manager.Management;
 
 import java.util.HashMap;
 
+/**
+ * Команда для удаления элемента из коллекции по ключу
+ */
 public class RemoveKeyCommand extends AbstractCommand {
     public RemoveKeyCommand(Management manager) {
         super(manager, "remove_key", "Удалить элемент из коллекции по его ключу");
@@ -15,7 +18,7 @@ public class RemoveKeyCommand extends AbstractCommand {
     }
 
     /**
-     *
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {

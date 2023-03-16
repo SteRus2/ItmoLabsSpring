@@ -11,6 +11,9 @@ import us.obviously.itmo.prog.model.StudyGroup;
 
 import java.util.HashMap;
 
+/**
+ * Команда для добавления нового элемента с заданным ключом
+ */
 public class InsertCommand extends AbstractCommand {
     public InsertCommand(Management manager) {
         super(manager, "insert", "Добавить новый элемент с заданным ключом");
@@ -18,7 +21,7 @@ public class InsertCommand extends AbstractCommand {
     }
 
     /**
-     *
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {

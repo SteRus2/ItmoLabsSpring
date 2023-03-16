@@ -12,6 +12,9 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 
+/**
+ * @param <T>
+ */
 public class Manager<T> implements Management {
     private final Scanner scanner;
     private final DataCollection dataCollection;
@@ -45,11 +48,19 @@ public class Manager<T> implements Management {
         new PrintFieldAscendingSemesterEnumCommand(this);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public Scanner getScanner() {
         if (this.fileScanner != null && this.fileScanner.hasNextLine()) return this.fileScanner;
         return this.scanner;
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public String nextChar() {
         if (this.fileScanner != null && this.fileScanner.hasNext()) {
             String line = this.fileScanner.next();
@@ -59,6 +70,10 @@ public class Manager<T> implements Management {
         return this.scanner.next();
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
     public String nextLine() {
         if (this.fileScanner != null && this.fileScanner.hasNextLine()) {
             String line = this.fileScanner.nextLine();
@@ -69,6 +84,10 @@ public class Manager<T> implements Management {
         return this.scanner.nextLine();
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
     public void run() {
         this.active = true;
         while (this.active) {
@@ -76,20 +95,17 @@ public class Manager<T> implements Management {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
     public void stop() {
         this.active = false;
     }
 
-    /**
-     *
-     */
-    @Override
-    public void save() throws FailedToDumpsEx, CantWriteDataException {
-        this.dataCollection.saveData();
-    }
 
     /**
-     * @param filepath
+     * @inheritDoc
      */
     @Override
     public void executeScript(String filepath) throws FileNotFoundException, RecurrentExecuteScripts {
@@ -100,35 +116,36 @@ public class Manager<T> implements Management {
         this.loadedScripts.add(filepath);
     }
 
-    private void semanticError() {
-    }
-
+    /**
+     * @inheritDoc
+     */
     @Override
     public void addCommand(AbstractCommand abstractCommand) {
         this.commands.put(abstractCommand.getKey(), abstractCommand);
         this.commandsList.add(abstractCommand);
     }
 
+
     /**
-     * @param id
-     * @return
+     * @inheritDoc
      */
     @Override
     public boolean isIdExists(Integer id) {
         return dataCollection.getData().get(id) != null;
     }
 
+
     /**
-     * @return
+     * @inheritDoc
      */
     @Override
     public List<AbstractCommand> getCommands() {
         return this.commandsList;
     }
 
+
     /**
-     * @param key
-     * @return
+     * @inheritDoc
      */
     @Override
     public AbstractCommand getCommand(String key) {
@@ -147,15 +164,10 @@ public class Manager<T> implements Management {
         }
         if (command == null) {
             if (commandName.equals("")) {
-                Messages.print("Введите " +
-                        ConsoleColors.GREEN + "help~=" +
-                        " для просмотра текущих команд.%n");
+                Messages.print("Введите " + ConsoleColors.GREEN + "help~=" + " для просмотра текущих команд.%n");
             } else {
-                Messages.print("\"%s\" не является командой. Введите " +
-                        ConsoleColors.GREEN + "help~=" +
-                        " для просмотра текущих команд.%n", commandName);
+                Messages.print("\"%s\" не является командой. Введите " + ConsoleColors.GREEN + "help~=" + " для просмотра текущих команд.%n", commandName);
             }
-            this.semanticError();
             return false;
         }
         try {
@@ -169,6 +181,10 @@ public class Manager<T> implements Management {
         return false;
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
     public DataCollection getDataCollection() {
         return dataCollection;
     }

@@ -6,6 +6,9 @@ import us.obviously.itmo.prog.manager.Management;
 
 import java.util.HashMap;
 
+/**
+ * Команда для удаления из коллекции всех элементов, ключ которых меньше заданного
+ */
 public class RemoveLowerKeyCommand extends AbstractCommand {
     public RemoveLowerKeyCommand(Management manager) {
         super(manager, "remove_lower_key", "Удалить из коллекции все элементы, ключ которых меньше, чем заданный");
@@ -13,7 +16,7 @@ public class RemoveLowerKeyCommand extends AbstractCommand {
     }
 
     /**
-     * TODO: FILL
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {

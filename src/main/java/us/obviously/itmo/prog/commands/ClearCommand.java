@@ -5,6 +5,9 @@ import us.obviously.itmo.prog.manager.Management;
 
 import java.util.HashMap;
 
+/**
+ * Команда для очистки коллекции
+ */
 public class ClearCommand extends AbstractCommand {
     public ClearCommand(Management manager) {
         super(manager, "clear", "Очистить коллекцию");
@@ -12,7 +15,7 @@ public class ClearCommand extends AbstractCommand {
     }
 
     /**
-     * TODO: FILL
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {

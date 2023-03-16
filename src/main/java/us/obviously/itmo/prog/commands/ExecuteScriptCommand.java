@@ -8,6 +8,9 @@ import us.obviously.itmo.prog.manager.Management;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 
+/**
+ * Команда для исполнения скрипта
+ */
 public class ExecuteScriptCommand extends AbstractCommand {
 
     public ExecuteScriptCommand(Management manager) {
@@ -16,7 +19,7 @@ public class ExecuteScriptCommand extends AbstractCommand {
     }
 
     /**
-     * TODO: FILL
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {

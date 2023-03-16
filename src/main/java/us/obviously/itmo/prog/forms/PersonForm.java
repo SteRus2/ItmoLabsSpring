@@ -16,9 +16,18 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 
+/**
+ * Форма Персоналии
+ */
 public class PersonForm extends Form<Person> {
     private final Person.Builder builder;
+    /**
+     * Элементы меню выбора цветов
+     */
     HashMap<String, SelectChoice<Color>> colors;
+    /**
+     * Элементы меню выбора национальностей
+     */
     HashMap<String, SelectChoice<Country>> nationalities;
 
     public PersonForm(Management manager) {
@@ -43,6 +52,11 @@ public class PersonForm extends Form<Person> {
         this.nationalities.put("5", new SelectChoice<>(Country.VATICAN.name, Country.VATICAN));
     }
 
+    /**
+     * Форма обновления Персоналии <b>person</b>
+     *
+     * @throws FormInterruptException Выбросит исключение, если пользователь введёт команду прерывания заполнения формы
+     */
     public void update(Person person) throws FormInterruptException {
         new StringFormField(manager, "name", this::setName, false, person.getName(), null).run();
 
@@ -73,6 +87,12 @@ public class PersonForm extends Form<Person> {
         new DropdownSelectFormField<>(manager, "nationality", this::setNationality, this.nationalities).run();
     }
 
+
+    /**
+     * Форма создания новой Персоналии
+     *
+     * @throws FormInterruptException Выбросит исключение, если пользователь введёт команду прерывания заполнения формы
+     */
     public void create() throws FormInterruptException {
         new StringFormField(manager, "name", this::setName).run();
 
@@ -91,32 +111,65 @@ public class PersonForm extends Form<Person> {
         new DropdownSelectFormField<>(manager, "nationality", this::setNationality, this.nationalities).run();
     }
 
+    /**
+     * Валидация имени и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setName(String value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле name не может быть null.");
         if (value.equals("")) throw new IncorrectValueException("Поле name не может быть пустым.");
         this.builder.setName(value);
     }
 
+
+    /**
+     * Валидация дня рождения и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setBirthday(ZonedDateTime value) throws IncorrectValueException {
         PersonValidation.validateBirthday(value);
         this.builder.setBirthday(value);
     }
 
+
+    /**
+     * Валидация цвета глаз и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setEyeColor(Color value) throws IncorrectValueException {
         PersonValidation.validateEyeColor(value);
         this.builder.setEyeColor(value);
     }
 
+    /**
+     * Валидация цвета волос и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setHairColor(Color value) throws IncorrectValueException {
         PersonValidation.validateHairColor(value);
         this.builder.setEyeColor(value);
     }
 
+    /**
+     * Валидация национальности и обновление билдера
+     *
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public void setNationality(Country value) throws IncorrectValueException {
         PersonValidation.validateNationality(value);
         this.builder.setNationality(value);
     }
 
+    /**
+     * Валидация готовой формы и сборка новой Персоналии
+     *
+     * @return Готовая Персоналия
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public Person build() throws IncorrectValueException {
         return this.builder.build();
     }

@@ -18,6 +18,9 @@ public class StudyGroupValidation {
      *
      * @param studyGroups Список Групп
      * @throws IncorrectValueException Выбросит исключение, если список не прошёл валидацию
+     *
+     * @see StudyGroupValidation#validate(StudyGroup)
+     * @see StudyGroupValidation#validateIdUnique(List)
      */
     public static void validateList(List<StudyGroup> studyGroups) throws IncorrectValueException {
         for (StudyGroup studyGroup : studyGroups) {
@@ -64,6 +67,8 @@ public class StudyGroupValidation {
      *
      * @param value Проверяемое значение id
      * @throws IncorrectValueException Выбросит исключение, если значение невалидно
+     *
+     * @see StudyGroupValidation#validateIdUnique(List)
      */
     public static void validateId(Integer value) throws IncorrectValueException {
         if (value == null) throw new IncorrectValueException("Поле id не может быть null.");

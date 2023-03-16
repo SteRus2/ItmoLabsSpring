@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Команда для взаимодействия пользователя с программой
+ */
 public abstract class AbstractCommand {
     Management manager;
     String name;
@@ -25,6 +28,11 @@ public abstract class AbstractCommand {
         this.indexParameters = new ArrayList<>();
     }
 
+    /**
+     * Вызов команды, которая получает на вход мапу аргументов
+     *
+     * @param args Аргументы, не провалидированные
+     */
     public abstract void execute(HashMap<String, String> args);
 
     final public void addParameter(String name, String description, Boolean required) {

@@ -13,6 +13,9 @@ import us.obviously.itmo.prog.model.StudyGroup;
 
 import java.util.HashMap;
 
+/**
+ * Команда обновления группы по id
+ */
 public class UpdateCommand extends AbstractCommand {
     public UpdateCommand(Management manager) {
         super(manager, "update", "обновить значение элемента коллекции, id которого равен заданному");
@@ -20,7 +23,7 @@ public class UpdateCommand extends AbstractCommand {
     }
 
     /**
-     *
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {

@@ -6,6 +6,9 @@ import us.obviously.itmo.prog.manager.Management;
 
 import java.util.HashMap;
 
+/**
+ * Команда для вывода справки по всем доступным командам
+ */
 public class HelpCommand extends AbstractCommand {
 
     public HelpCommand(Management manager) {
@@ -13,6 +16,9 @@ public class HelpCommand extends AbstractCommand {
         addParameter("command", "помощь по конкретной команде", false);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void execute(HashMap<String, String> args) {
         var commandName = args.get("command");

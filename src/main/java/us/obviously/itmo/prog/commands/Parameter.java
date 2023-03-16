@@ -1,5 +1,8 @@
 package us.obviously.itmo.prog.commands;
 
+/**
+ * Нумерованный параметр команды
+ */
 public class Parameter {
     String name;
     String description;
@@ -11,6 +14,11 @@ public class Parameter {
         this.required = required;
     }
 
+    /**
+     * @return Строка с описанием для списка всех команд
+     *
+     * @see HelpCommand
+     */
     public String getHelp() {
         if (required) {
             return String.format("\t~ye%s~= - %s", this.name, this.description);

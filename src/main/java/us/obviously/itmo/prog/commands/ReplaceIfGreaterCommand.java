@@ -13,6 +13,9 @@ import us.obviously.itmo.prog.model.StudyGroup;
 
 import java.util.HashMap;
 
+/**
+ * Команда для обновления по id, но только если новое значение больше старого
+ */
 public class ReplaceIfGreaterCommand extends AbstractCommand {
     public ReplaceIfGreaterCommand(Management manager) {
         super(manager, "replace_if_greater", "Заменить значение по ключу, если новое значение больше старого");
@@ -21,7 +24,7 @@ public class ReplaceIfGreaterCommand extends AbstractCommand {
     }
 
     /**
-     * TODO: FILL
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {

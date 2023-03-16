@@ -4,12 +4,18 @@ import us.obviously.itmo.prog.exceptions.InvalidArgumentException;
 import us.obviously.itmo.prog.manager.Management;
 import us.obviously.itmo.prog.model.StudyGroup;
 
+/**
+ * Проверка, что ключ, введённый пользователь, является id некоторой группы
+ */
 public class ExistingStudyGroupKeyArgumentValidator extends AbstractArgumentValidator<String, StudyGroup> {
 
     public ExistingStudyGroupKeyArgumentValidator(Management manager) {
         super(manager);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public StudyGroup validate(String value) throws InvalidArgumentException {
         try {

@@ -6,7 +6,13 @@ import us.obviously.itmo.prog.model.StudyGroup;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Класс для вывода графики
+ */
 public class TablesPrinter {
+    /**
+     * Вывод всех групп в виде таблицы
+     */
     public static void printStudyGroups(HashMap<Integer, StudyGroup> data) {
 
         int width = 100;
@@ -62,12 +68,18 @@ public class TablesPrinter {
         Messages.printStatement(builder.toString());
     }
 
+    /**
+     * Вывод всех групп в виде таблицы
+     */
     public static void printStudyGroups(List<StudyGroup> data) {
         HashMap<Integer, StudyGroup> map = new HashMap<>();
         data.forEach((item) -> map.put(item.getId(), item));
         printStudyGroups(map);
     }
 
+    /**
+     * Вывод таблицы семестров
+     */
     public static void printSemesters(List<Semester> semesters) {
         int width = 70;
         var builder = new StringBuilder();
@@ -79,10 +91,19 @@ public class TablesPrinter {
         Messages.printStatement(builder.toString());
     }
 
+    /**
+     * Вывод разделителя между формами
+     */
     public static void printTableDelimiter() {
         Messages.printStatement("%n~0bk~~~~~~~~=%n");
     }
 
+    /**
+     * Добавление разделительной горизонтальной линии в <b>builder</b>
+     *
+     * @param symbols Ширина линии в символах
+     * @return Тот же builder, для сохранения chain-ов
+     */
     private static StringBuilder line(StringBuilder builder, Integer symbols) {
         if (symbols == 0) return builder.append("%n".formatted());
         if (symbols > 1) {

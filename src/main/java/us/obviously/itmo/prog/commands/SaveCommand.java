@@ -8,21 +8,21 @@ import us.obviously.itmo.prog.manager.Management;
 
 import java.util.HashMap;
 
+/**
+ * Команда для сохранения текущей коллекции в файл
+ */
 public class SaveCommand extends AbstractCommand {
-    /**
-     * @param manager
-     */
     public SaveCommand(Management manager) {
         super(manager, "save", "Сохранить коллекцию в файл");
     }
 
     /**
-     * @param args
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {
         try {
-            this.manager.save();
+            this.manager.getDataCollection().saveData();
             Messages.printStatement(ConsoleColors.GREEN + "Успешно сохранено!~=");
         } catch (FailedToDumpsEx | CantWriteDataException e) {
             Messages.printStatement("Ошибка при сохранении: " + e.getMessage());

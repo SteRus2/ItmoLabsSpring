@@ -10,28 +10,63 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Интерфейс описывает методы взаимодействия с пользователем
+ */
 public interface Management {
+    /**
+     * Запуск цикла Менджера
+     */
     void run();
 
+    /**
+     * Остановка цикла Менджера
+     */
     void stop();
 
-    void save() throws FailedToDumpsEx, CantWriteDataException;
+    /**
+     * Вызов скрипта из файла <b>filepath</b>
+     *
+     * @param filepath Путь к файлу
+     * @throws FileNotFoundException Выбросит исключение, если файл не найден
+     * @throws RecurrentExecuteScripts Выбросит исключение, если произошла рекурсия вызовов
+     */
+    void executeScript(String filepath) throws FileNotFoundException, RecurrentExecuteScripts;
 
-    void executeScript(String fileName) throws FileNotFoundException, RecurrentExecuteScripts;
-
+    /**
+     * Добавить команду <b>abastractCommand</b> в мапу возможных команд
+     *
+     * @param abstractCommand Исполняемая команда
+     */
     void addCommand(AbstractCommand abstractCommand);
 
+    /**
+     * Проверка существования элемента с переданным <b>id</b>
+     *
+     * @param id Проверяемое id
+     * @return <b>true</b> - элемент с данным id существует
+     */
     boolean isIdExists(Integer id);
 
-    Scanner getScanner();
-
+    /**
+     * @return Получить следующую введённую строку
+     */
     String nextLine();
 
-    String nextChar();
-
+    /**
+     * @return Список всех используемых команда
+     */
     List<AbstractCommand> getCommands();
 
+    /**
+     * Получить команду по ключу <b>key</b>
+     */
     AbstractCommand getCommand(String key);
 
+    /**
+     * @return Класс для работы с коллекцией групп
+     *
+     * @see DataCollection
+     */
     DataCollection getDataCollection();
 }

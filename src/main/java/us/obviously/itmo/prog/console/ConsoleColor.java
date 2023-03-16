@@ -3,9 +3,25 @@ package us.obviously.itmo.prog.console;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс для удобного цветового форматирования текста
+ */
 public class ConsoleColor {
     private static final List<ConsoleColor> colors = new ArrayList<>();
+    final String name;
+    final String code;
+    final String regex;
 
+    public ConsoleColor(String name, String code, String regex) {
+        this.name = name;
+        this.code = code;
+        this.regex = regex;
+        ConsoleColor.colors.add(this);
+    }
+
+    /**
+     * Вызывается один раз в Main для инициализации списка всех цветов
+     */
     static public void initColors() {
         new ConsoleColor("RESET", "\033[0m", "=");
 
@@ -80,20 +96,11 @@ public class ConsoleColor {
         new ConsoleColor("WHITE_BACKGROUND_BRIGHT", "\033[0;107m", "0WH");
     }
 
-
+    /**
+     * @return Список всех цветов
+     */
     static List<ConsoleColor> getColors() {
         return colors;
-    }
-
-    final String name;
-    final String code;
-    final String regex;
-
-    public ConsoleColor(String name, String code, String regex) {
-        this.name = name;
-        this.code = code;
-        this.regex = regex;
-        ConsoleColor.colors.add(this);
     }
 
     @Override

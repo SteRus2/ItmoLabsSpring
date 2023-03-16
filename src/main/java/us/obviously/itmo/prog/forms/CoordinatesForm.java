@@ -11,7 +11,10 @@ import us.obviously.itmo.prog.model.Coordinates;
 import java.util.HashMap;
 
 
-public class CoordinatesForm extends Form {
+/**
+ * Форма Координат
+ */
+public class CoordinatesForm extends Form<Coordinates> {
     private final Coordinates.Builder builder;
     HashMap<String, SelectChoice<Color>> colors;
 
@@ -42,6 +45,12 @@ public class CoordinatesForm extends Form {
         this.builder.setY(value);
     }
 
+    /**
+     * Валидация готовой формы и сборка новых Координат
+     *
+     * @return Готовые Координаты
+     * @throws IncorrectValueException Выбросит исключение, если поле невалидно
+     */
     public Coordinates build() throws IncorrectValueException {
         return this.builder.build();
     }

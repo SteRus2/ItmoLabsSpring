@@ -10,13 +10,16 @@ import us.obviously.itmo.prog.model.Person;
 
 import java.util.HashMap;
 
+/**
+ * Команда для вывода всех элементов, значения поля groupAdmin которых больше заданного
+ */
 public class FilterGreaterThanGroupAdminCommand extends AbstractCommand {
     public FilterGreaterThanGroupAdminCommand(Management manager) {
         super(manager, "filter_greater_than_group_admin", "Вывести элементы, значение поля groupAdmin которых больше заданного");
     }
 
     /**
-     * TODO: FILL
+     * @inheritDoc
      */
     @Override
     public void execute(HashMap<String, String> args) {
