@@ -32,7 +32,7 @@ public class FloatFormField extends FormField<Float> {
         try {
             var maxLen = String.valueOf(Float.MAX_VALUE).length() - 1;
             if (value.length() > maxLen) {
-                throw new IncorrectValueException("Слишком большое число. Наши системы не поддерживают работу с целыми числами, по модулю большими 999,999,999.");
+                throw new IncorrectValueException("Слишком большое число. Наши системы не поддерживают работу с рациональными числами, по модулю большими 999,999,999.");
             }
             return Float.parseFloat(value);
         } catch (NumberFormatException e) {
