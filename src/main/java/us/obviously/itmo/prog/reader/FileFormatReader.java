@@ -16,6 +16,7 @@ import java.util.Scanner;
  * {@inheritDoc}
  */
 public class FileFormatReader extends FileReader {
+    private String baseString;
     /**
      * Конструктор, задающий путь до файла и формат
      *
@@ -29,6 +30,10 @@ public class FileFormatReader extends FileReader {
         parser = switch (ff) {
             case XML -> new XMLParser();
             case JSON -> new JsonParser();
+        };
+        baseString = switch (ff){
+            case XML -> "<%s></%s>".formatted(XMLParser.ROOT_NAME, XMLParser.ROOT_NAME);
+            case JSON -> "{}";
         };
     }
 
@@ -54,6 +59,9 @@ public class FileFormatReader extends FileReader {
             }
         }
         mainString = String.join("", strings);
+        if (mainString.trim().equals("")){
+            mainString = "<StudyGroups></Syt>";
+        }
         return parser.loads(mainString);
     }
 

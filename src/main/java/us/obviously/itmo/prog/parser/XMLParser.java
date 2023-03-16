@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class XMLParser extends Parser {
     private List<StudyGroup> dataList;
+    public static String ROOT_NAME = "StudyGroups";
     private final XmlMapper xmlMapper;
 
     {
