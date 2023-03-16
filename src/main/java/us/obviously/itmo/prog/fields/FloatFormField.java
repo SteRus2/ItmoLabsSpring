@@ -28,6 +28,7 @@ public class FloatFormField extends FormField<Float> {
 
     @Override
     public Float convert(String value) throws IncorrectValueException {
+        if (value.length() > 9) throw new IncorrectValueException("Слишком большое число. Наши системы не поддерживают работу с рациональными числами, в которых символов больше 9-ти. Удалите %d лишних символов.".formatted(value.length() - 9));
         if (value.equals("")) return null;
         try {
             var maxLen = String.valueOf(Float.MAX_VALUE).length() - 1;
