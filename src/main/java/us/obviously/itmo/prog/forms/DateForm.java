@@ -27,15 +27,12 @@ public class DateForm extends Form<ZonedDateTime> {
     /**
      * Форма создания новой Даты
      */
-    public void create() {
-        try {
-            new IntegerFormField(manager, "year", this::setYear).run();
-            new IntegerFormField(manager, "month", this::setMonth).run();
-            new IntegerFormField(manager, "day", this::setDay).run();
-            new IntegerFormField(manager, "offset hours", this::setHours, false, 0, null).run();
-            new IntegerFormField(manager, "offset minutes", this::setMinutes, false, 0, null).run();
-        } catch (FormInterruptException ignored) {
-        }
+    public void create() throws FormInterruptException {
+        new IntegerFormField(manager, "year", this::setYear).run();
+        new IntegerFormField(manager, "month", this::setMonth).run();
+        new IntegerFormField(manager, "day", this::setDay).run();
+        new IntegerFormField(manager, "offset hours", this::setHours, false, 0, null).run();
+        new IntegerFormField(manager, "offset minutes", this::setMinutes, false, 0, null).run();
     }
 
     /**
