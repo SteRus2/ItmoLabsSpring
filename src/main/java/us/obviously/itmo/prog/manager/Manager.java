@@ -161,14 +161,9 @@ public class Manager<T> implements Management {
         try {
             var args = command.parseParameters(Arrays.copyOfRange(words, 1, words.length));
 
-            try {
-                command.execute(args);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-//                return false;
-            }
+            command.execute(args);
 
-        } catch (UnexpectedArgumentException e) {
+        } catch (UnexpectedArgumentException | MissedArgumentException e) {
             Messages.printStatement(e.getMessage());
         }
         return false;

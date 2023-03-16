@@ -1,5 +1,6 @@
 package us.obviously.itmo.prog.commands;
 
+import us.obviously.itmo.prog.exceptions.MissedArgumentException;
 import us.obviously.itmo.prog.exceptions.UnexpectedArgumentException;
 import us.obviously.itmo.prog.manager.Management;
 
@@ -24,7 +25,7 @@ public abstract class AbstractCommand {
         this.indexParameters = new ArrayList<>();
     }
 
-    public abstract void execute(HashMap<String, String> args) throws Exception;
+    public abstract void execute(HashMap<String, String> args);
 
     final public void addParameter(String name, String description, Boolean required) {
         var parameter = new Parameter(name, description, required);
@@ -66,7 +67,7 @@ public abstract class AbstractCommand {
         return this.name;
     }
 
-    public HashMap<String, String> parseParameters(String[] words) throws UnexpectedArgumentException {
+    public HashMap<String, String> parseParameters(String[] words) throws UnexpectedArgumentException, MissedArgumentException {
 
         var maxCommandsNumber = indexParameters.size();
         var requiredCommandsNumber = indexParameters.stream().filter((x) -> {return x.required;}).count();
@@ -80,7 +81,7 @@ public abstract class AbstractCommand {
         }
 
         if (givenCommandsNumber < requiredCommandsNumber) {
-            throw new UnexpectedArgumentException(("Команда \"%s\" ожидала %d обязательных параметров, " +
+            throw new MissedArgumentException(("Команда \"%s\" ожидала %d обязательных параметров, " +
                     "передано %d. Введите " +
                     "~grhelp %s~=" +
                     " для просмотра возможных параметров.")
