@@ -23,6 +23,7 @@ abstract public class FormField<T> {
     private boolean skip = false;
     private Boolean silent = false;
     private T value = null;
+
     public FormField(Management manager, String key, Callback<T> callback, Boolean nil, T defaultValue, String defaultValueStr, String autofill) {
         this.manager = manager;
         this.key = key;

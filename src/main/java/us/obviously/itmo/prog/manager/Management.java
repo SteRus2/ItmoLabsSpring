@@ -23,11 +23,11 @@ public interface Management {
 
     boolean isIdExists(Integer id);
 
-    public Scanner getScanner();
+    Scanner getScanner();
 
-    public String nextLine();
+    String nextLine();
 
-    public String nextChar();
+    String nextChar();
 
     List<AbstractCommand> getCommands();
 

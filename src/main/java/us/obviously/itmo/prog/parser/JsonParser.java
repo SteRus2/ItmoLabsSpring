@@ -24,9 +24,10 @@ import java.util.List;
  * {@inheritDoc}
  * <br> Формат строки - json
  */
-public class JsonParser extends Parser{
+public class JsonParser extends Parser {
     private List<StudyGroup> dataList;
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
     {
         objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
@@ -63,7 +64,7 @@ public class JsonParser extends Parser{
         Collection<StudyGroup> values = value.values();
         dataList = new ArrayList<>(values);
         String result;
-        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             objectMapper.writer().writeValue(byteArrayOutputStream, dataList);
             result = byteArrayOutputStream.toString();
             return result;

@@ -14,8 +14,8 @@ public class InfoCommand extends AbstractCommand {
     @Override
     public void execute(HashMap<String, String> args) {
         var info = this.manager.getDataCollection().getInfo();
-        Messages.printStatement("Количество: ~bl" +info.getCount() + "~=");
-        Messages.printStatement("       Тип: ~bl" +info.getType() + "~=");
-        Messages.printStatement("      Дата: ~bl" +info.getDate() + "~=");
+        Messages.printStatement("Количество: ~bl" + info.getCount() + "~=");
+        Messages.printStatement("       Тип: ~bl" + info.getType() + "~=");
+        Messages.printStatement("      Дата: ~bl" + info.getDate() + "~=");
     }
 }

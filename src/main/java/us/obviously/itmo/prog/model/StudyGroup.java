@@ -30,6 +30,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Возвращает id
+     *
      * @return id
      */
     public Integer getId() {
@@ -38,6 +39,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Возвращает название группы
+     *
      * @return Название группы
      */
     public String getName() {
@@ -46,6 +48,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Возвращает координаты
+     *
      * @return координаты
      */
     public Coordinates getCoordinates() {
@@ -54,6 +57,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Устанавливает дату создания
+     *
      * @param creationDate дата создания группы
      */
     public void setCreationDate(Date creationDate) {
@@ -62,6 +66,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Возвращает дату создания группы
+     *
      * @return Дата создания группы
      */
     public Date getCreationDate() {
@@ -70,6 +75,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Возвращает количество студентов
+     *
      * @return Количество студентов
      */
     public Integer getStudentsCount() {
@@ -78,6 +84,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Возвращает форму обучения
+     *
      * @return Форма обучения
      */
     public FormOfEducation getFormOfEducation() {
@@ -86,6 +93,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Возвращает семестр
+     *
      * @return Семемтр
      */
     public Semester getSemesterEnum() {
@@ -94,6 +102,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Возвращает админа группы
+     *
      * @return Админ группы
      */
     public Person getGroupAdmin() {
@@ -102,6 +111,7 @@ public class StudyGroup implements Comparable {
 
     /**
      * Позволяет сравнивать группы, сначала по количеству студентов, потом по id
+     *
      * @param o the object to be compared.
      * @return Число, говорящее о том, какая группа "больше"
      */

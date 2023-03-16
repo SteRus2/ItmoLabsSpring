@@ -9,6 +9,7 @@ public class Coordinates {
 
     /**
      * Конструктор, устанавливающий параметры координат
+     *
      * @param x Координата x - Long
      * @param y Координата y - Float
      */

@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 /**
  * Класс, позволяющий считывать данные из файла
+ *
  * @see FileFormatReader
  */
 public abstract class FileReader extends DataReader {
@@ -18,6 +19,7 @@ public abstract class FileReader extends DataReader {
 
     /**
      * Конструктор, позволяющий задать путь до файла
+     *
      * @param filePath Путь до файла
      */
     public FileReader(String filePath) {

@@ -9,6 +9,7 @@ public class LongFormField extends FormField<Long> {
     public LongFormField(Management manager, String key, Callback<Long> callback, Boolean nil, Long defaultInput, String autofill) {
         super(manager, key, callback, nil, defaultInput, null, autofill);
     }
+
     public LongFormField(Management manager, String key, Callback<Long> callback) {
         super(manager, key, callback, false, null, null, null);
     }

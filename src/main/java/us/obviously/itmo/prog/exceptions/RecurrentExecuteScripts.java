@@ -6,6 +6,7 @@ package us.obviously.itmo.prog.exceptions;
 public class RecurrentExecuteScripts extends Exception {
     /**
      * Конструктор со специальным сообщением о деталях исключения
+     *
      * @param errorMessage Строка, содержащая детали исключения
      */
     public RecurrentExecuteScripts(String errorMessage) {

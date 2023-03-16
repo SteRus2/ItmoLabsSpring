@@ -12,19 +12,20 @@ import java.util.*;
  * Класс, предоставляющий основной функционал по работе с коллекцией данных
  */
 public class DataCollection {
-    private DataReader dataReader;
-    private HashMap<Integer, StudyGroup> data;
-    private String type;
-    private Date initDate;
+    private final DataReader dataReader;
+    private final HashMap<Integer, StudyGroup> data;
+    private final String type;
+    private final Date initDate;
     private int count;
 
     /**
      * Конструктор, с помощью которого происходит инициализация коллекции, коллекцию получаем из dataReader
+     *
      * @param dataReader Источник данных
-     * @throws IncorrectValueException Выбросит исключение, если данные не пройдут валидацию
+     * @throws IncorrectValueException      Выбросит исключение, если данные не пройдут валидацию
      * @throws IncorrectValuesTypeException Выбросит исключение, если данные будут в неправильном формате
-     * @throws CantParseDataException Выбросит исключение, если не сможет перевести дынные в нужный формат
-     * @throws CantFindFileException Выбросит исключение, если не сможет найти путь до данных
+     * @throws CantParseDataException       Выбросит исключение, если не сможет перевести дынные в нужный формат
+     * @throws CantFindFileException        Выбросит исключение, если не сможет найти путь до данных
      */
     public DataCollection(DataReader dataReader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException {
         this.dataReader = dataReader;
@@ -35,6 +36,7 @@ public class DataCollection {
 
     /**
      * Метод, для получения информации о коллекции
+     *
      * @return Информацию о коллекцию в формате объекта
      * @see DataInfo
      */
@@ -45,6 +47,7 @@ public class DataCollection {
 
     /**
      * Возвращает Коллекцию
+     *
      * @return Коллекция
      */
     public HashMap<Integer, StudyGroup> getData() {
@@ -53,8 +56,9 @@ public class DataCollection {
 
     /**
      * Метод, позволяющий добавить в коллекцию новую запись с новым ключом
+     *
      * @param item Новый элемент коллекции
-     * @param key Ключ элемента
+     * @param key  Ключ элемента
      * @throws UsedKeyException Выбросит исключение, если ключ уже используется
      */
     public void insertItem(StudyGroup item, int key) throws UsedKeyException {
@@ -67,8 +71,9 @@ public class DataCollection {
 
     /**
      * Позволяет обновить объект в коллекции по заданному ключу
+     *
      * @param item Новый элемент
-     * @param key Ключ элемента, который нужно обновить
+     * @param key  Ключ элемента, который нужно обновить
      * @throws NoSuchIdException Выбросит исключение, если подобного ключа в коллекции нет
      */
     public void updateItem(StudyGroup item, int key) throws NoSuchIdException {
@@ -81,10 +86,11 @@ public class DataCollection {
 
     /**
      * Метод позволяющий убрать элемент из коллекции по заданному ключу
+     *
      * @param key Ключ объекта
      * @throws NoSuchIdException Выбросит исключение, если элемента под таким ключом нет
-     * <br>(ну, к слову, семантика этого метода такова - по итогу в коллекции не должно быть элемента с ключом key,
-     * <br>в целом, если его там и так не было, то зачем выбрасывать исключение? Элемента в коллекции уже нет, разработчики решили, что надо)
+     *                           <br>(ну, к слову, семантика этого метода такова - по итогу в коллекции не должно быть элемента с ключом key,
+     *                           <br>в целом, если его там и так не было, то зачем выбрасывать исключение? Элемента в коллекции уже нет, разработчики решили, что надо)
      */
     public void removeItem(int key) throws NoSuchIdException {
         if (!data.containsKey(key)) {
@@ -102,7 +108,8 @@ public class DataCollection {
 
     /**
      * Метод, позволяющий сохранить коллекцию
-     * @throws FailedToDumpsEx Выбросит исключение, если не сможет перевести коллекцию в нужный формат
+     *
+     * @throws FailedToDumpsEx        Выбросит исключение, если не сможет перевести коллекцию в нужный формат
      * @throws CantWriteDataException Выбросит исключение, если не сможет записать данные
      */
     public void saveData() throws FailedToDumpsEx, CantWriteDataException {
@@ -111,7 +118,8 @@ public class DataCollection {
 
     /**
      * Метод, позволяющий заменить объект по заданному ключу новым объектом, если новый объект больше старого
-     * @param key Ключ объекта
+     *
+     * @param key  Ключ объекта
      * @param item Новый объект
      * @throws NoSuchIdException Выбросит исключение, если объекта с данным ключом нет в коллекции
      */
@@ -126,6 +134,7 @@ public class DataCollection {
 
     /**
      * Метод, позволяющий удалить из коллекции все элементы, ключ которых больше заданного
+     *
      * @param key Ключ
      */
     public void removeGreaterKey(int key) {
@@ -135,13 +144,14 @@ public class DataCollection {
                 ids.add(pair.getKey());
             }
         }
-        for (Integer k : ids){
+        for (Integer k : ids) {
             data.remove(k);
         }
     }
 
     /**
      * Метод, позволяющий удалить из коллекции все элементы, ключ которых меньше заданного
+     *
      * @param key Ключ
      */
     public void removeLowerKey(int key) {
@@ -151,13 +161,14 @@ public class DataCollection {
                 ids.add(pair.getKey());
             }
         }
-        for (Integer k : ids){
+        for (Integer k : ids) {
             data.remove(k);
         }
     }
 
     /**
      * Метод, который позволяет сгруппировать элементы коллекции по значению поля name
+     *
      * @return Возвращает HashMap с ключом в виде имени и значением - List со всеми элементами с данным именем
      */
     public Map<String, List<StudyGroup>> groupCountingByName() {
@@ -176,6 +187,7 @@ public class DataCollection {
 
     /**
      * Метод, который позволяет получить все элементы, поле groupAdmin которых больше чем данный
+     *
      * @param groupAdmin groupAdmin, по которому происходит проверка
      * @return List, состоящий из всех элементов поле groupAdmin которых больше чем данный
      */
@@ -191,6 +203,7 @@ public class DataCollection {
 
     /**
      * Метод, позволяющий получить значения поля semesterEnum все элементов в порядке возрастания
+     *
      * @return List из элементов типа Semester
      */
     public List<Semester> printFieldAscendingSemesterEnum() {

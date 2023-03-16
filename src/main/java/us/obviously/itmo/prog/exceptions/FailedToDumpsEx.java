@@ -8,9 +8,10 @@ import java.io.IOException;
 public class FailedToDumpsEx extends IOException {
     /**
      * Конструктор со специальным сообщением о деталях исключения
+     *
      * @param err Строка, содержащая детали исключения
      */
-    public FailedToDumpsEx(String err){
+    public FailedToDumpsEx(String err) {
         super(err);
     }
 }

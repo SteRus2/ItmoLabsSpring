@@ -29,7 +29,7 @@ public class FilterGreaterThanGroupAdminCommand extends AbstractCommand {
             TablesPrinter.printStudyGroups(res);
         } catch (IncorrectValueException e) {
             Messages.printStatement("~reЧто-то криво заполнили: " + e.getMessage() + "~=");
-        }  catch (FormInterruptException e) {
+        } catch (FormInterruptException e) {
             Messages.printStatement("~blПрервано пользователем.~=");
         }
     }

@@ -6,6 +6,7 @@ package us.obviously.itmo.prog.exceptions;
 public class InvalidArgumentException extends Exception {
     /**
      * Конструктор со специальным сообщением о деталях исключения
+     *
      * @param errorMessage Строка, содержащая детали исключения
      */
     public InvalidArgumentException(String errorMessage) {

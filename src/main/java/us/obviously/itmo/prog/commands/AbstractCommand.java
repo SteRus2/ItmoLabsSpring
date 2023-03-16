@@ -70,7 +70,9 @@ public abstract class AbstractCommand {
     public HashMap<String, String> parseParameters(String[] words) throws UnexpectedArgumentException, MissedArgumentException {
 
         var maxCommandsNumber = indexParameters.size();
-        var requiredCommandsNumber = indexParameters.stream().filter((x) -> {return x.required;}).count();
+        var requiredCommandsNumber = indexParameters.stream().filter((x) -> {
+            return x.required;
+        }).count();
         var givenCommandsNumber = words.length;
         if (givenCommandsNumber > maxCommandsNumber) {
             throw new UnexpectedArgumentException(("Команда \"%s\" ожидала не более %d параметров, " +

@@ -9,6 +9,7 @@ public class IntegerFormField extends FormField<Integer> {
     public IntegerFormField(Management manager, String key, Callback<Integer> callback, Boolean nil, Integer defaultInput, String autofill) {
         super(manager, key, callback, nil, defaultInput, null, autofill);
     }
+
     public IntegerFormField(Management manager, String key, Callback<Integer> callback) {
         super(manager, key, callback, false, null, null, null);
     }

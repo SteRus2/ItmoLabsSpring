@@ -24,15 +24,17 @@ import java.util.List;
  * {@inheritDoc}
  * <br> Формат строки - XML
  */
-public class XMLParser extends Parser{
+public class XMLParser extends Parser {
     private List<StudyGroup> dataList;
-    private XmlMapper xmlMapper;
+    private final XmlMapper xmlMapper;
+
     {
         xmlMapper = new XmlMapper();
         xmlMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         xmlMapper.findAndRegisterModules();
 
     }
+
     /**
      * {@inheritDoc}
      */
@@ -63,7 +65,7 @@ public class XMLParser extends Parser{
         Collection<StudyGroup> values = value.values();
         dataList = new ArrayList<>(values);
         String result;
-        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             xmlMapper.writer().withRootName("StudyGroups").writeValue(byteArrayOutputStream, dataList);
             result = byteArrayOutputStream.toString();
             return result;

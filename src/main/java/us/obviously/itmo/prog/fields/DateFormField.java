@@ -12,9 +12,11 @@ public class DateFormField<T extends ZonedDateTime> extends FormField<T> {
     public DateFormField(Management manager, String key, Callback<T> callback, Boolean nil, T defaultInput, String autofill) {
         super(manager, key, callback, nil, defaultInput, defaultInput.toString(), autofill);
     }
+
     public DateFormField(Management manager, String key, Callback<T> callback) {
         super(manager, key, callback, false, null, null, null);
     }
+
     @Override
     void printSuccessMessage(T value) {
         if (value == null) {

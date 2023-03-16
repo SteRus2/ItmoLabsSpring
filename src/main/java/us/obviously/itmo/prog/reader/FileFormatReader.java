@@ -14,21 +14,23 @@ import java.util.Scanner;
 /**
  * {@inheritDoc}
  */
-public class FileFormatReader extends FileReader{
+public class FileFormatReader extends FileReader {
     /**
      * Конструктор, задающий путь до файла и формат
+     *
      * @param filePath Путь до файла
-     * @param ff Формат файла
+     * @param ff       Формат файла
      * @see FileFormat
      */
 
     public FileFormatReader(String filePath, FileFormat ff) {
         super(filePath);
-        parser = switch (ff){
+        parser = switch (ff) {
             case XML -> new XMLParser();
             case JSON -> new JsonParser();
         };
     }
+
     /**
      * {@inheritDoc}
      */
@@ -36,7 +38,7 @@ public class FileFormatReader extends FileReader{
     public HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException {
         try {
             scanner = new Scanner(file);
-            while (scanner.hasNextLine()){
+            while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 strings.add(line);
             }
@@ -48,16 +50,17 @@ public class FileFormatReader extends FileReader{
         mainString = String.join("", strings);
         return parser.loads(mainString);
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void saveData(HashMap<Integer, StudyGroup> data) throws CantWriteDataException, FailedToDumpsEx {
         mainString = parser.dumps(data);
-        try(FileOutputStream fos = new FileOutputStream(file)){
+        try (FileOutputStream fos = new FileOutputStream(file)) {
             byte[] buffer = mainString.getBytes();
             fos.write(buffer, 0, buffer.length);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new CantWriteDataException("Не удалось сохранить данные");
         }
     }

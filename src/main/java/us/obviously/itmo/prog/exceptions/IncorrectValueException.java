@@ -6,6 +6,7 @@ package us.obviously.itmo.prog.exceptions;
 public class IncorrectValueException extends Exception {
     /**
      * Конструктор со специальным сообщением о деталях исключения
+     *
      * @param errorMessage Строка, содержащая детали исключения
      */
     public IncorrectValueException(String errorMessage) {

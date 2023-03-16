@@ -9,6 +9,7 @@ public class FloatFormField extends FormField<Float> {
     public FloatFormField(Management manager, String key, Callback<Float> callback, Boolean nil, Float defaultInput, String autofill) {
         super(manager, key, callback, nil, defaultInput, defaultInput.toString(), autofill);
     }
+
     public FloatFormField(Management manager, String key, Callback<Float> callback) {
         super(manager, key, callback, false, null, null, null);
     }
