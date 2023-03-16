@@ -1,6 +1,9 @@
 package us.obviously.itmo.prog.reader;
 
+import us.obviously.itmo.prog.exceptions.FileNotWritableException;
+
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,5 +28,10 @@ public abstract class FileReader extends DataReader {
     public FileReader(String filePath) {
         this.filePath = filePath;
         file = new File(filePath);
+    }
+
+    @Override
+    public boolean canSaveData() {
+        return Files.isWritable(file.toPath());
     }
 }

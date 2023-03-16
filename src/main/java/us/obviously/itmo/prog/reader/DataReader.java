@@ -24,7 +24,7 @@ public abstract class DataReader {
      * @throws CantParseDataException       Выбросит исключение, если не сможет перевести дынные в нужный формат
      * @throws CantFindFileException        Выбросит исключение, если не сможет найти путь до данных
      */
-    public abstract HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException;
+    public abstract HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException;
 
     /**
      * Метод, позволяющий сохранять коллекцию
@@ -33,5 +33,6 @@ public abstract class DataReader {
      * @throws FailedToDumpsEx        Выбросит исключение, если не сможет перевести коллекцию в нужный формат
      * @throws CantWriteDataException Выбросит исключение, если не сможет записать данные
      */
-    public abstract void saveData(HashMap<Integer, StudyGroup> data) throws FailedToDumpsEx, CantWriteDataException;
+    public abstract void saveData(HashMap<Integer, StudyGroup> data) throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException;
+    public abstract boolean canSaveData();
 }

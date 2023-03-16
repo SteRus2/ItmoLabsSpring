@@ -8,6 +8,7 @@ import us.obviously.itmo.prog.parser.XMLParser;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -35,7 +36,10 @@ public class FileFormatReader extends FileReader {
      * {@inheritDoc}
      */
     @Override
-    public HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException {
+    public HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
+        if (!Files.isReadable(file.toPath())){
+            throw new FileNotReadableException("Извините, файл не читаем");
+        }
         try {
             scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
@@ -57,7 +61,10 @@ public class FileFormatReader extends FileReader {
      * {@inheritDoc}
      */
     @Override
-    public void saveData(HashMap<Integer, StudyGroup> data) throws CantWriteDataException, FailedToDumpsEx {
+    public void saveData(HashMap<Integer, StudyGroup> data) throws CantWriteDataException, FailedToDumpsEx, FileNotWritableException {
+        if (!Files.isWritable(file.toPath())){
+            throw new FileNotWritableException("Извините, нет разрешения на запись");
+        }
         mainString = parser.dumps(data);
         try (FileOutputStream fos = new FileOutputStream(file)) {
             byte[] buffer = mainString.getBytes();

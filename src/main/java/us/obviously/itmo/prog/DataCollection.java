@@ -27,7 +27,7 @@ public class DataCollection {
      * @throws CantParseDataException       Выбросит исключение, если не сможет перевести дынные в нужный формат
      * @throws CantFindFileException        Выбросит исключение, если не сможет найти путь до данных
      */
-    public DataCollection(DataReader dataReader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException {
+    public DataCollection(DataReader dataReader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
         this.dataReader = dataReader;
         this.data = dataReader.getData();
         type = StudyGroup.class.getName();
@@ -112,7 +112,7 @@ public class DataCollection {
      * @throws FailedToDumpsEx        Выбросит исключение, если не сможет перевести коллекцию в нужный формат
      * @throws CantWriteDataException Выбросит исключение, если не сможет записать данные
      */
-    public void saveData() throws FailedToDumpsEx, CantWriteDataException {
+    public void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException {
         dataReader.saveData(data);
     }
 
@@ -219,5 +219,9 @@ public class DataCollection {
             result.add(sg.getSemesterEnum());
         }
         return result;
+    }
+
+    public boolean canSaveData(){
+        return dataReader.canSaveData();
     }
 }
