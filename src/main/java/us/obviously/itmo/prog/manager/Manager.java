@@ -1,6 +1,6 @@
 package us.obviously.itmo.prog.manager;
 
-import us.obviously.itmo.prog.DataCollection;
+import us.obviously.itmo.prog.data.DataCollection;
 import us.obviously.itmo.prog.commands.*;
 import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.console.Messages;

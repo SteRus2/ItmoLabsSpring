@@ -1,21 +1,18 @@
 package us.obviously.itmo.prog.manager;
 
-import us.obviously.itmo.prog.DataCollection;
+import us.obviously.itmo.prog.data.DataCollection;
 import us.obviously.itmo.prog.commands.AbstractCommand;
-import us.obviously.itmo.prog.exceptions.CantWriteDataException;
-import us.obviously.itmo.prog.exceptions.FailedToDumpsEx;
 import us.obviously.itmo.prog.exceptions.RecurrentExecuteScripts;
 
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Интерфейс описывает методы взаимодействия с пользователем
  */
 public interface Management {
     /**
-     * Запуск цикла Менджера
+     * Запуск цикла Менажёра
      */
     void run();
 

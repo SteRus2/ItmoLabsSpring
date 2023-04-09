@@ -1,4 +1,4 @@
-package us.obviously.itmo.prog;
+package us.obviously.itmo.prog.data;
 
 import us.obviously.itmo.prog.exceptions.*;
 import us.obviously.itmo.prog.model.Person;
@@ -209,12 +209,7 @@ public class DataCollection {
     public List<Semester> printFieldAscendingSemesterEnum() {
         List<StudyGroup> local = new ArrayList<>(data.values());
         List<Semester> result = new ArrayList<>();
-        local.sort(new Comparator<StudyGroup>() {
-            @Override
-            public int compare(StudyGroup o1, StudyGroup o2) {
-                return o1.compareTo(o2);
-            }
-        });
+        local.sort((o1, o2) -> o1.compareTo(o2));
         for (StudyGroup sg : local) {
             result.add(sg.getSemesterEnum());
         }

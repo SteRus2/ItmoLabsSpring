@@ -1,4 +1,4 @@
-package us.obviously.itmo.prog;
+package us.obviously.itmo.prog.data;
 
 import java.util.Date;
 
