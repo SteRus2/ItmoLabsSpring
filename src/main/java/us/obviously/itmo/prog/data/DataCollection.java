@@ -7,16 +7,17 @@ import us.obviously.itmo.prog.model.StudyGroup;
 import us.obviously.itmo.prog.reader.DataReader;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Класс, предоставляющий основной функционал по работе с коллекцией данных
  */
 public class DataCollection {
     private final DataReader dataReader;
-    private final HashMap<Integer, StudyGroup> data;
+    private HashMap<Integer, StudyGroup> data;
     private final String type;
     private final Date initDate;
-    private int count;
 
     /**
      * Конструктор, с помощью которого происходит инициализация коллекции, коллекцию получаем из dataReader
@@ -41,7 +42,7 @@ public class DataCollection {
      * @see DataInfo
      */
     public DataInfo getInfo() {
-        count = data.size();
+        int count = data.size();
         return new DataInfo(type, initDate, count);
     }
 
@@ -138,15 +139,10 @@ public class DataCollection {
      * @param key Ключ
      */
     public void removeGreaterKey(int key) {
-        List<Integer> ids = new ArrayList<>();
-        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
-            if (pair.getKey() > key) {
-                ids.add(pair.getKey());
-            }
-        }
-        for (Integer k : ids) {
-            data.remove(k);
-        }
+        data = data.keySet()
+                .stream()
+                .filter(x -> x <= key)
+                .collect(Collectors.toMap(Function.identity(), data::get, (prev, next) -> next, HashMap::new));
     }
 
     /**
@@ -155,15 +151,10 @@ public class DataCollection {
      * @param key Ключ
      */
     public void removeLowerKey(int key) {
-        List<Integer> ids = new ArrayList<>();
-        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
-            if (pair.getKey() < key) {
-                ids.add(pair.getKey());
-            }
-        }
-        for (Integer k : ids) {
-            data.remove(k);
-        }
+        data  = data.keySet()
+                .stream()
+                .filter(x -> x >= key)
+                .collect(Collectors.toMap(Function.identity(), data::get, (prev, next) -> next, HashMap::new));
     }
 
     /**
@@ -172,17 +163,9 @@ public class DataCollection {
      * @return Возвращает HashMap с ключом в виде имени и значением - List со всеми элементами с данным именем
      */
     public Map<String, List<StudyGroup>> groupCountingByName() {
-        HashMap<String, List<StudyGroup>> localData = new HashMap<>();
-        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
-            if (!localData.containsKey(pair.getValue().getName())) {
-                localData.put(pair.getValue().getName(), new ArrayList<>(List.of(pair.getValue())));
-            } else {
-                List<StudyGroup> llsg = localData.get(pair.getValue().getName());
-                llsg.add(pair.getValue());
-                localData.put(pair.getValue().getName(), llsg);
-            }
-        }
-        return localData;
+        return data.values()
+                .stream()
+                .collect(Collectors.groupingBy(StudyGroup::getName));
     }
 
     /**
@@ -192,13 +175,10 @@ public class DataCollection {
      * @return List, состоящий из всех элементов поле groupAdmin которых больше чем данный
      */
     public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin) {
-        List<StudyGroup> local = new ArrayList<>();
-        for (Map.Entry<Integer, StudyGroup> pair : data.entrySet()) {
-            if (pair.getValue().getGroupAdmin().compareTo(groupAdmin) < 0) {
-                local.add(pair.getValue());
-            }
-        }
-        return local;
+        return data.values()
+                .stream()
+                .filter(x -> x.getGroupAdmin().compareTo(groupAdmin) < 0)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -207,13 +187,11 @@ public class DataCollection {
      * @return List из элементов типа Semester
      */
     public List<Semester> printFieldAscendingSemesterEnum() {
-        List<StudyGroup> local = new ArrayList<>(data.values());
-        List<Semester> result = new ArrayList<>();
-        local.sort((o1, o2) -> o1.compareTo(o2));
-        for (StudyGroup sg : local) {
-            result.add(sg.getSemesterEnum());
-        }
-        return result;
+        return data.values()
+                .stream()
+                .map(StudyGroup::getSemesterEnum)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public boolean canSaveData(){
