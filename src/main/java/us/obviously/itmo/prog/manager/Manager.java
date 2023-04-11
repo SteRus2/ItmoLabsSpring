@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.manager;
 
 import us.obviously.itmo.prog.data.DataCollection;
+import us.obviously.itmo.prog.data.DataStorage;
 import us.obviously.itmo.prog.commands.*;
 import us.obviously.itmo.prog.console.ConsoleColors;
 import us.obviously.itmo.prog.console.Messages;
@@ -25,7 +26,7 @@ public class Manager<T> implements Management {
     private Boolean active;
 
     public Manager(DataReader reader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
-        this.dataCollection = new DataCollection(reader);
+        this.dataCollection = new DataStorage(reader);
         this.scanner = new Scanner(System.in);
 
         this.commands = new HashMap<>();
