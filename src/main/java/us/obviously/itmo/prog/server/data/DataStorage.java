@@ -135,7 +135,7 @@ public class DataStorage implements DataCollection {
      * @throws NoSuchIdException Выбросит исключение, если объекта с данным ключом нет в коллекции
      */
     @Override
-    public void replaceIfGreater(int key, StudyGroup item) throws NoSuchIdException {
+    public void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException {
         if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }

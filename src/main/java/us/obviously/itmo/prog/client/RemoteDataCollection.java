@@ -56,7 +56,7 @@ public class RemoteDataCollection implements DataCollection {
     }
 
     @Override
-    public void replaceIfGreater(int key, StudyGroup item) throws NoSuchIdException {
+    public void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException {
 
     }
 

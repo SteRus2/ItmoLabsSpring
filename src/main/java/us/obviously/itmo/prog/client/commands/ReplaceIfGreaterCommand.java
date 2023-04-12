@@ -36,7 +36,7 @@ public class ReplaceIfGreaterCommand extends AbstractCommand {
             try {
                 StudyGroup studyGroup = studyGroupForm.build();
                 try {
-                    this.manager.getDataCollection().replaceIfGreater(studyGroup.getId(), studyGroup);
+                    this.manager.getDataCollection().replaceIfGreater(studyGroup, studyGroup.getId());
                     Messages.printStatement("~blЕсли это было необходимо, studyGroup обновлён под id %s~=", studyGroup.getId());
                 } catch (NoSuchIdException e) {
                     Messages.printStatement(ConsoleColors.RED + "Ошибка при сохранении: " + e.getMessage() + "~=");
