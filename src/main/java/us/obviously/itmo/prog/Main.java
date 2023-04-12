@@ -1,14 +1,18 @@
 package us.obviously.itmo.prog;
 
-import us.obviously.itmo.prog.console.ConsoleColor;
-import us.obviously.itmo.prog.console.Messages;
-import us.obviously.itmo.prog.exceptions.*;
-import us.obviously.itmo.prog.manager.Management;
-import us.obviously.itmo.prog.manager.Manager;
-import us.obviously.itmo.prog.model.StudyGroup;
-import us.obviously.itmo.prog.reader.DataReader;
-import us.obviously.itmo.prog.reader.FileFormat;
-import us.obviously.itmo.prog.reader.FileFormatReader;
+import us.obviously.itmo.prog.client.console.ConsoleColor;
+import us.obviously.itmo.prog.client.console.Messages;
+import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.client.manager.Manager;
+import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.server.exceptions.CantFindFileException;
+import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
+import us.obviously.itmo.prog.server.exceptions.FileNotReadableException;
+import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
+import us.obviously.itmo.prog.server.reader.DataReader;
+import us.obviously.itmo.prog.server.reader.FileFormat;
+import us.obviously.itmo.prog.server.reader.FileFormatReader;
 
 public class Main {
     public static void main(String[] args) {
