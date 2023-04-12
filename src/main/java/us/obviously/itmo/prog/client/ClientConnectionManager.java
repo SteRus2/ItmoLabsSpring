@@ -2,7 +2,11 @@ package us.obviously.itmo.prog.client;
 
 import us.obviously.itmo.prog.common.ConnectionManager;
 
+import java.io.IOException;
+
 public interface ClientConnectionManager extends ConnectionManager {
-    void waitResponse();
-    void request();
+    String waitResponse();
+    void request(String request);
+
+    void stop() throws IOException;
 }

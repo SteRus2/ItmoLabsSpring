@@ -6,4 +6,5 @@ import java.io.IOException;
 
 public interface ServerConnectionManager extends ConnectionManager {
     void waitRequest() throws IOException;
+    void giveResponse(String response);
 }

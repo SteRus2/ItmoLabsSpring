@@ -55,19 +55,35 @@ public class Server implements ServerConnectionManager {
 
     @Override
     public void write(ByteBuffer data) {
-
+        try {
+            client.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void waitRequest() throws IOException {
         byteBuffer = read();
         String result = UTF_8.decode(byteBuffer).toString();
-        System.out.println(result);
+        System.out.println(result + " - from server");
+        giveResponse(result + " - from server");
         byteBuffer.clear();
         if (result.equals("exit")){
             deactivateServer();
         }
     }
+
+    @Override
+    public void giveResponse(String args) {
+        byteBuffer = ByteBuffer.wrap(args.getBytes(UTF_8));
+        try {
+            write(byteBuffer);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     void activeServer(){
         this.isActive = true;
         System.out.println("Сервер открыт!");

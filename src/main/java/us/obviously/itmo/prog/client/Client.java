@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.client;
 
 
+import us.obviously.itmo.prog.common.data.DataCollection;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -8,7 +10,6 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 public class Client implements ClientConnectionManager {
     private static InetAddress host;
@@ -25,11 +26,6 @@ public class Client implements ClientConnectionManager {
         connection = SocketChannel.open();
         connection.connect(address);
         activeClient();
-        while (isActive){
-            request();
-            waitResponse();
-        }
-        connection.close();
     }
 
     @Override
@@ -42,8 +38,15 @@ public class Client implements ClientConnectionManager {
     }
 
     @Override
-    public ByteBuffer read() {
-        return null;
+    public ByteBuffer read() throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        int read = connection.read(buffer);
+        buffer.flip();
+        if (read == -1){
+            //TODO replace this Exception to new one
+            throw new IOException("SocketClosed");
+        }
+        return buffer;
     }
     void activeClient(){
         this.isActive = true;
@@ -55,18 +58,25 @@ public class Client implements ClientConnectionManager {
     }
 
     @Override
-    public void waitResponse() {
-
+    public String waitResponse() {
+        ByteBuffer byteBuffer;
+        try {
+            byteBuffer = read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return StandardCharsets.UTF_8.decode(byteBuffer).toString();
     }
 
     @Override
-    public void request() {
-        Scanner scanner = new Scanner(System.in);
-        myRequest = scanner.nextLine();
-        buffer = ByteBuffer.wrap(myRequest.getBytes(StandardCharsets.UTF_8));
+    public void request(String myRequest) {
+        buffer = ByteBuffer.wrap(myRequest.getBytes());
         write(buffer);
-        if (myRequest.equals("exit")){
-            deactivateClient();
-        }
+    }
+
+    @Override
+    public void stop() throws IOException {
+        deactivateClient();
+        connection.close();
     }
 }
