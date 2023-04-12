@@ -28,9 +28,9 @@ public class Manager<T> implements Management {
     private Scanner fileScanner;
     private Boolean active;
 
-    public Manager(DataReader reader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
-        this.dataCollection = new DataStorage(reader);
-        this.scanner = new Scanner(System.in);
+    public Manager(DataCollection dataCollection, Scanner scanner) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
+        this.dataCollection = dataCollection;
+        this.scanner = scanner;
 
         this.commands = new HashMap<>();
         this.commandsList = new ArrayList<>();

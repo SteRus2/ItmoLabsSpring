@@ -5,7 +5,9 @@ import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.client.manager.Manager;
+import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.server.data.DataStorage;
 import us.obviously.itmo.prog.server.exceptions.CantFindFileException;
 import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.server.exceptions.FileNotReadableException;
@@ -13,6 +15,8 @@ import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
 import us.obviously.itmo.prog.server.reader.DataReader;
 import us.obviously.itmo.prog.server.reader.FileFormat;
 import us.obviously.itmo.prog.server.reader.FileFormatReader;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -24,7 +28,9 @@ public class Main {
         }
         try {
             DataReader reader = new FileFormatReader(args[0], FileFormat.XML); //TODO обработать использование парсера по названию файла
-            Management manager = new Manager<StudyGroup>(reader);
+            DataCollection dataCollection = new DataStorage(reader);
+            Scanner scanner = new Scanner(System.in);
+            Management manager = new Manager<StudyGroup>(dataCollection, scanner);
             if (!manager.getDataCollection().canSaveData()) {
                 Messages.printStatement("~yeОсторожно! Нет права на запись.~=");
             }
