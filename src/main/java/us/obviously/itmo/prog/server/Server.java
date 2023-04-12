@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.server;
 
 
+import us.obviously.itmo.prog.common.data.DataCollection;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -18,7 +20,10 @@ public class Server implements ServerConnectionManager {
     private static SocketAddress address;
     private ByteBuffer byteBuffer;
     private boolean isActive;
-
+    private DataCollection data;
+    public Server(DataCollection dataCollection){
+        this.data = dataCollection;
+    }
     //TODO Exceptions
     @Override
     public void run(int port) throws IOException {
@@ -27,6 +32,8 @@ public class Server implements ServerConnectionManager {
         address = new InetSocketAddress(port);
         server.bind(address);
         client = server.accept();
+        System.out.print("Клиент подключился!! - ");
+        System.out.println(client.getRemoteAddress());
         while (isActive){
             waitRequest();
         }
