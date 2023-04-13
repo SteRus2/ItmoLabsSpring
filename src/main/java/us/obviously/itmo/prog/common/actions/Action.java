@@ -30,12 +30,16 @@ public abstract class Action<T, D> {
         } catch (FailedToDumpsEx e) {
             throw new RuntimeException(e);
         }
-        client.write(ByteBuffer.wrap(body.getBytes()));
+        try {
+            client.write(ByteBuffer.wrap(body.getBytes()));
+        } catch (IOException e) {
+            //TODO exception
+        }
         ByteBuffer buffer = null;
         try {
             buffer = client.read();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //TODO exception
         }
         var responseBody = new String(buffer.array());
         ResponseModel response = null;
