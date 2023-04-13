@@ -1,51 +1,47 @@
 package us.obviously.itmo.prog.client;
 
 
-import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.client.exceptions.FailedToCloseConnection;
+import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
+import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 
 public class Client implements ClientConnectionManager {
     private static InetAddress host;
-    private static SocketAddress address;
-    private static SocketChannel connection;
+    private static Socket connection;
     private ByteBuffer buffer;
-    private String myRequest;
+    private InputStream is;
+    private OutputStream os;
+    private InetSocketAddress address;
     private boolean isActive;
 
     @Override
     public void run(int port) throws IOException {
         host = InetAddress.getLocalHost();
+        connection = new Socket();
         address = new InetSocketAddress(host, port);
-        connection = SocketChannel.open();
-        connection.connect(address);
+        connection.connect(address, 1000);
         activeClient();
     }
 
     @Override
-    public void write(ByteBuffer data) {
-        try {
-            connection.write(data);
-        } catch (IOException e) {
-            //TODO
-        }
+    public void write(ByteBuffer data) throws IOException {
+        os = connection.getOutputStream();
+        os.write(data.array());
     }
 
     @Override
     public ByteBuffer read() throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        int read = connection.read(buffer);
-        buffer.flip();
-        if (read == -1){
-            //TODO replace this Exception to new one
-            throw new IOException("SocketClosed");
-        }
+        is = connection.getInputStream();
+        is.read(buffer.array());
         return buffer;
     }
     void activeClient(){
@@ -58,25 +54,33 @@ public class Client implements ClientConnectionManager {
     }
 
     @Override
-    public String waitResponse() {
+    public String waitResponse() throws FailedToReadRemoteException {
         ByteBuffer byteBuffer;
         try {
             byteBuffer = read();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FailedToReadRemoteException("Не удается получить данные с сервера");
         }
         return StandardCharsets.UTF_8.decode(byteBuffer).toString();
     }
 
     @Override
-    public void request(String myRequest) {
+    public void request(String myRequest) throws FailedToSentRequestsException {
         buffer = ByteBuffer.wrap(myRequest.getBytes());
-        write(buffer);
+        try {
+            write(buffer);
+        } catch (IOException e) {
+            throw new FailedToSentRequestsException("Не удалось отправить запрос");
+        }
     }
 
     @Override
-    public void stop() throws IOException {
+    public void stop() throws FailedToCloseConnection {
         deactivateClient();
-        connection.close();
+        try {
+            connection.close();
+        } catch (IOException e) {
+            throw new FailedToCloseConnection("Закрыть соединение с сервером по какой то причине не получилось, будем вверить что вашего самообладания хватило на то, чтобы закрыть подключение самостоятельно, иначе, будем считать, что подключения уже нет");
+        }
     }
 }

@@ -2,20 +2,12 @@ package us.obviously.itmo.prog.server;
 
 import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.client.manager.Management;
-import us.obviously.itmo.prog.client.manager.Manager;
 import us.obviously.itmo.prog.common.data.DataCollection;
-import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.data.DataStorage;
-import us.obviously.itmo.prog.server.exceptions.CantFindFileException;
-import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
-import us.obviously.itmo.prog.server.exceptions.FileNotReadableException;
-import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
+import us.obviously.itmo.prog.server.exceptions.*;
 import us.obviously.itmo.prog.server.reader.DataReader;
 import us.obviously.itmo.prog.server.reader.FileFormat;
 import us.obviously.itmo.prog.server.reader.FileFormatReader;
-
-import java.io.IOException;
 
 public class MainServer {
     public static int port = 9999;
@@ -32,11 +24,8 @@ public class MainServer {
                 Messages.printStatement("~yeОсторожно! Нет права на запись.~=");
             }
             server = new Server(dataCollection);
-            try {
-                server.run(port);
-            } catch (IOException e) {
-                //TODO Exceptions
-            }
+            server.run(port);
+            dataCollection.saveData();
         } catch (CantFindFileException e) {
             Messages.printStatement("~reФайл не найден. Убедитесь в правильности пути и повторите попытку.~=");
         } catch (IncorrectValueException | IncorrectValuesTypeException e) {
@@ -45,6 +34,12 @@ public class MainServer {
             Messages.printStatement("~reФайл нечитаем. " + e.getMessage() + "~=");
         } catch (FileNotReadableException e) {
             Messages.printStatement("~reНет разрешение на чтение файла. Воспользуйтесь командой ~grchmod~=");
+        } catch (FileNotWritableException e) {
+            Messages.printStatement("~reФайл нельзя записывать" + e.getMessage() + "~=");
+        } catch (FailedToDumpsEx e) {
+            Messages.printStatement("~reФайл нечитаем. " + e.getMessage() + "~=");
+        } catch (CantWriteDataException e) {
+            Messages.printStatement("~reФайл нечитаем. " + e.getMessage() + "~=");
         }
     }
 }

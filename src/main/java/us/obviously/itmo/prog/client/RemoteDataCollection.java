@@ -1,5 +1,8 @@
 package us.obviously.itmo.prog.client;
 
+import us.obviously.itmo.prog.client.console.Messages;
+import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
+import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.data.DataInfo;
 import us.obviously.itmo.prog.common.model.Person;
@@ -7,6 +10,7 @@ import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.exceptions.*;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +24,14 @@ public class RemoteDataCollection implements DataCollection {
     }
     @Override
     public DataInfo getInfo() {
-        client.request("getInfo");
-        answer = client.waitResponse();
+        try {
+            client.request("getInfo");
+            answer = client.waitResponse();
+        } catch (FailedToSentRequestsException e) {
+            Messages.printStatement("~reМы не смогли отправить запрос. " + e.getMessage() + "~=");
+        } catch (FailedToReadRemoteException e) {
+            Messages.printStatement("~reМы не смогли получить ответ от сервера. " + e.getMessage() + "~=");
+        }
         return new DataInfo(answer, new Date(), 9);
     }
 

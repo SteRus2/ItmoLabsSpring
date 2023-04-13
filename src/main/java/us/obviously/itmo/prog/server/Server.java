@@ -1,6 +1,9 @@
 package us.obviously.itmo.prog.server;
 
 
+import us.obviously.itmo.prog.client.console.Messages;
+import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
+import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.common.data.DataCollection;
 
 import java.io.IOException;
@@ -24,20 +27,34 @@ public class Server implements ServerConnectionManager {
     public Server(DataCollection dataCollection){
         this.data = dataCollection;
     }
-    //TODO Exceptions
     @Override
-    public void run(int port) throws IOException {
-        server = ServerSocketChannel.open();
-        activeServer();
-        address = new InetSocketAddress(port);
-        server.bind(address);
-        client = server.accept();
-        System.out.print("Клиент подключился!! - ");
-        System.out.println(client.getRemoteAddress());
-        while (isActive){
-            waitRequest();
+    public void run(int port) {
+        try {
+            server = ServerSocketChannel.open();
+            server.configureBlocking(false);
+            activeServer();
+            address = new InetSocketAddress(port);
+            server.bind(address);
+            client = server.accept();
+            System.out.println("Клиент подключился! - " + client.getRemoteAddress());
+            while (isActive){
+                waitRequest();
+            }
+        } catch (IOException e){
+            Messages.printStatement("~reНам не удалось запустить сервер, видимо, по разным причинам: " + e.getMessage() + "~=");
+            deactivateServer();
+        } catch (FailedToReadRemoteException e) {
+            Messages.printStatement("~reКлиент не умеет общаться, мы закрываемся: " + e.getMessage() + "~=");
+            deactivateServer();
+        } catch (FailedToSentRequestsException e) {
+            Messages.printStatement("~reНам не удалось отправить ответ клиенту, но мы, как программа уважающая людей, сожалеем об этом: " + e.getMessage() + "~=");
+            deactivateServer();
         }
-        server.close();
+        try {
+            server.close();
+        } catch (IOException e) {
+            Messages.printStatement("~reОк, мы попытались закрыть сервер, у нас не получилось, наверное что-то пошло не так, мы надеемся, что сейчас сервер закрыт. " + e.getMessage() + "~=");
+        }
     }
 
     @Override
@@ -46,25 +63,24 @@ public class Server implements ServerConnectionManager {
         int read = client.read(buffer);
         buffer.flip();
         if (read == -1){
-            //TODO replace this Exception to new one
-            throw new IOException("SocketClosed");
+            throw new IOException("Сокет закрыт");
         }
         return buffer;
     }
 
 
     @Override
-    public void write(ByteBuffer data) {
-        try {
-            client.write(data);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void write(ByteBuffer data) throws IOException {
+        client.write(data);
     }
 
     @Override
-    public void waitRequest() throws IOException {
-        byteBuffer = read();
+    public void waitRequest() throws FailedToReadRemoteException, FailedToSentRequestsException {
+        try {
+            byteBuffer = read();
+        } catch (IOException e) {
+            throw new FailedToReadRemoteException("Сервер не может получить данные от Клиента. Он сам виновать.");
+        }
         String result = UTF_8.decode(byteBuffer).toString();
         System.out.println(result + " - from server");
         giveResponse(result + " - from server");
@@ -75,13 +91,14 @@ public class Server implements ServerConnectionManager {
     }
 
     @Override
-    public void giveResponse(String args) {
+    public void giveResponse(String args) throws FailedToSentRequestsException {
         byteBuffer = ByteBuffer.wrap(args.getBytes(UTF_8));
         try {
             write(byteBuffer);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new FailedToSentRequestsException("У нас не получилось отдать так называемый Response");
         }
+
     }
 
     void activeServer(){
