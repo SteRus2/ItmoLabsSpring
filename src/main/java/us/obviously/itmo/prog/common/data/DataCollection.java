@@ -24,7 +24,7 @@ public interface DataCollection {
 
     void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException;
 
-    void replaceIfGreater(int key, StudyGroup item) throws NoSuchIdException;
+    void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException;
 
     void removeGreaterKey(int key);
 
