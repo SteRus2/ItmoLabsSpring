@@ -1,6 +1,6 @@
 package us.obviously.itmo.prog.common.actions;
 
-enum ResponseStatus {
+public enum ResponseStatus {
     OK,
     CREATED,
     BAD_REQUEST,

@@ -20,8 +20,8 @@ public class MainClient {
         try {
             ConsoleColor.initColors();
             Scanner scanner = new Scanner(System.in);
-            client = new Client();
             DataCollection dataCollection = new RemoteDataCollection(client);
+            client = new Client(dataCollection);
             Management manager = new Manager<StudyGroup>(dataCollection, scanner);
             client.run(port);
             manager.run();

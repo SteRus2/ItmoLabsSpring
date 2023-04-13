@@ -18,6 +18,15 @@ public class Client implements ClientConnectionManager {
     private ByteBuffer buffer;
     private String myRequest;
     private boolean isActive;
+    private final DataCollection dataCollection;
+
+    public Client(DataCollection dataCollection) {
+        this.dataCollection = dataCollection;
+    }
+
+    public DataCollection getDataCollection() {
+        return dataCollection;
+    }
 
     @Override
     public void run(int port) throws IOException {
@@ -42,17 +51,19 @@ public class Client implements ClientConnectionManager {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         int read = connection.read(buffer);
         buffer.flip();
-        if (read == -1){
+        if (read == -1) {
             //TODO replace this Exception to new one
             throw new IOException("SocketClosed");
         }
         return buffer;
     }
-    void activeClient(){
+
+    void activeClient() {
         this.isActive = true;
         System.out.println("Клиент запущен!");
     }
-    void deactivateClient(){
+
+    void deactivateClient() {
         this.isActive = false;
         System.out.println("Клиент закрыт!");
     }

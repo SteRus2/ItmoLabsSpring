@@ -9,17 +9,4 @@ import java.util.Map;
 
 public class StudyGroupListSerializer implements Serializer<List<StudyGroup>> {
 
-    @Override
-    public String serialize(List<StudyGroup> object) {
-        // TODO: Сериализуем получается
-        return String.valueOf(object);
-    }
-
-    @Override
-    public List<StudyGroup> parse(String body) {
-        int key = Integer.parseInt(body);
-        // TODO: Распарсивание
-        // return new DataInfo(key, new StudyGroup());
-        return new LinkedList<>();
-    }
 }

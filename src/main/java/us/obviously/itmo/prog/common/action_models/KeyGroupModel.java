@@ -6,9 +6,9 @@ public class KeyGroupModel extends Model {
     private int key;
     private StudyGroup studyGroup;
 
-    public KeyGroupModel(int key, StudyGroup studyGroup) {
-        this.key = key;
+    public KeyGroupModel(StudyGroup studyGroup, int key) {
         this.studyGroup = studyGroup;
+        this.key = key;
     }
 
     public int getKey() {

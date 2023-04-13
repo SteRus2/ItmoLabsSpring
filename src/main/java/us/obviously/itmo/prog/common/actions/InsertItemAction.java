@@ -8,13 +8,13 @@ import us.obviously.itmo.prog.common.serializers.VoidSerializer;
 import us.obviously.itmo.prog.server.exceptions.UsedKeyException;
 
 public class InsertItemAction extends Action<KeyGroupModel, VoidModel> {
-    public InsertItemAction(DataCollection dataCollection) {
-        super(dataCollection, "insert", new KeyGroupSerializer(), new VoidSerializer());
+    public InsertItemAction() {
+        super("insert", new KeyGroupSerializer(), new VoidSerializer());
     }
 
     @Override
-    public VoidModel execute(KeyGroupModel arguments) throws UsedKeyException {
-        this.getDataCollection().insertItem(arguments.getStudyGroup(), arguments.getKey());
+    public VoidModel execute(DataCollection dataCollection, KeyGroupModel arguments) throws UsedKeyException {
+        dataCollection.insertItem(arguments.getStudyGroup(), arguments.getKey());
         return new VoidModel();
     }
 }
