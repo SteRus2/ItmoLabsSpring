@@ -2,15 +2,14 @@ package us.obviously.itmo.prog.client;
 
 
 import us.obviously.itmo.prog.client.exceptions.FailedToCloseConnection;
+import us.obviously.itmo.prog.client.exceptions.FailedToConnectToServerException;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -22,13 +21,23 @@ public class Client implements ClientConnectionManager {
     private OutputStream os;
     private InetSocketAddress address;
     private boolean isActive;
-
+    public Client(int port) throws FailedToConnectToServerException {
+        try {
+            host = InetAddress.getLocalHost();
+            connection = new Socket();
+            address = new InetSocketAddress(host, port);
+            connection.connect(address, 10000);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (SocketTimeoutException e){
+            throw new FailedToConnectToServerException("Превышено время ожидания ответа от сервера");
+        } catch (IOException e) {
+            throw new FailedToConnectToServerException("Не удается подключиться к серверу, попробуйте позже");
+        }
+        buffer = ByteBuffer.allocate(1024);
+    }
     @Override
-    public void run(int port) throws IOException {
-        host = InetAddress.getLocalHost();
-        connection = new Socket();
-        address = new InetSocketAddress(host, port);
-        connection.connect(address, 1000);
+    public void run() {
         activeClient();
     }
 

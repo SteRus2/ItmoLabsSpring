@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.common.actions;
 
 import us.obviously.itmo.prog.client.Client;
+import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
+import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.action_models.ResponseModel;
 import us.obviously.itmo.prog.common.data.DataCollection;
@@ -10,6 +12,7 @@ import us.obviously.itmo.prog.server.exceptions.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public abstract class Action<T, D> {
@@ -28,20 +31,23 @@ public abstract class Action<T, D> {
         try {
             body = this.request.serialize(arguments);
         } catch (FailedToDumpsEx e) {
+            //TODO exception
+        }
+        System.out.println(1);
+        try {
+            client.request(body);
+        } catch (FailedToSentRequestsException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(2);
+        String buffer = null;
         try {
-            client.write(ByteBuffer.wrap(body.getBytes()));
-        } catch (IOException e) {
-            //TODO exception
+            buffer = client.waitResponse();
+        } catch (FailedToReadRemoteException e) {
+            throw new RuntimeException(e);
         }
-        ByteBuffer buffer = null;
-        try {
-            buffer = client.read();
-        } catch (IOException e) {
-            //TODO exception
-        }
-        var responseBody = new String(buffer.array());
+        System.out.println(3);
+        var responseBody = buffer;
         ResponseModel response = null;
         try {
             response = new ResponseSerializer().parse(responseBody);

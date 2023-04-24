@@ -1,4 +1,4 @@
-package us.obviously.itmo.prog.server;
+package us.obviously.itmo.prog.server.net;
 
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;

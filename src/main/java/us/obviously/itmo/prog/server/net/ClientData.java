@@ -1,4 +1,4 @@
-package us.obviously.itmo.prog.server;
+package us.obviously.itmo.prog.server.net;
 
 import java.nio.ByteBuffer;
 

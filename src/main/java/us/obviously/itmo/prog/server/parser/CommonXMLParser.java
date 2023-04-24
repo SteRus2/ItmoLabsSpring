@@ -43,8 +43,7 @@ public class CommonXMLParser<T> extends CommonParser<T> {
     public T loads(String value) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
         List<T> l1;
         try {
-            l1 = xmlMapper.readValue(value, new TypeReference<>() {
-            });
+            l1 = xmlMapper.readValue(value, new TypeReference<>() {});
         } catch (JsonMappingException e) {
             throw new IncorrectValuesTypeException("Данные в файле имеют некорректный тип");
         } catch (JsonProcessingException e) {

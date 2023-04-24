@@ -3,6 +3,7 @@ package us.obviously.itmo.prog.client;
 import us.obviously.itmo.prog.client.console.ConsoleColor;
 import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.FailedToCloseConnection;
+import us.obviously.itmo.prog.client.exceptions.FailedToConnectToServerException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.client.manager.Manager;
@@ -24,14 +25,12 @@ public class MainClient {
         try {
             ConsoleColor.initColors();
             Scanner scanner = new Scanner(System.in);
-            client = new Client();
+            client = new Client(port);
             DataCollection dataCollection = new RemoteDataCollection(client);
             Management manager = new Manager<StudyGroup>(dataCollection, scanner);
-            client.run(port);
+            client.run();
             manager.run();
             client.stop();
-        } catch (SocketTimeoutException e) {
-            Messages.printStatement("~reПревышено время ожидания сервера~=");
         } catch (CantFindFileException e) {
             Messages.printStatement("~reФайл не найден. Убедитесь в правильности пути и повторите попытку.~=");
         } catch (IncorrectValueException | IncorrectValuesTypeException e) {
@@ -40,10 +39,10 @@ public class MainClient {
             Messages.printStatement("~reФайл нечитаем. " + e.getMessage() + "~=");
         } catch (FileNotReadableException e) {
             Messages.printStatement("~reНет разрешение на чтение файла. Воспользуйтесь командой ~grchmod~=");
-        } catch (IOException e) {
-            Messages.printStatement("~reМы не уверены точно, но видимо у сервера выходной, подключиться не получается: " + e.getMessage() + "~=");
         } catch (FailedToCloseConnection e) {
             Messages.printStatement("~reПодключение не закрыто, ВНИМАНИЕ, подключение не закрыто: " + e.getMessage() + "~=");
+        } catch (FailedToConnectToServerException e) {
+            Messages.printStatement("~reПодключиться не удалось: " + e.getMessage() + "~=");
         }
     }
 }
