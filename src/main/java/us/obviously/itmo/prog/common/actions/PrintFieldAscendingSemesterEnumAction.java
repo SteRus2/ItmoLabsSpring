@@ -14,7 +14,8 @@ public class PrintFieldAscendingSemesterEnumAction extends Action<VoidModel, Lis
     }
 
     @Override
-    public List<Semester> execute(DataCollection dataCollection, VoidModel arguments) {
-        return dataCollection.printFieldAscendingSemesterEnum();
+    public Response execute(DataCollection dataCollection, VoidModel arguments) {
+//        return dataCollection.printFieldAscendingSemesterEnum();
+        return new Response("It's fine", ResponseStatus.OK);
     }
 }

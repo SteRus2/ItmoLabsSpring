@@ -5,6 +5,7 @@ import us.obviously.itmo.prog.client.exceptions.FailedToCloseConnection;
 import us.obviously.itmo.prog.client.exceptions.FailedToConnectToServerException;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
+import us.obviously.itmo.prog.common.actions.Request;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,8 +75,8 @@ public class Client implements ClientConnectionManager {
     }
 
     @Override
-    public void request(String myRequest) throws FailedToSentRequestsException {
-        buffer = ByteBuffer.wrap(myRequest.getBytes());
+    public void request(Request myRequest) throws FailedToSentRequestsException {
+
         try {
             write(buffer);
         } catch (IOException e) {

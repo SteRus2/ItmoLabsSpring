@@ -15,7 +15,8 @@ public class GroupCountingByNameAction extends Action<VoidModel, Map<String, Lis
     }
 
     @Override
-    public Map<String, List<StudyGroup>> execute(DataCollection dataCollection, VoidModel arguments) {
-        return dataCollection.groupCountingByName();
+    public Response execute(DataCollection dataCollection, VoidModel arguments) {
+//        return dataCollection.groupCountingByName();
+        return new Response("It's fine", ResponseStatus.OK);
     }
 }

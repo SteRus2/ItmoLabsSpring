@@ -11,8 +11,9 @@ public class ClearDataAction extends Action<VoidModel, VoidModel> {
     }
 
     @Override
-    public VoidModel execute(DataCollection dataCollection, VoidModel arguments) {
+    public Response execute(DataCollection dataCollection, VoidModel arguments) {
         dataCollection.clearData();
-        return new VoidModel();
+        // return new VoidModel();
+        return new Response("It's fine", ResponseStatus.OK);
     }
 }

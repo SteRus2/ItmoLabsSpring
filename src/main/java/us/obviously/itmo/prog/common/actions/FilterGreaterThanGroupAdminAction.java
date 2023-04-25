@@ -15,7 +15,8 @@ public class FilterGreaterThanGroupAdminAction extends Action<Person, List<Study
     }
 
     @Override
-    public List<StudyGroup> execute(DataCollection dataCollection, Person arguments) {
-        return dataCollection.filterGreaterThanGroupAdmin(arguments);
+    public Response execute(DataCollection dataCollection, Person arguments) {
+        // return dataCollection.filterGreaterThanGroupAdmin(arguments);
+        return new Response("It's fine", ResponseStatus.OK);
     }
 }

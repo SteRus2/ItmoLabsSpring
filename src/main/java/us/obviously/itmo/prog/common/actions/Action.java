@@ -33,13 +33,11 @@ public abstract class Action<T, D> {
         } catch (FailedToDumpsEx e) {
             //TODO exception
         }
-        System.out.println(1);
         try {
-            client.request(body);
+            client.request(new Request(this.name, body));
         } catch (FailedToSentRequestsException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(2);
         String buffer = null;
         try {
             buffer = client.waitResponse();
@@ -90,7 +88,12 @@ public abstract class Action<T, D> {
         }
     }
 
-    abstract public D execute(DataCollection dataCollection, T arguments) throws UsedKeyException, NoSuchIdException, FileNotWritableException, FailedToDumpsEx, CantWriteDataException;
+    public Response run(DataCollection dataCollection, String arguments) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, FailedToDumpsEx, CantWriteDataException, NoSuchIdException {
+        T args = this.request.parse(arguments);
+        return this.execute(dataCollection, args);
+    }
+
+    abstract public Response execute(DataCollection dataCollection, T arguments) throws UsedKeyException, NoSuchIdException, FileNotWritableException, FailedToDumpsEx, CantWriteDataException;
 
     public Serializer<D> getResponse() {
         return response;

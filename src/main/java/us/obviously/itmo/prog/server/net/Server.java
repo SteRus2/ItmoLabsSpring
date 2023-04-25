@@ -101,9 +101,8 @@ public class Server implements ServerConnectionManager {
                          key.cancel();
                      }
                 }
-
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Messages.printStatement("~yeunknown io exception~=");
             } catch (FailedToAcceptClientException e) {
                 Messages.printStatement("~reНе получилось присоединить клиента: " + e.getMessage() + "~=");
             }

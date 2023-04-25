@@ -13,8 +13,9 @@ public class SaveDataAction extends Action<VoidModel, VoidModel> {
     }
 
     @Override
-    public VoidModel execute(DataCollection dataCollection, VoidModel arguments) throws FileNotWritableException, FailedToDumpsEx, CantWriteDataException {
+    public Response execute(DataCollection dataCollection, VoidModel arguments) throws FileNotWritableException, FailedToDumpsEx, CantWriteDataException {
         dataCollection.saveData();
-        return new VoidModel();
+//        return new VoidModel();
+        return new Response("It's fine", ResponseStatus.OK);
     }
 }

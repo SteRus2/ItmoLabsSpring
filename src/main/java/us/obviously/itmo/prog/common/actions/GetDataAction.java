@@ -14,7 +14,8 @@ public class GetDataAction extends Action<VoidModel, HashMap<Integer, StudyGroup
     }
 
     @Override
-    public HashMap<Integer, StudyGroup> execute(DataCollection dataCollection, VoidModel arguments) {
-        return dataCollection.getData();
+    public Response execute(DataCollection dataCollection, VoidModel arguments) {
+        // return dataCollection.getData();
+        return new Response("It's fine", ResponseStatus.OK);
     }
 }

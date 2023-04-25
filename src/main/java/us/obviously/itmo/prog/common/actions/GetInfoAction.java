@@ -14,7 +14,8 @@ public class GetInfoAction extends Action<VoidModel, DataInfo> {
     }
 
     @Override
-    public DataInfo execute(DataCollection dataCollection, VoidModel arguments) {
-        return dataCollection.getInfo();
+    public Response execute(DataCollection dataCollection, VoidModel arguments) {
+//        return dataCollection.getInfo();
+        return new Response("It's fine", ResponseStatus.OK);
     }
 }
