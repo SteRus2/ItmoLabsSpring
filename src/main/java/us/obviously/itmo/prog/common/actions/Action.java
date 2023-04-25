@@ -32,8 +32,6 @@ public abstract class Action<T, D> {
             body = this.request.serialize(arguments);
         } catch (FailedToDumpsEx e) {
             //TODO exception
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         try {
             client.request(new Request(this.name, body));
