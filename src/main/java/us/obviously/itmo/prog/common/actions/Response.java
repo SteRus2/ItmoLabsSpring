@@ -18,4 +18,12 @@ public class Response implements Serializable {
     public String getBody() {
         return body;
     }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "body='" + body + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

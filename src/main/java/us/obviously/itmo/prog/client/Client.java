@@ -6,18 +6,18 @@ import us.obviously.itmo.prog.client.exceptions.FailedToConnectToServerException
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.common.actions.Request;
+import us.obviously.itmo.prog.common.actions.Response;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class Client implements ClientConnectionManager {
+    private static final int DATA_SIZE = 4096;
     private static InetAddress host;
     private static Socket connection;
-    private ByteBuffer buffer;
     private InputStream is;
     private OutputStream os;
     private InetSocketAddress address;
@@ -35,7 +35,6 @@ public class Client implements ClientConnectionManager {
         } catch (IOException e) {
             throw new FailedToConnectToServerException("Не удается подключиться к серверу, попробуйте позже");
         }
-        buffer = ByteBuffer.allocate(1024);
     }
     @Override
     public void run() {
@@ -50,6 +49,7 @@ public class Client implements ClientConnectionManager {
 
     @Override
     public ByteBuffer read() throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(DATA_SIZE);
         is = connection.getInputStream();
         is.read(buffer.array());
         return buffer;
@@ -64,24 +64,36 @@ public class Client implements ClientConnectionManager {
     }
 
     @Override
-    public String waitResponse() throws FailedToReadRemoteException {
+    public Response waitResponse() throws FailedToReadRemoteException {
         ByteBuffer byteBuffer;
         try {
             byteBuffer = read();
         } catch (IOException e) {
             throw new FailedToReadRemoteException("Не удается получить данные с сервера");
         }
-        return StandardCharsets.UTF_8.decode(byteBuffer).toString();
+        ByteArrayInputStream bis = new ByteArrayInputStream(byteBuffer.array());
+        ObjectInputStream objectInputStream;
+        Response response;
+        try{
+            objectInputStream = new ObjectInputStream(bis);
+            response = (Response) objectInputStream.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(response.toString());
+        return response;
     }
 
     @Override
-    public void request(Request myRequest) throws FailedToSentRequestsException {
+    public void request(Request request) throws FailedToSentRequestsException, IOException {
 
-        try {
-            write(buffer);
-        } catch (IOException e) {
-            throw new FailedToSentRequestsException("Не удалось отправить запрос");
-        }
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(bos);
+        objectOutputStream.writeObject(request);
+        connection.getOutputStream().write(bos.toByteArray());
+        bos.close();
     }
 
     @Override

@@ -37,18 +37,17 @@ public abstract class Action<T, D> {
             client.request(new Request(this.name, body));
         } catch (FailedToSentRequestsException e) {
             throw new RuntimeException(e);
+        } catch (IOException e) {
+
         }
-        String buffer = null;
+        Response response1;
         try {
-            buffer = client.waitResponse();
+            response1 = client.waitResponse();
         } catch (FailedToReadRemoteException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(3);
-        var responseBody = buffer;
-        ResponseModel response = null;
         try {
-            response = new ResponseSerializer().parse(responseBody);
+            return response.parse(response1.getBody());
         } catch (IncorrectValuesTypeException e) {
             throw new RuntimeException(e);
         } catch (IncorrectValueException e) {
@@ -56,6 +55,14 @@ public abstract class Action<T, D> {
         } catch (CantParseDataException e) {
             throw new RuntimeException(e);
         }
+        /*try {
+            var response1 = client.waitResponse();
+        } catch (FailedToReadRemoteException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(3);
+        var responseBody = buffer;
+
         if (response.status() == ResponseStatus.BAD_REQUEST) {
             throw new RuntimeException("BAD REQUEST");
         }
@@ -85,7 +92,7 @@ public abstract class Action<T, D> {
             throw new RuntimeException(e);
         } catch (CantParseDataException e) {
             throw new RuntimeException(e);
-        }
+        }*/
     }
 
     public Response run(DataCollection dataCollection, String arguments) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, FailedToDumpsEx, CantWriteDataException, NoSuchIdException {

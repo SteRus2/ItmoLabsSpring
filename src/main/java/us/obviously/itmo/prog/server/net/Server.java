@@ -5,46 +5,48 @@ import us.obviously.itmo.prog.client.console.ConsoleColor;
 import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
+import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.common.actions.Action;
+import us.obviously.itmo.prog.common.actions.Request;
+import us.obviously.itmo.prog.common.actions.Response;
+import us.obviously.itmo.prog.common.actions.ResponseStatus;
 import us.obviously.itmo.prog.common.data.DataCollection;
-import us.obviously.itmo.prog.server.exceptions.FailedToAcceptClientException;
-import us.obviously.itmo.prog.server.exceptions.FailedToCloseServerException;
-import us.obviously.itmo.prog.server.exceptions.FailedToStartServerException;
+import us.obviously.itmo.prog.server.ActionManager;
+import us.obviously.itmo.prog.server.exceptions.*;
 import us.obviously.itmo.prog.server.serverCommands.ServerCommand;
 import us.obviously.itmo.prog.server.serverCommands.ServerCommandManager;
 
-import java.io.IOException;
-import java.net.InetAddress;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 import static java.nio.channels.SelectionKey.OP_READ;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Server implements ServerConnectionManager {
     private final int DATA_SIZE = 1024;
-    private InetAddress host;
     private ServerSocketChannel server;
-    private SocketChannel client;
     private SocketAddress address;
     private final Scanner serverCommandReader;
-    private ByteBuffer byteBuffer;
     private boolean isActive;
     private final DataCollection data;
     private final Selector selector;
     private Set<SelectionKey> selectionKeySet;
     private ServerCommandManager serverCommandManager;
+    private ActionManager actionManager;
+    private Map<SocketChannel, ArrayList<Request>> clientSocketMap;
 
     {
         ConsoleColor.initColors();
         serverCommandReader = new Scanner(System.in);
+        clientSocketMap = new HashMap<>();
     }
     public Server(DataCollection dataCollection, int port) throws FailedToStartServerException {
         this.data = dataCollection;
-        byteBuffer = ByteBuffer.allocate(DATA_SIZE);
         try {
             selector = Selector.open();
             server = ServerSocketChannel.open();
@@ -52,6 +54,7 @@ public class Server implements ServerConnectionManager {
             server.register(selector, SelectionKey.OP_ACCEPT);
             activeServer();
             serverCommandManager = new ServerCommandManager(this);
+            actionManager = new ActionManager();
         } catch (ClosedChannelException e){
             throw new FailedToStartServerException("Возникла ошибка при старте сервера, сетевой канал закрыт, попробуйте позже");
         } catch (IOException e){
@@ -90,21 +93,63 @@ public class Server implements ServerConnectionManager {
                      if (key.isValid()){
                          if(key.isAcceptable()){
                             acceptClient(key);
+                             System.out.println(clientSocketMap.toString());
                          }
                          if(key.isReadable()){
+                             SocketChannel socketChannel = (SocketChannel) key.channel();
+                             Request request = readRequest(socketChannel);
+                            if (clientSocketMap.containsKey((SocketChannel) key.channel())){
+                                clientSocketMap.get((SocketChannel) key.channel()).add(request);
+                                socketChannel.register(key.selector(), SelectionKey.OP_WRITE);
+                            }
+                            System.out.println(clientSocketMap.toString());
 
                          }
                          if (key.isWritable()){
-
+                             SocketChannel socketChannel = (SocketChannel) key.channel();
+                             if (clientSocketMap.containsKey(socketChannel)){
+                                 var requests = clientSocketMap.get(socketChannel);
+                                 Request request = requests.get(requests.size() - 1);
+                                 requests.remove(requests.size() - 1);
+                                 Action action = actionManager.getAction(request.getCommand());
+                                 System.out.println(action);
+                                 Response response;
+                                 if (action == null){
+                                     response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
+                                 } else {
+                                     response = action.run(data, request.getBody());
+                                 }
+                                 System.out.println(response.toString());
+                                 giveResponse(response, socketChannel);
+                                 if (requests.isEmpty()){
+                                     socketChannel.register(key.selector(), OP_READ);
+                                 }
+                             }
                          }
                      } else {
                          key.cancel();
                      }
                 }
             } catch (IOException e) {
-                Messages.printStatement("~yeunknown io exception~=");
+                Messages.printStatement("~yeUnknown io exception "+ Arrays.toString(e.getStackTrace()) + "~=");
             } catch (FailedToAcceptClientException e) {
                 Messages.printStatement("~reНе получилось присоединить клиента: " + e.getMessage() + "~=");
+            } catch (ClassNotFoundException e) {
+                Messages.printStatement("~reНе удалось получить Приказ клиента~=");
+            } catch (UsedKeyException e) {
+                throw new RuntimeException(e);
+            } catch (IncorrectValuesTypeException e) {
+                throw new RuntimeException(e);
+            } catch (IncorrectValueException e) {
+                throw new RuntimeException(e);
+            } catch (FileNotWritableException e) {
+                throw new RuntimeException(e);
+            } catch (CantParseDataException e) {
+                throw new RuntimeException(e);
+            } catch (CantWriteDataException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchIdException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -112,6 +157,7 @@ public class Server implements ServerConnectionManager {
         var clientSocket = (ServerSocketChannel) selectionKey.channel();
         try {
             var client = clientSocket.accept();
+            clientSocketMap.put( client, new ArrayList<>());
             client.configureBlocking(false);
             client.register(selectionKey.selector(), OP_READ);
             System.out.println("Новый клиент: " + client.getRemoteAddress());
@@ -120,27 +166,47 @@ public class Server implements ServerConnectionManager {
         }
     }
 
+    private Request readRequest(SocketChannel socketChannel) throws IOException, ClassNotFoundException {
+        ByteBuffer buf = ByteBuffer.allocate(DATA_SIZE);
+        try {
+            socketChannel.read(buf);
+        } catch (SocketException e) {
+            socketChannel.close();
+            System.out.println("Клиент отключен");
+        }
+        return deserializeRequest(buf);
+    }
+
+    private Request deserializeRequest(ByteBuffer buf) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buf.array());
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        return (Request) objectInputStream.readObject();
+    }
+    private ByteBuffer serializeResponse(Response response){
+        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+            objectOutputStream.writeObject(response);
+            return ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+            //TODO exception
+        }
+    }
 
     @Override
     public ByteBuffer read() throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        int read = client.read(buffer);
-        buffer.flip();
-        if (read == -1){
-            throw new IOException("Сокет закрыт");
-        }
-        return buffer;
-    }
 
+        return ByteBuffer.allocate(1024);
+    }
 
     @Override
     public void write(ByteBuffer data) throws IOException {
-        client.write(data);
+
     }
 
     @Override
     public void waitRequest() throws FailedToReadRemoteException, FailedToSentRequestsException {
-        try {
+
+        /*try {
             System.out.println(123);
             byteBuffer.clear();
             byteBuffer = read();
@@ -150,19 +216,13 @@ public class Server implements ServerConnectionManager {
         }
         String result = UTF_8.decode(byteBuffer).toString();
         System.out.println(result + " - from server");
-        giveResponse(result + " - from server");
-        byteBuffer.clear();
+        //giveResponse(result + " - from server");
+        byteBuffer.clear();*/
     }
 
     @Override
-    public void giveResponse(String args) throws FailedToSentRequestsException {
-        byteBuffer = ByteBuffer.wrap(args.getBytes(UTF_8));
-        try {
-            write(byteBuffer);
-        } catch (IOException e) {
-            throw new FailedToSentRequestsException("У нас не получилось отдать так называемый Response");
-        }
-
+    public void giveResponse(Response response, SocketChannel socketChannel) throws IOException {
+        socketChannel.write(serializeResponse(response));
     }
 
     public void activeServer(){
