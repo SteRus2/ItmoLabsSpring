@@ -5,6 +5,7 @@ import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.serializers.DataSerializer;
 import us.obviously.itmo.prog.common.serializers.VoidSerializer;
+import us.obviously.itmo.prog.server.exceptions.FailedToDumpsEx;
 
 import java.util.HashMap;
 
@@ -15,7 +16,12 @@ public class GetDataAction extends Action<VoidModel, HashMap<Integer, StudyGroup
 
     @Override
     public Response execute(DataCollection dataCollection, VoidModel arguments) {
-        // return dataCollection.getData();
-        return new Response("It's fine", ResponseStatus.OK);
+        var result = dataCollection.getData();
+        try {
+            String body = this.getResponse().serialize(result);
+            return new Response(body, ResponseStatus.OK);
+        } catch (FailedToDumpsEx e) {
+            return new Response(e.getMessage(), ResponseStatus.SERVER_ERROR);
+        }
     }
 }

@@ -6,6 +6,7 @@ import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.data.DataInfo;
 import us.obviously.itmo.prog.common.serializers.DataInfoSerializer;
 import us.obviously.itmo.prog.common.serializers.VoidSerializer;
+import us.obviously.itmo.prog.server.exceptions.FailedToDumpsEx;
 import us.obviously.itmo.prog.server.exceptions.UsedKeyException;
 
 public class GetInfoAction extends Action<VoidModel, DataInfo> {
@@ -15,7 +16,12 @@ public class GetInfoAction extends Action<VoidModel, DataInfo> {
 
     @Override
     public Response execute(DataCollection dataCollection, VoidModel arguments) {
-//        return dataCollection.getInfo();
-        return new Response("It's fine", ResponseStatus.OK);
+        var result = dataCollection.getInfo();
+        try {
+            String body = this.getResponse().serialize(result);
+            return new Response(body, ResponseStatus.OK);
+        } catch (FailedToDumpsEx e) {
+            return new Response(e.getMessage(), ResponseStatus.SERVER_ERROR);
+        }
     }
 }

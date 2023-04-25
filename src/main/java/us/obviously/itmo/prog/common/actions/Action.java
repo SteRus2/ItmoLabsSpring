@@ -93,7 +93,7 @@ public abstract class Action<T, D> {
         return this.execute(dataCollection, args);
     }
 
-    abstract public Response execute(DataCollection dataCollection, T arguments) throws UsedKeyException, NoSuchIdException, FileNotWritableException, FailedToDumpsEx, CantWriteDataException;
+    abstract public Response execute(DataCollection dataCollection, T arguments);
 
     public Serializer<D> getResponse() {
         return response;

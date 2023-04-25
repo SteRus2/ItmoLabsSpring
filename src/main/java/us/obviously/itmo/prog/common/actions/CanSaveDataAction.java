@@ -17,8 +17,7 @@ public class CanSaveDataAction extends Action<VoidModel, Boolean> {
             String body = this.getResponse().serialize(dataCollection.canSaveData());
             return new Response(body, ResponseStatus.OK);
         } catch (FailedToDumpsEx e) {
-            return new Response("Error", ResponseStatus.SERVER_ERROR);
+            return new Response(e.getMessage(), ResponseStatus.SERVER_ERROR);
         }
-
     }
 }

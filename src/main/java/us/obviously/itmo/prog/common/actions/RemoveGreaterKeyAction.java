@@ -14,7 +14,6 @@ public class RemoveGreaterKeyAction extends Action<KeyModel, VoidModel> {
     @Override
     public Response execute(DataCollection dataCollection, KeyModel arguments) {
         dataCollection.removeGreaterKey(arguments.getKey());
-//        return new VoidModel();
         return new Response("It's fine", ResponseStatus.OK);
     }
 }

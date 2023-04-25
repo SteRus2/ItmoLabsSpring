@@ -13,9 +13,16 @@ public class SaveDataAction extends Action<VoidModel, VoidModel> {
     }
 
     @Override
-    public Response execute(DataCollection dataCollection, VoidModel arguments) throws FileNotWritableException, FailedToDumpsEx, CantWriteDataException {
-        dataCollection.saveData();
-//        return new VoidModel();
+    public Response execute(DataCollection dataCollection, VoidModel arguments) {
+        try {
+            dataCollection.saveData();
+        } catch (FailedToDumpsEx e) {
+            return new Response(e.getMessage(), ResponseStatus.SERVER_ERROR);
+        } catch (CantWriteDataException e) {
+            return new Response("Запись недоступна", ResponseStatus.FORBIDDEN);
+        } catch (FileNotWritableException e) {
+            return new Response("Файл нельзя писать", ResponseStatus.FORBIDDEN);
+        }
         return new Response("It's fine", ResponseStatus.OK);
     }
 }

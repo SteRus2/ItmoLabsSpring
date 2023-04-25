@@ -13,9 +13,12 @@ public class RemoveItemAction extends Action<KeyModel, VoidModel> {
     }
 
     @Override
-    public Response execute(DataCollection dataCollection, KeyModel arguments) throws NoSuchIdException {
-        dataCollection.removeItem(arguments.getKey());
-//        return new VoidModel();
+    public Response execute(DataCollection dataCollection, KeyModel arguments) {
+        try {
+            dataCollection.removeItem(arguments.getKey());
+        } catch (NoSuchIdException e) {
+            return new Response("Элемента с таким id не существует", ResponseStatus.NOT_FOUND);
+        }
         return new Response("It's fine", ResponseStatus.OK);
     }
 }

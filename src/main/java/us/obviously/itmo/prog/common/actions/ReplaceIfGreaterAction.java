@@ -14,9 +14,12 @@ public class ReplaceIfGreaterAction extends Action<KeyGroupModel, VoidModel> {
     }
 
     @Override
-    public Response execute(DataCollection dataCollection, KeyGroupModel arguments) throws NoSuchIdException {
-        dataCollection.replaceIfGreater(arguments.getStudyGroup(), arguments.getKey());
-//        return new VoidModel();
+    public Response execute(DataCollection dataCollection, KeyGroupModel arguments) {
+        try {
+            dataCollection.replaceIfGreater(arguments.getStudyGroup(), arguments.getKey());
+        } catch (NoSuchIdException e) {
+            return new Response("Элемента с таким id не существует", ResponseStatus.NOT_FOUND);
+        }
         return new Response("It's fine", ResponseStatus.OK);
     }
 }

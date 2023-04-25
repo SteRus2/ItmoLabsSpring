@@ -13,9 +13,12 @@ public class InsertItemAction extends Action<KeyGroupModel, VoidModel> {
     }
 
     @Override
-    public Response execute(DataCollection dataCollection, KeyGroupModel arguments) throws UsedKeyException {
-        dataCollection.insertItem(arguments.getStudyGroup(), arguments.getKey());
-//        return new VoidModel();
+    public Response execute(DataCollection dataCollection, KeyGroupModel arguments) {
+        try {
+            dataCollection.insertItem(arguments.getStudyGroup(), arguments.getKey());
+        } catch (UsedKeyException e) {
+            return new Response("Ключ уже используется", ResponseStatus.BAD_REQUEST);
+        }
         return new Response("It's fine", ResponseStatus.OK);
     }
 }
