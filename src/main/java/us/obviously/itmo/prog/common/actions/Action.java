@@ -32,6 +32,8 @@ public abstract class Action<T, D> {
             body = this.request.serialize(arguments);
         } catch (FailedToDumpsEx e) {
             //TODO exception
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         try {
             client.request(new Request(this.name, body));
@@ -48,11 +50,9 @@ public abstract class Action<T, D> {
         }
         try {
             return response.parse(response1.getBody());
-        } catch (IncorrectValuesTypeException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (IncorrectValueException e) {
-            throw new RuntimeException(e);
-        } catch (CantParseDataException e) {
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         /*try {
@@ -95,7 +95,7 @@ public abstract class Action<T, D> {
         }*/
     }
 
-    public Response run(DataCollection dataCollection, String arguments) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, FailedToDumpsEx, CantWriteDataException, NoSuchIdException {
+    public Response run(DataCollection dataCollection, String arguments) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, IOException, CantWriteDataException, NoSuchIdException, ClassNotFoundException {
         T args = this.request.parse(arguments);
         return this.execute(dataCollection, args);
     }
