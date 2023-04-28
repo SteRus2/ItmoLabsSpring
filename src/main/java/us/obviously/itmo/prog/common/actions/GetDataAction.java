@@ -1,7 +1,7 @@
 package us.obviously.itmo.prog.common.actions;
 
 import us.obviously.itmo.prog.common.action_models.VoidModel;
-import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.serializers.DataSerializer;
 import us.obviously.itmo.prog.common.serializers.VoidSerializer;
@@ -15,13 +15,13 @@ public class GetDataAction extends Action<VoidModel, HashMap<Integer, StudyGroup
     }
 
     @Override
-    public Response execute(DataCollection dataCollection, VoidModel arguments) {
+    public Response execute(LocalDataCollection dataCollection, VoidModel arguments) {
         var result = dataCollection.getData();
         try {
-            String body = this.getResponse().serialize(result);
+            var body = this.getResponse().serialize(result);
             return new Response(body, ResponseStatus.OK);
         } catch (FailedToDumpsEx e) {
-            return new Response(e.getMessage(), ResponseStatus.SERVER_ERROR);
+            return new Response(e.getMessage().getBytes(), ResponseStatus.SERVER_ERROR);
         }
     }
 }

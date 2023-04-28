@@ -4,6 +4,9 @@ import us.obviously.itmo.prog.client.console.ConsoleColor;
 import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.data.LocalDataCollection;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.server.data.DataStorage;
 import us.obviously.itmo.prog.server.exceptions.*;
 import us.obviously.itmo.prog.server.net.Server;
@@ -24,7 +27,7 @@ public class MainServer {
         }
         try {
             DataReader reader = new FileFormatReader(args[0], FileFormat.XML); //TODO обработать использование парсера по названию файла
-            DataCollection dataCollection = new DataStorage(reader);
+            LocalDataCollection dataCollection = new DataStorage(reader);
             if (!dataCollection.canSaveData()) {
                 Messages.printStatement("~yeОсторожно! Нет права на запись.~=");
             }

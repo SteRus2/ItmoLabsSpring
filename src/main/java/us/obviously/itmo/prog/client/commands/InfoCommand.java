@@ -2,6 +2,8 @@ package us.obviously.itmo.prog.client.commands;
 
 import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 
 import java.util.HashMap;
 
@@ -19,9 +21,15 @@ public class InfoCommand extends AbstractCommand {
      */
     @Override
     public void execute(HashMap<String, String> args) {
-        var info = this.manager.getDataCollection().getInfo();
-        Messages.printStatement("Количество: ~bl" + info.getCount() + "~=");
-        Messages.printStatement("       Тип: ~bl" + info.getType() + "~=");
-        Messages.printStatement("      Дата: ~bl" + info.getDate() + "~=");
+        try {
+            var info = this.manager.getDataCollection().getInfo();
+            Messages.printStatement("Количество: ~bl" + info.getCount() + "~=");
+            Messages.printStatement("       Тип: ~bl" + info.getType() + "~=");
+            Messages.printStatement("      Дата: ~bl" + info.getDate() + "~=");
+        } catch (BadRequestException e) {
+            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+        } catch (ServerErrorException e) {
+            Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
+        }
     }
 }

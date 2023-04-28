@@ -2,7 +2,7 @@ package us.obviously.itmo.prog.common.actions;
 
 import us.obviously.itmo.prog.common.action_models.KeyModel;
 import us.obviously.itmo.prog.common.action_models.VoidModel;
-import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.serializers.KeySerializer;
 import us.obviously.itmo.prog.common.serializers.VoidSerializer;
 import us.obviously.itmo.prog.server.exceptions.NoSuchIdException;
@@ -13,7 +13,7 @@ public class RemoveItemAction extends Action<KeyModel, VoidModel> {
     }
 
     @Override
-    public Response execute(DataCollection dataCollection, KeyModel arguments) {
+    public Response execute(LocalDataCollection dataCollection, KeyModel arguments) {
         try {
             dataCollection.removeItem(arguments.getKey());
         } catch (NoSuchIdException e) {

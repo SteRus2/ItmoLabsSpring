@@ -6,10 +6,12 @@ import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.FormInterruptException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.exceptions.InvalidArgumentException;
-import us.obviously.itmo.prog.server.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.client.forms.StudyGroupForm;
 import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.server.exceptions.NoSuchIdException;
 
 import java.util.HashMap;
 
@@ -48,6 +50,10 @@ public class ReplaceIfGreaterCommand extends AbstractCommand {
             Messages.printStatement("~reОшибка с аргументом: " + e.getMessage() + "~=");
         } catch (FormInterruptException e) {
             Messages.printStatement("~blПрервано пользователем.~=");
+        } catch (BadRequestException e) {
+            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+        } catch (ServerErrorException e) {
+            Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }
 
     }

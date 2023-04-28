@@ -3,6 +3,7 @@ package us.obviously.itmo.prog.server.data;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.data.DataInfo;
+import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Класс, предоставляющий основной функционал по работе с коллекцией данных
  */
-public class DataStorage implements DataCollection {
+public class DataStorage implements LocalDataCollection {
     private final DataReader dataReader;
     private HashMap<Integer, StudyGroup> data;
     private final String type;

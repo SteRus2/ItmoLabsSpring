@@ -3,7 +3,9 @@ package us.obviously.itmo.prog.common.model;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.validation.CoordinatesValidation;
 
-public class Coordinates {
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
     private Long x; //Поле не может быть null
     private Float y; //Значение поля должно быть больше -373
 

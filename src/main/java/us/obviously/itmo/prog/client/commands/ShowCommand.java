@@ -1,7 +1,11 @@
 package us.obviously.itmo.prog.client.commands;
 
+import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.console.TablesPrinter;
 import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
+import us.obviously.itmo.prog.common.model.StudyGroup;
 
 import java.util.HashMap;
 
@@ -18,7 +22,14 @@ public class ShowCommand extends AbstractCommand {
      */
     @Override
     public void execute(HashMap<String, String> args) {
-        var hs = this.manager.getDataCollection().getData();
+        HashMap<Integer, StudyGroup> hs = null;
+        try {
+            hs = this.manager.getDataCollection().getData();
+        } catch (BadRequestException e) {
+            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+        } catch (ServerErrorException e) {
+            Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
+        }
         TablesPrinter.printStudyGroups(hs);
     }
 }

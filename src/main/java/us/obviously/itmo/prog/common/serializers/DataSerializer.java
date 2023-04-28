@@ -10,21 +10,21 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class DataSerializer implements Serializer<HashMap<Integer, StudyGroup>> {
-    @Override
-    public String serialize(HashMap<Integer, StudyGroup> object) throws FailedToDumpsEx {
-        StringBuilder builder = new StringBuilder();
-        object.forEach((key, o) -> {
-            builder.append(o.getClass().toString());
-        });
-        return builder.toString();
-    }
-
-    @Override
-    public HashMap<Integer, StudyGroup> parse(String body) throws IOException, ClassNotFoundException {
-        var elements = body.split("&");
-        for (String element : elements) {
-
-        }
-        return Serializer.super.parse(body);
-    }
+//    @Override
+//    public String serialize(HashMap<Integer, StudyGroup> object) throws FailedToDumpsEx {
+//        StringBuilder builder = new StringBuilder();
+//        object.forEach((key, o) -> {
+//            builder.append(o.getClass().toString());
+//        });
+//        return builder.toString();
+//    }
+//
+//    @Override
+//    public HashMap<Integer, StudyGroup> parse(String body) throws IOException, ClassNotFoundException {
+//        var elements = body.split("&");
+//        for (String element : elements) {
+//
+//        }
+//        return Serializer.super.parse(body);
+//    }
 }

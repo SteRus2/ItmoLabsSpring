@@ -6,6 +6,8 @@ import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.client.manager.Manager;
 import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.data.DataStorage;
 import us.obviously.itmo.prog.server.exceptions.CantFindFileException;
@@ -43,6 +45,10 @@ public class Main {
             Messages.printStatement("~reФайл нечитаем. " + e.getMessage() + "~=");
         } catch (FileNotReadableException e) {
             Messages.printStatement("~reНет разрешение на чтение файла. Воспользуйтесь командой ~grchmod~=");
+        } catch (BadRequestException e) {
+            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+        } catch (ServerErrorException e) {
+            Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }
     }
 }

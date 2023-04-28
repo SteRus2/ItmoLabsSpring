@@ -5,6 +5,8 @@ import us.obviously.itmo.prog.client.exceptions.FormInterruptException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.forms.SelectChoice;
 import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -99,7 +101,7 @@ abstract public class FormField<T> {
                 this.value = this.convert(line);
             }
             this.callback.callback(this.value);
-        } catch (IncorrectValueException e) {
+        } catch (IncorrectValueException | BadRequestException | ServerErrorException e) {
             Messages.printStatement("~reОшибка: " + e.getMessage() + "~=");
             return false;
         }
@@ -181,6 +183,6 @@ abstract public class FormField<T> {
     }
 
     public interface Callback<T> {
-        void callback(T value) throws IncorrectValueException, FormInterruptException;
+        void callback(T value) throws IncorrectValueException, FormInterruptException, BadRequestException, ServerErrorException;
     }
 }

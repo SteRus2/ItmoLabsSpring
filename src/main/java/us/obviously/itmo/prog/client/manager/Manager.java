@@ -5,6 +5,8 @@ import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.exceptions.MissedArgumentException;
 import us.obviously.itmo.prog.client.exceptions.RecurrentExecuteScripts;
 import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.server.data.DataStorage;
 import us.obviously.itmo.prog.client.console.ConsoleColors;
 import us.obviously.itmo.prog.client.console.Messages;
@@ -134,7 +136,7 @@ public class Manager<T> implements Management {
      * @inheritDoc
      */
     @Override
-    public boolean isIdExists(Integer id) {
+    public boolean isIdExists(Integer id) throws BadRequestException, ServerErrorException {
         return dataCollection.getData().get(id) != null;
     }
 

@@ -1,4 +1,6 @@
 package us.obviously.itmo.prog.common.action_models;
 
-public class VoidModel extends Model {
+import java.io.Serializable;
+
+public class VoidModel extends Model implements Serializable {
 }

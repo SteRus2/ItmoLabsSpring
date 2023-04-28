@@ -2,6 +2,7 @@ package us.obviously.itmo.prog.common.actions;
 
 import us.obviously.itmo.prog.client.Client;
 import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.serializers.PersonSerializer;
@@ -16,10 +17,10 @@ public class FilterGreaterThanGroupAdminAction extends Action<Person, List<Study
     }
 
     @Override
-    public Response execute(DataCollection dataCollection, Person arguments) {
+    public Response execute(LocalDataCollection dataCollection, Person arguments) {
         var result = dataCollection.filterGreaterThanGroupAdmin(arguments);
         try {
-            String body = this.getResponse().serialize(result);
+            var body = this.getResponse().serialize(result);
             return new Response(body, ResponseStatus.OK);
         } catch (FailedToDumpsEx e) {
             return new Response(e.getMessage(), ResponseStatus.SERVER_ERROR);

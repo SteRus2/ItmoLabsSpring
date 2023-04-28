@@ -10,7 +10,7 @@ import us.obviously.itmo.prog.common.actions.Action;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.actions.ResponseStatus;
-import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.server.ActionManager;
 import us.obviously.itmo.prog.server.exceptions.*;
 import us.obviously.itmo.prog.server.serverCommands.ServerCommand;
@@ -25,16 +25,15 @@ import java.nio.channels.*;
 import java.util.*;
 
 import static java.nio.channels.SelectionKey.OP_READ;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Server implements ServerConnectionManager {
     private final int DATA_SIZE = 1024;
+    private final Scanner serverCommandReader;
+    private final LocalDataCollection data;
+    private final Selector selector;
     private ServerSocketChannel server;
     private SocketAddress address;
-    private final Scanner serverCommandReader;
     private boolean isActive;
-    private final DataCollection data;
-    private final Selector selector;
     private Set<SelectionKey> selectionKeySet;
     private ServerCommandManager serverCommandManager;
     private ActionManager actionManager;
@@ -45,7 +44,8 @@ public class Server implements ServerConnectionManager {
         serverCommandReader = new Scanner(System.in);
         clientSocketMap = new HashMap<>();
     }
-    public Server(DataCollection dataCollection, int port) throws FailedToStartServerException {
+
+    public Server(LocalDataCollection dataCollection, int port) throws FailedToStartServerException {
         this.data = dataCollection;
         try {
             selector = Selector.open();
@@ -55,9 +55,9 @@ public class Server implements ServerConnectionManager {
             activeServer();
             serverCommandManager = new ServerCommandManager(this);
             actionManager = new ActionManager();
-        } catch (ClosedChannelException e){
+        } catch (ClosedChannelException e) {
             throw new FailedToStartServerException("Возникла ошибка при старте сервера, сетевой канал закрыт, попробуйте позже");
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new FailedToStartServerException("Возникла ошибка при старте сервера, пожалуйста, попробуйте позднее");
         }
         try {
@@ -66,7 +66,7 @@ public class Server implements ServerConnectionManager {
         } catch (IOException e) {
             throw new FailedToStartServerException("Данный порт занят");
         }
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 while (serverCommandReader.hasNextLine()) {
@@ -81,57 +81,58 @@ public class Server implements ServerConnectionManager {
             }
         }.start();
     }
+
     @Override
     public void run() {
-        while (isActive){
+        while (isActive) {
             try {
                 int nowChannels = selector.select(1000);
                 selectionKeySet = selector.selectedKeys();
-                for (var iter = selectionKeySet.iterator(); iter.hasNext(); ){
-                     SelectionKey key = iter.next();
-                     iter.remove();
-                     if (key.isValid()){
-                         if(key.isAcceptable()){
+                for (var iter = selectionKeySet.iterator(); iter.hasNext(); ) {
+                    SelectionKey key = iter.next();
+                    iter.remove();
+                    if (key.isValid()) {
+                        if (key.isAcceptable()) {
                             acceptClient(key);
-                             System.out.println(clientSocketMap.toString());
-                         }
-                         if(key.isReadable()){
-                             SocketChannel socketChannel = (SocketChannel) key.channel();
-                             Request request = readRequest(socketChannel);
-                            if (clientSocketMap.containsKey((SocketChannel) key.channel())){
+                            System.out.println(clientSocketMap.toString());
+                        }
+                        if (key.isReadable()) {
+                            SocketChannel socketChannel = (SocketChannel) key.channel();
+                            Request request = readRequest(socketChannel);
+                            if (clientSocketMap.containsKey((SocketChannel) key.channel())) {
                                 clientSocketMap.get((SocketChannel) key.channel()).add(request);
                                 socketChannel.register(key.selector(), SelectionKey.OP_WRITE);
                             }
                             System.out.println(clientSocketMap.toString());
 
-                         }
-                         if (key.isWritable()){
-                             SocketChannel socketChannel = (SocketChannel) key.channel();
-                             if (clientSocketMap.containsKey(socketChannel)){
-                                 var requests = clientSocketMap.get(socketChannel);
-                                 Request request = requests.get(requests.size() - 1);
-                                 requests.remove(requests.size() - 1);
-                                 Action action = actionManager.getAction(request.getCommand());
-                                 System.out.println(action);
-                                 Response response;
-                                 if (action == null){
-                                     response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
-                                 } else {
-                                     response = action.run(data, request.getBody());
-                                 }
-                                 System.out.println(response.toString());
-                                 giveResponse(response, socketChannel);
-                                 if (requests.isEmpty()){
-                                     socketChannel.register(key.selector(), OP_READ);
-                                 }
-                             }
-                         }
-                     } else {
-                         key.cancel();
-                     }
+                        }
+                        if (key.isWritable()) {
+                            SocketChannel socketChannel = (SocketChannel) key.channel();
+                            if (clientSocketMap.containsKey(socketChannel)) {
+                                var requests = clientSocketMap.get(socketChannel);
+                                Request request = requests.get(requests.size() - 1);
+                                requests.remove(requests.size() - 1);
+                                var action = actionManager.getAction(request.getCommand());
+                                System.out.println(action);
+                                Response response;
+                                if (action == null) {
+                                    response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
+                                } else {
+                                    response = action.run(data, request.getBody());
+                                }
+                                System.out.println(response.toString());
+                                giveResponse(response, socketChannel);
+                                if (requests.isEmpty()) {
+                                    socketChannel.register(key.selector(), OP_READ);
+                                }
+                            }
+                        }
+                    } else {
+                        key.cancel();
+                    }
                 }
             } catch (IOException e) {
-                Messages.printStatement("~yeUnknown io exception "+ Arrays.toString(e.getStackTrace()) + "~=");
+                Messages.printStatement("~yeUnknown io exception " + Arrays.toString(e.getStackTrace()) + "~=");
             } catch (FailedToAcceptClientException e) {
                 Messages.printStatement("~reНе получилось присоединить клиента: " + e.getMessage() + "~=");
             } catch (ClassNotFoundException e) {
@@ -153,11 +154,12 @@ public class Server implements ServerConnectionManager {
             }
         }
     }
+
     private void acceptClient(SelectionKey selectionKey) throws FailedToAcceptClientException {
         var clientSocket = (ServerSocketChannel) selectionKey.channel();
         try {
             var client = clientSocket.accept();
-            clientSocketMap.put( client, new ArrayList<>());
+            clientSocketMap.put(client, new ArrayList<>());
             client.configureBlocking(false);
             client.register(selectionKey.selector(), OP_READ);
             System.out.println("Новый клиент: " + client.getRemoteAddress());
@@ -182,8 +184,9 @@ public class Server implements ServerConnectionManager {
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
         return (Request) objectInputStream.readObject();
     }
-    private ByteBuffer serializeResponse(Response response){
-        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+
+    private ByteBuffer serializeResponse(Response response) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
             objectOutputStream.writeObject(response);
             return ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
         } catch (IOException e) {
@@ -225,10 +228,11 @@ public class Server implements ServerConnectionManager {
         socketChannel.write(serializeResponse(response));
     }
 
-    public void activeServer(){
+    public void activeServer() {
         this.isActive = true;
         System.out.println("Сервер открыт!");
     }
+
     public void deactivateServer() throws FailedToCloseServerException {
         this.isActive = false;
         try {

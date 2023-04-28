@@ -3,6 +3,8 @@ package us.obviously.itmo.prog.client.commands;
 import us.obviously.itmo.prog.client.console.ConsoleColors;
 import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 
 import java.util.HashMap;
 
@@ -29,6 +31,10 @@ public class RemoveGreaterKeyCommand extends AbstractCommand {
                     "Введите " + ConsoleColors.GREEN + "save~=" + ", чтобы сохранить изменения.");
         } catch (NumberFormatException e) {
             Messages.printStatement("Не получается чето");
+        } catch (BadRequestException e) {
+            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+        } catch (ServerErrorException e) {
+            Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }
     }
 }

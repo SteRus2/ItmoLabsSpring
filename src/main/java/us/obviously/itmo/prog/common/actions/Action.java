@@ -4,16 +4,11 @@ import us.obviously.itmo.prog.client.Client;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.common.action_models.ResponseModel;
-import us.obviously.itmo.prog.common.data.DataCollection;
-import us.obviously.itmo.prog.common.serializers.ResponseSerializer;
+import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.serializers.Serializer;
 import us.obviously.itmo.prog.server.exceptions.*;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 public abstract class Action<T, D> {
     private final Serializer<T> request;
@@ -27,7 +22,7 @@ public abstract class Action<T, D> {
     }
 
     public D send(Client client, T arguments) {
-        String body = null;
+        byte[] body = null;
         try {
             body = this.request.serialize(arguments);
         } catch (FailedToDumpsEx e) {
@@ -93,12 +88,12 @@ public abstract class Action<T, D> {
         }*/
     }
 
-    public Response run(DataCollection dataCollection, String arguments) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, IOException, CantWriteDataException, NoSuchIdException, ClassNotFoundException {
+    public Response run(LocalDataCollection dataCollection, byte[] arguments) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, IOException, CantWriteDataException, NoSuchIdException, ClassNotFoundException {
         T args = this.request.parse(arguments);
         return this.execute(dataCollection, args);
     }
 
-    abstract public Response execute(DataCollection dataCollection, T arguments);
+    abstract public Response execute(LocalDataCollection dataCollection, T arguments);
 
     public Serializer<D> getResponse() {
         return response;

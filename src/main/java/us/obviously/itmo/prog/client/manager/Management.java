@@ -1,8 +1,10 @@
 package us.obviously.itmo.prog.client.manager;
 
-import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.client.commands.AbstractCommand;
 import us.obviously.itmo.prog.client.exceptions.RecurrentExecuteScripts;
+import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -25,7 +27,7 @@ public interface Management {
      * Вызов скрипта из файла <b>filepath</b>
      *
      * @param filepath Путь к файлу
-     * @throws FileNotFoundException Выбросит исключение, если файл не найден
+     * @throws FileNotFoundException   Выбросит исключение, если файл не найден
      * @throws RecurrentExecuteScripts Выбросит исключение, если произошла рекурсия вызовов
      */
     void executeScript(String filepath) throws FileNotFoundException, RecurrentExecuteScripts;
@@ -43,7 +45,7 @@ public interface Management {
      * @param id Проверяемое id
      * @return <b>true</b> - элемент с данным id существует
      */
-    boolean isIdExists(Integer id);
+    boolean isIdExists(Integer id) throws BadRequestException, ServerErrorException;
 
     /**
      * @return Получить следующую введённую строку
@@ -62,7 +64,6 @@ public interface Management {
 
     /**
      * @return Класс для работы с коллекцией групп
-     *
      * @see DataCollection
      */
     DataCollection getDataCollection();

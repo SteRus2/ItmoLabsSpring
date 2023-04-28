@@ -8,7 +8,7 @@ import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
 import java.io.*;
 
 public interface Serializer<T> {
-    default String serialize(T object) throws FailedToDumpsEx {
+    default byte[] serialize(T object) throws FailedToDumpsEx {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = null;
         try {
@@ -18,11 +18,11 @@ public interface Serializer<T> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return baos.toString();
+        return baos.toByteArray();
     }
 
-    default T parse(String body) throws IOException, ClassNotFoundException {
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(body.getBytes()));
+    default T parse(byte[] body) throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(body));
         T readStrObj = (T) ois.readObject();
         ois.close();
         return readStrObj;

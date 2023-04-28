@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.common.model;
 
-public enum Semester {
+import java.io.Serializable;
+
+public enum Semester implements Serializable {
     SECOND("Второй"),
     THIRD("Третий"),
     FIFTH("Пятый"),

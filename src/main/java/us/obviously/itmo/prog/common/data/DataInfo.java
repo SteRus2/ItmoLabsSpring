@@ -1,5 +1,6 @@
 package us.obviously.itmo.prog.common.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  *
  * @author stepa
  */
-public class DataInfo {
+public class DataInfo implements Serializable {
     /**
      * Поле тип данных, хранимых в коллекции
      */

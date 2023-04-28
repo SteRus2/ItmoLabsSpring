@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.common.action_models;
 
-public class KeyModel extends Model {
+import java.io.Serializable;
+
+public class KeyModel extends Model implements Serializable {
     private int key;
 
     public KeyModel(int key) {

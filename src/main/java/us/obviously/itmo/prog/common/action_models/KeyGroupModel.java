@@ -2,7 +2,9 @@ package us.obviously.itmo.prog.common.action_models;
 
 import us.obviously.itmo.prog.common.model.StudyGroup;
 
-public class KeyGroupModel extends Model {
+import java.io.Serializable;
+
+public class KeyGroupModel extends Model implements Serializable {
     private int key;
     private StudyGroup studyGroup;
 

@@ -4,6 +4,7 @@ import us.obviously.itmo.prog.client.Client;
 import us.obviously.itmo.prog.common.action_models.KeyModel;
 import us.obviously.itmo.prog.common.action_models.VoidModel;
 import us.obviously.itmo.prog.common.data.DataCollection;
+import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.serializers.KeySerializer;
 import us.obviously.itmo.prog.common.serializers.VoidSerializer;
 
@@ -13,7 +14,7 @@ public class RemoveLowerKeyAction extends Action<KeyModel, VoidModel> {
     }
 
     @Override
-    public Response execute(DataCollection dataCollection, KeyModel arguments) {
+    public Response execute(LocalDataCollection dataCollection, KeyModel arguments) {
         dataCollection.removeLowerKey(arguments.getKey());
         return new Response("It's fine", ResponseStatus.OK);
     }

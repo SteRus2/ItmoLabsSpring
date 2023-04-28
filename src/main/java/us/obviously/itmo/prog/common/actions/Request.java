@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class Request implements Serializable {
     private String command;
-    private String body;
-    public Request(String command, String body) {
+    private byte[] body;
+    public Request(String command, byte[] body) {
         this.command = command;
         this.body = body;
     }
@@ -14,7 +14,7 @@ public class Request implements Serializable {
         return command;
     }
 
-    public String getBody() {
+    public byte[] getBody() {
         return body;
     }
 
@@ -22,7 +22,7 @@ public class Request implements Serializable {
     public String toString() {
         return "Request{" +
                 "command='" + command + '\'' +
-                ", body='" + body + '\'' +
+                ", body='" + body.toString() + '\'' +
                 '}';
     }
 }

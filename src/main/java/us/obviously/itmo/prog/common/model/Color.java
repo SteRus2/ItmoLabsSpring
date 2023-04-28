@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.common.model;
 
-public enum Color {
+import java.io.Serializable;
+
+public enum Color implements Serializable {
     RED("Красный"),
     YELLOW("Жёлтый"),
     ORANGE("Оранжевый"),

@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.common.model;
 
-public enum Country {
+import java.io.Serializable;
+
+public enum Country implements Serializable {
     FRANCE("Франция"),
     INDIA("Индия"),
     VATICAN("Ватикан"),

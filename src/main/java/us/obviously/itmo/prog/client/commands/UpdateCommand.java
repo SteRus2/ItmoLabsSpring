@@ -6,10 +6,12 @@ import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.FormInterruptException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.exceptions.InvalidArgumentException;
-import us.obviously.itmo.prog.server.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.client.forms.StudyGroupForm;
 import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.server.exceptions.NoSuchIdException;
 
 import java.util.HashMap;
 
@@ -32,17 +34,17 @@ public class UpdateCommand extends AbstractCommand {
         try {
             var group = new ExistingStudyGroupKeyArgumentValidator(manager).validate(key);
             studyGroupForm.update(group);
-            try {
-                StudyGroup studyGroup = studyGroupForm.build();
-                try {
-                    this.manager.getDataCollection().updateItem(studyGroup, studyGroup.getId());
-                    Messages.printStatement("~blstudyGroup обновлён под id %s~=", studyGroup.getId());
-                } catch (NoSuchIdException e) {
-                    Messages.printStatement("~reОшибка при сохранении: " + e.getMessage() + "~=");
-                }
-            } catch (IncorrectValueException e) {
-                Messages.printStatement("~reЧто-то криво заполнили: " + e.getMessage() + "~=");
-            }
+            StudyGroup studyGroup = studyGroupForm.build();
+            this.manager.getDataCollection().updateItem(studyGroup, studyGroup.getId());
+            Messages.printStatement("~blstudyGroup обновлён под id %s~=", studyGroup.getId());
+        } catch (NoSuchIdException e) {
+            Messages.printStatement("~reОшибка при сохранении: " + e.getMessage() + "~=");
+        } catch (BadRequestException e) {
+            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+        } catch (ServerErrorException e) {
+            Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
+        } catch (IncorrectValueException e) {
+            Messages.printStatement("~reЧто-то криво заполнили: " + e.getMessage() + "~=");
         } catch (InvalidArgumentException e) {
             Messages.printStatement("~reОшибка с аргументом: " + e.getMessage() + "~=");
         } catch (FormInterruptException e) {
