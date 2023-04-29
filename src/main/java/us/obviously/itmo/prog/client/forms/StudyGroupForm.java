@@ -52,7 +52,8 @@ public class StudyGroupForm extends Form<StudyGroup> {
      * @throws FormInterruptException Выбросит исключение, если пользователь введёт команду прерывания заполнения формы
      */
     public void update(StudyGroup group) throws FormInterruptException {
-        new IntegerFormField(manager, "id", this::findId, false, group.getId(), null).run();
+        //new IntegerFormField(manager, "id", this::findId, false, group.getId(), null).run();
+        this.builder.setId(group.getId());
         new StringFormField(manager, "name", this::setName, false, group.getName(), null).run();
         new DropdownSelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters, false, group.getSemesterEnum(), group.getSemesterEnum().name(), null).run();
         new DropdownSelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation, false, group.getFormOfEducation(), group.getFormOfEducation().name(), null).run();

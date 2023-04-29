@@ -32,7 +32,7 @@ public class RemoveGreaterKeyCommand extends AbstractCommand {
         } catch (NumberFormatException e) {
             Messages.printStatement("Не получается чето");
         } catch (BadRequestException e) {
-            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+            Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }

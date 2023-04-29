@@ -28,7 +28,7 @@ public class PrintFieldAscendingSemesterEnumCommand extends AbstractCommand {
         try {
             TablesPrinter.printSemesters(this.manager.getDataCollection().printFieldAscendingSemesterEnum());
         } catch (BadRequestException e) {
-            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+            Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }

@@ -34,7 +34,7 @@ public class RemoveKeyCommand extends AbstractCommand {
         } catch (NoSuchIdException e) {
             Messages.printStatement(ConsoleColors.RED + e.getMessage() + "~=");
         } catch (BadRequestException e) {
-            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+            Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }

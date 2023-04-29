@@ -23,6 +23,6 @@ public class SaveDataAction extends Action<VoidModel, VoidModel> {
         } catch (FileNotWritableException e) {
             return new Response("Файл нельзя писать", ResponseStatus.FORBIDDEN);
         }
-        return new Response("It's fine", ResponseStatus.OK);
+        return new Response(this.getResponse().serialize(new VoidModel()), ResponseStatus.OK);
     }
 }

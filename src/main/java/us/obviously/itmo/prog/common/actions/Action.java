@@ -2,13 +2,16 @@ package us.obviously.itmo.prog.common.actions;
 
 import us.obviously.itmo.prog.client.Client;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
-import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.serializers.Serializer;
+import us.obviously.itmo.prog.common.serializers.StringSerializer;
 import us.obviously.itmo.prog.server.exceptions.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public abstract class Action<T, D> {
     private final Serializer<T> request;
@@ -21,71 +24,36 @@ public abstract class Action<T, D> {
         this.response = response;
     }
 
-    public D send(Client client, T arguments) {
-        byte[] body = null;
+    public void send(Client client, T arguments) {
         try {
-            body = this.request.serialize(arguments);
-        } catch (FailedToDumpsEx e) {
-            //TODO exception
+            client.connect(client.getPort());
+        } catch (IOException e) {
         }
+        byte[] body = null;
+        body = this.request.serialize(arguments);
+        //System.out.println(Arrays.toString(body));
         try {
             client.request(new Request(this.name, body));
-        } catch (FailedToSentRequestsException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
 
         }
-        Response response1;
+
+    }
+    public D recieve(Client client) throws BadRequestException, FailedToReadRemoteException {
+        Response response1 = client.waitResponse();
         try {
-            response1 = client.waitResponse();
-        } catch (FailedToReadRemoteException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            return response.parse(response1.getBody());
+            switch (response1.getStatus()) {
+                case OK, CREATED -> {
+                    return response.parse(response1.getBody());
+                }
+            }
+            var errorSerializer = new StringSerializer();
+            throw new BadRequestException(errorSerializer.parse(response1.getBody()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        /*try {
-            var response1 = client.waitResponse();
-        } catch (FailedToReadRemoteException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(3);
-        var responseBody = buffer;
-
-        if (response.status() == ResponseStatus.BAD_REQUEST) {
-            throw new RuntimeException("BAD REQUEST");
-        }
-        if (response.status() == ResponseStatus.FORBIDDEN) {
-            throw new RuntimeException("FORBIDDEN");
-        }
-        if (response.status() == ResponseStatus.UNAUTHORIZED) {
-            throw new RuntimeException("UNAUTHORIZED");
-        }
-        if (response.status() == ResponseStatus.NOT_FOUND) {
-            throw new RuntimeException("NOT_FOUND");
-        }
-        if (response.status() == ResponseStatus.PAYMENT_REQUIRED) {
-            throw new RuntimeException("PAYMENT_REQUIRED");
-        }
-        if (response.status() == ResponseStatus.SERVER_ERROR) {
-            throw new RuntimeException("SERVER_ERROR");
-        }
-        if (!Objects.equals(response.command(), this.name)) {
-            throw new RuntimeException("NOT APPROPROAAPROPIATE COMMAND");
-        }
-        try {
-            return this.getResponse().parse(response.body());
-        } catch (IncorrectValuesTypeException e) {
-            throw new RuntimeException(e);
-        } catch (IncorrectValueException e) {
-            throw new RuntimeException(e);
-        } catch (CantParseDataException e) {
-            throw new RuntimeException(e);
-        }*/
     }
 
     public Response run(LocalDataCollection dataCollection, byte[] arguments) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, IOException, CantWriteDataException, NoSuchIdException, ClassNotFoundException {

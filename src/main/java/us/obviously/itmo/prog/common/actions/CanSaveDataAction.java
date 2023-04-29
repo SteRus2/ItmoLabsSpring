@@ -13,11 +13,9 @@ public class CanSaveDataAction extends Action<VoidModel, Boolean> {
 
     @Override
     public Response execute(LocalDataCollection dataCollection, VoidModel arguments) {
-        try {
-            byte[] body = this.getResponse().serialize(dataCollection.canSaveData());
-            return new Response(body, ResponseStatus.OK);
-        } catch (FailedToDumpsEx e) {
-            return new Response(e.getMessage(), ResponseStatus.SERVER_ERROR);
-        }
+
+        byte[] body = this.getResponse().serialize(dataCollection.canSaveData());
+        return new Response(body, ResponseStatus.OK);
+
     }
 }

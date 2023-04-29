@@ -40,7 +40,7 @@ public class UpdateCommand extends AbstractCommand {
         } catch (NoSuchIdException e) {
             Messages.printStatement("~reОшибка при сохранении: " + e.getMessage() + "~=");
         } catch (BadRequestException e) {
-            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+            Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         } catch (IncorrectValueException e) {

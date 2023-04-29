@@ -27,7 +27,7 @@ public class InfoCommand extends AbstractCommand {
             Messages.printStatement("       Тип: ~bl" + info.getType() + "~=");
             Messages.printStatement("      Дата: ~bl" + info.getDate() + "~=");
         } catch (BadRequestException e) {
-            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+            Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }

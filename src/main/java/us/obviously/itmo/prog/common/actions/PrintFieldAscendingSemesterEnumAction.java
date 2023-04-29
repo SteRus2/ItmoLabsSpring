@@ -17,11 +17,7 @@ public class PrintFieldAscendingSemesterEnumAction extends Action<VoidModel, Lis
     @Override
     public Response execute(LocalDataCollection dataCollection, VoidModel arguments) {
         var result = dataCollection.printFieldAscendingSemesterEnum();
-        try {
-            var body = this.getResponse().serialize(result);
-            return new Response(body, ResponseStatus.OK);
-        } catch (FailedToDumpsEx e) {
-            return new Response(e.getMessage(), ResponseStatus.SERVER_ERROR);
-        }
+        var body = this.getResponse().serialize(result);
+        return new Response(body, ResponseStatus.OK);
     }
 }

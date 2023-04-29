@@ -25,11 +25,12 @@ public class ShowCommand extends AbstractCommand {
         HashMap<Integer, StudyGroup> hs = null;
         try {
             hs = this.manager.getDataCollection().getData();
+            TablesPrinter.printStudyGroups(hs);
+
         } catch (BadRequestException e) {
-            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+            Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }
-        TablesPrinter.printStudyGroups(hs);
     }
 }

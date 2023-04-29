@@ -21,21 +21,30 @@ public class Client implements ClientConnectionManager {
     private InputStream is;
     private OutputStream os;
     private InetSocketAddress address;
+    private int port;
     private boolean isActive;
+
     public Client(int port) throws FailedToConnectToServerException {
+        this.port = port;
         try {
-            host = InetAddress.getLocalHost();
-            connection = new Socket();
-            address = new InetSocketAddress(host, port);
-            connection.connect(address, 10000);
+            connect(port);
         } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        } catch (SocketTimeoutException e){
+            throw new FailedToConnectToServerException("Неизвестный хост");
+        } catch (SocketTimeoutException e) {
             throw new FailedToConnectToServerException("Превышено время ожидания ответа от сервера");
         } catch (IOException e) {
             throw new FailedToConnectToServerException("Не удается подключиться к серверу, попробуйте позже");
         }
     }
+    @Override
+    public void connect(int port) throws IOException {
+        host = InetAddress.getLocalHost();
+        connection = new Socket();
+        address = new InetSocketAddress(host, port);
+        connection.connect(address, 1000);
+    }
+
+
     @Override
     public void run() {
         activeClient();
@@ -49,16 +58,18 @@ public class Client implements ClientConnectionManager {
 
     @Override
     public ByteBuffer read() throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(DATA_SIZE);
+        ByteBuffer buffer = ByteBuffer.allocate(DATA_SIZE * 32);
         is = connection.getInputStream();
         is.read(buffer.array());
         return buffer;
     }
-    void activeClient(){
+
+    void activeClient() {
         this.isActive = true;
         System.out.println("Клиент запущен!");
     }
-    void deactivateClient(){
+
+    void deactivateClient() {
         this.isActive = false;
         System.out.println("Клиент закрыт!");
     }
@@ -69,12 +80,12 @@ public class Client implements ClientConnectionManager {
         try {
             byteBuffer = read();
         } catch (IOException e) {
-            throw new FailedToReadRemoteException("Не удается получить данные с сервера");
+            throw new FailedToReadRemoteException("Не удается получить данные с сервера, попробуйте позднее");
         }
         ByteArrayInputStream bis = new ByteArrayInputStream(byteBuffer.array());
         ObjectInputStream objectInputStream;
         Response response;
-        try{
+        try {
             objectInputStream = new ObjectInputStream(bis);
             response = (Response) objectInputStream.readObject();
         } catch (IOException e) {
@@ -87,10 +98,11 @@ public class Client implements ClientConnectionManager {
     }
 
     @Override
-    public void request(Request request) throws FailedToSentRequestsException, IOException {
+    public void request(Request request) throws IOException {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(bos);
+        System.out.println(request);
         objectOutputStream.writeObject(request);
         connection.getOutputStream().write(bos.toByteArray());
         bos.close();
@@ -104,5 +116,9 @@ public class Client implements ClientConnectionManager {
         } catch (IOException e) {
             throw new FailedToCloseConnection("Закрыть соединение с сервером по какой то причине не получилось, будем вверить что вашего самообладания хватило на то, чтобы закрыть подключение самостоятельно, иначе, будем считать, что подключения уже нет");
         }
+    }
+
+    public int getPort() {
+        return port;
     }
 }

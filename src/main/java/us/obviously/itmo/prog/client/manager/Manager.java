@@ -43,7 +43,7 @@ public class Manager<T> implements Management {
         new UpdateCommand(this);
         new RemoveKeyCommand(this);
         new ClearCommand(this);
-        new SaveCommand(this);
+        //new SaveCommand(this);
         new ExecuteScriptCommand(this);
         new ExitCommand(this);
         new ReplaceIfGreaterCommand(this);

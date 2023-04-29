@@ -20,6 +20,6 @@ public class InsertItemAction extends Action<KeyGroupModel, VoidModel> {
         } catch (UsedKeyException e) {
             return new Response("Ключ уже используется", ResponseStatus.BAD_REQUEST);
         }
-        return new Response("It's fine", ResponseStatus.OK);
+        return new Response(this.getResponse().serialize(new VoidModel()), ResponseStatus.OK);
     }
 }

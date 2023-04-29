@@ -37,7 +37,7 @@ public class FilterGreaterThanGroupAdminCommand extends AbstractCommand {
         } catch (FormInterruptException e) {
             Messages.printStatement("~blПрервано пользователем.~=");
         } catch (BadRequestException e) {
-            Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
+            Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }

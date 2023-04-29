@@ -17,11 +17,8 @@ public class GetDataAction extends Action<VoidModel, HashMap<Integer, StudyGroup
     @Override
     public Response execute(LocalDataCollection dataCollection, VoidModel arguments) {
         var result = dataCollection.getData();
-        try {
-            var body = this.getResponse().serialize(result);
-            return new Response(body, ResponseStatus.OK);
-        } catch (FailedToDumpsEx e) {
-            return new Response(e.getMessage().getBytes(), ResponseStatus.SERVER_ERROR);
-        }
+
+        var body = this.getResponse().serialize(result);
+        return new Response(body, ResponseStatus.OK);
     }
 }

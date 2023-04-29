@@ -8,7 +8,7 @@ import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
 import java.io.*;
 
 public interface Serializer<T> {
-    default byte[] serialize(T object) throws FailedToDumpsEx {
+    default byte[] serialize(T object) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = null;
         try {
@@ -16,7 +16,6 @@ public interface Serializer<T> {
             oos.writeObject(object);
             oos.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         return baos.toByteArray();
     }

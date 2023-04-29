@@ -1,5 +1,7 @@
 package us.obviously.itmo.prog.common.actions;
 
+import us.obviously.itmo.prog.common.serializers.StringSerializer;
+
 import java.io.Serializable;
 
 public class Response implements Serializable {
@@ -12,7 +14,7 @@ public class Response implements Serializable {
     }
 
     public Response(String body, ResponseStatus status) {
-        this.body = body.getBytes();
+        this.body = new StringSerializer().serialize(body);
         this.status = status;
     }
 

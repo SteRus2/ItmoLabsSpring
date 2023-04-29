@@ -7,6 +7,8 @@ import us.obviously.itmo.prog.common.serializers.KeySerializer;
 import us.obviously.itmo.prog.common.serializers.VoidSerializer;
 import us.obviously.itmo.prog.server.exceptions.NoSuchIdException;
 
+import java.nio.charset.StandardCharsets;
+
 public class RemoveItemAction extends Action<KeyModel, VoidModel> {
     public RemoveItemAction() {
         super("remove", new KeySerializer(), new VoidSerializer());
@@ -19,6 +21,6 @@ public class RemoveItemAction extends Action<KeyModel, VoidModel> {
         } catch (NoSuchIdException e) {
             return new Response("Элемента с таким id не существует", ResponseStatus.NOT_FOUND);
         }
-        return new Response("It's fine", ResponseStatus.OK);
+        return new Response(this.getResponse().serialize(new VoidModel()) , ResponseStatus.OK);
     }
 }

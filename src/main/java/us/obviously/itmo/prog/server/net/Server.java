@@ -23,13 +23,16 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.nio.channels.SelectionKey.OP_READ;
 
 public class Server implements ServerConnectionManager {
+    public Logger logger;
     private final int DATA_SIZE = 1024;
     private final Scanner serverCommandReader;
-    private final LocalDataCollection data;
+    public final LocalDataCollection data;
     private final Selector selector;
     private ServerSocketChannel server;
     private SocketAddress address;
@@ -39,7 +42,10 @@ public class Server implements ServerConnectionManager {
     private ActionManager actionManager;
     private Map<SocketChannel, ArrayList<Request>> clientSocketMap;
 
+
     {
+        logger = Logger.getLogger(Server.class.getName());
+        logger.setLevel(Level.FINE);
         ConsoleColor.initColors();
         serverCommandReader = new Scanner(System.in);
         clientSocketMap = new HashMap<>();
@@ -73,7 +79,7 @@ public class Server implements ServerConnectionManager {
                     String commandString = serverCommandReader.nextLine();
                     ServerCommand command = serverCommandManager.getCommand(commandString);
                     if (command == null) {
-                        System.out.println("Команды не существует");
+                        logger.info("Команды сервера не существует");
                     } else {
                         command.execute();
                     }
@@ -94,17 +100,24 @@ public class Server implements ServerConnectionManager {
                     if (key.isValid()) {
                         if (key.isAcceptable()) {
                             acceptClient(key);
-                            System.out.println(clientSocketMap.toString());
+                            logger.info("Клиенты: " + clientSocketMap.toString());
                         }
                         if (key.isReadable()) {
-                            SocketChannel socketChannel = (SocketChannel) key.channel();
-                            Request request = readRequest(socketChannel);
-                            if (clientSocketMap.containsKey((SocketChannel) key.channel())) {
-                                clientSocketMap.get((SocketChannel) key.channel()).add(request);
-                                socketChannel.register(key.selector(), SelectionKey.OP_WRITE);
+                            try {
+                                SocketChannel socketChannel = (SocketChannel) key.channel();
+                                Request request = readRequest(socketChannel);
+                                if (clientSocketMap.containsKey((SocketChannel) key.channel())) {
+                                    clientSocketMap.get((SocketChannel) key.channel()).add(request);
+                                    socketChannel.register(key.selector(), SelectionKey.OP_WRITE);
+                                }
+                                logger.info("запрос от клиента ( " + ((SocketChannel) key.channel()).getRemoteAddress() + " ), Запрос: " + request.toString());
+                            } catch (IOException e){
+                                logger.info("Клиент отключен " + ((SocketChannel) key.channel()).getRemoteAddress());
+                                ((SocketChannel) key.channel()).socket().close();
+                                key.cancel();
+                                selectionKeySet.remove(key);
+                                continue;
                             }
-                            System.out.println(clientSocketMap.toString());
-
                         }
                         if (key.isWritable()) {
                             SocketChannel socketChannel = (SocketChannel) key.channel();
@@ -113,14 +126,13 @@ public class Server implements ServerConnectionManager {
                                 Request request = requests.get(requests.size() - 1);
                                 requests.remove(requests.size() - 1);
                                 var action = actionManager.getAction(request.getCommand());
-                                System.out.println(action);
                                 Response response;
                                 if (action == null) {
                                     response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
                                 } else {
                                     response = action.run(data, request.getBody());
                                 }
-                                System.out.println(response.toString());
+                                logger.info("Ответ клиенту ( " + socketChannel.getRemoteAddress() + " ), ответ " + response.toString());
                                 giveResponse(response, socketChannel);
                                 if (requests.isEmpty()) {
                                     socketChannel.register(key.selector(), OP_READ);
@@ -132,11 +144,11 @@ public class Server implements ServerConnectionManager {
                     }
                 }
             } catch (IOException e) {
-                Messages.printStatement("~yeUnknown io exception " + Arrays.toString(e.getStackTrace()) + "~=");
+                logger.warning("Клиент отключен " + Arrays.toString(e.getStackTrace()));
             } catch (FailedToAcceptClientException e) {
-                Messages.printStatement("~reНе получилось присоединить клиента: " + e.getMessage() + "~=");
+                logger.warning("Не получилось присоединить клиента: " + e.getMessage());
             } catch (ClassNotFoundException e) {
-                Messages.printStatement("~reНе удалось получить Приказ клиента~=");
+                logger.warning("Не удалось получить Приказ клиента");
             } catch (UsedKeyException e) {
                 throw new RuntimeException(e);
             } catch (IncorrectValuesTypeException e) {
@@ -162,19 +174,19 @@ public class Server implements ServerConnectionManager {
             clientSocketMap.put(client, new ArrayList<>());
             client.configureBlocking(false);
             client.register(selectionKey.selector(), OP_READ);
-            System.out.println("Новый клиент: " + client.getRemoteAddress());
+            logger.info("Новый клиент: " + client.getRemoteAddress());
         } catch (IOException e) {
             throw new FailedToAcceptClientException("Во время соединения с клиентом произошла ошибка");
         }
     }
 
     private Request readRequest(SocketChannel socketChannel) throws IOException, ClassNotFoundException {
-        ByteBuffer buf = ByteBuffer.allocate(DATA_SIZE);
+        ByteBuffer buf = ByteBuffer.allocate(DATA_SIZE * 32);
         try {
             socketChannel.read(buf);
         } catch (SocketException e) {
             socketChannel.close();
-            System.out.println("Клиент отключен");
+            logger.warning("Клиент отключен " + Arrays.toString(e.getStackTrace()));
         }
         return deserializeRequest(buf);
     }
@@ -230,7 +242,7 @@ public class Server implements ServerConnectionManager {
 
     public void activeServer() {
         this.isActive = true;
-        System.out.println("Сервер открыт!");
+        logger.info("Сервер открыт!");
     }
 
     public void deactivateServer() throws FailedToCloseServerException {
@@ -240,7 +252,7 @@ public class Server implements ServerConnectionManager {
         } catch (IOException e) {
             throw new FailedToCloseServerException("Возникла непредвиденная ошибка при закрытии сервера");
         }
-        System.out.println("Сервер закрыт!");
+        logger.info("Сервер закрыт!");
         System.exit(0);
 
     }

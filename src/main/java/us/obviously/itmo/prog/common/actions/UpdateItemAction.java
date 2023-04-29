@@ -19,6 +19,6 @@ public class UpdateItemAction extends Action<KeyGroupModel, VoidModel> {
         } catch (NoSuchIdException e) {
             return new Response("Элемента с таким id не существует", ResponseStatus.NOT_FOUND);
         }
-        return new Response("It's fine", ResponseStatus.OK);
+        return new Response(this.getResponse().serialize(new VoidModel()), ResponseStatus.OK);
     }
 }
