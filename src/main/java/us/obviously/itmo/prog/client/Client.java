@@ -12,10 +12,11 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Client implements ClientConnectionManager {
-    private static final int DATA_SIZE = 4096;
+    private static final int DATA_SIZE = 5000;
     private static InetAddress host;
     private static Socket connection;
     private InputStream is;
@@ -58,10 +59,27 @@ public class Client implements ClientConnectionManager {
 
     @Override
     public ByteBuffer read() throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(DATA_SIZE * 32);
+        var bytes = new ArrayList<Byte>();
         is = connection.getInputStream();
-        is.read(buffer.array());
-        return buffer;
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(is, DATA_SIZE * 2);
+        byte[] buf = new byte[DATA_SIZE + 1];
+        int l = 0;
+        do {
+            int check = bufferedInputStream.read(buf);
+            System.out.println("read: " + l++);
+            if (check == -1){
+                throw new IOException("Ошибка при чтении данных");
+            }
+            for (int i = 0; i < DATA_SIZE; i++){
+                bytes.add(buf[i]);
+            }
+        } while (buf[DATA_SIZE] != 1);
+
+        byte[] responseBytes = new byte[bytes.size()];
+        for (int i = 0; i < bytes.size(); i++){
+            responseBytes[i] = bytes.get(i);
+        }
+        return ByteBuffer.wrap(responseBytes);
     }
 
     void activeClient() {
@@ -78,10 +96,12 @@ public class Client implements ClientConnectionManager {
     public Response waitResponse() throws FailedToReadRemoteException {
         ByteBuffer byteBuffer;
         try {
+            System.out.println(6666);
             byteBuffer = read();
         } catch (IOException e) {
             throw new FailedToReadRemoteException("Не удается получить данные с сервера, попробуйте позднее");
         }
+        System.out.println(7777);
         ByteArrayInputStream bis = new ByteArrayInputStream(byteBuffer.array());
         ObjectInputStream objectInputStream;
         Response response;
@@ -89,11 +109,10 @@ public class Client implements ClientConnectionManager {
             objectInputStream = new ObjectInputStream(bis);
             response = (Response) objectInputStream.readObject();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FailedToReadRemoteException(e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(response.toString());
         return response;
     }
 
@@ -102,7 +121,6 @@ public class Client implements ClientConnectionManager {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(bos);
-        System.out.println(request);
         objectOutputStream.writeObject(request);
         connection.getOutputStream().write(bos.toByteArray());
         bos.close();

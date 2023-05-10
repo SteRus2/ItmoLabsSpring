@@ -2,14 +2,13 @@ package us.obviously.itmo.prog.server.net;
 
 
 import us.obviously.itmo.prog.client.console.ConsoleColor;
-import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.common.actions.Action;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.actions.ResponseStatus;
+import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.server.ActionManager;
 import us.obviously.itmo.prog.server.exceptions.*;
@@ -30,7 +29,7 @@ import static java.nio.channels.SelectionKey.OP_READ;
 
 public class Server implements ServerConnectionManager {
     public Logger logger;
-    private final int DATA_SIZE = 1024;
+    private final int DATA_SIZE = 5000;
     private final Scanner serverCommandReader;
     public final LocalDataCollection data;
     private final Selector selector;
@@ -181,7 +180,7 @@ public class Server implements ServerConnectionManager {
     }
 
     private Request readRequest(SocketChannel socketChannel) throws IOException, ClassNotFoundException {
-        ByteBuffer buf = ByteBuffer.allocate(DATA_SIZE * 32);
+        ByteBuffer buf = ByteBuffer.allocate(DATA_SIZE);
         try {
             socketChannel.read(buf);
         } catch (SocketException e) {
@@ -197,10 +196,10 @@ public class Server implements ServerConnectionManager {
         return (Request) objectInputStream.readObject();
     }
 
-    private ByteBuffer serializeResponse(Response response) {
+    private byte[] serializeResponse(Response response) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
             objectOutputStream.writeObject(response);
-            return ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
+            return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
             //TODO exception
@@ -237,7 +236,25 @@ public class Server implements ServerConnectionManager {
 
     @Override
     public void giveResponse(Response response, SocketChannel socketChannel) throws IOException {
-        socketChannel.write(serializeResponse(response));
+        byte[] bytes = serializeResponse(response);
+        int n = bytes.length;
+
+        int count;
+        if (n % DATA_SIZE == 0){
+            count = n / DATA_SIZE;
+        } else {
+            count = n / DATA_SIZE + 1;
+        }
+        for (int i = 0; i < count; i++){
+            byte[] buf = Arrays.copyOfRange(bytes, i * DATA_SIZE, (i + 1) * DATA_SIZE + 1);
+            if (i == count - 1){
+                buf[buf.length - 1] = 1;
+            } else {
+                buf[buf.length - 1] = 0;
+            }
+            socketChannel.write(ByteBuffer.wrap(buf));
+            System.out.println("sent: " + i);
+        }
     }
 
     public void activeServer() {

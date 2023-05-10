@@ -36,7 +36,7 @@ public class ActionManager {
         actionMap.put(removeGreaterAction.getName(), removeGreaterAction);
         actionMap.put(removeItemAction.getName(), removeItemAction);
         actionMap.put(removeLowerAction.getName(), removeLowerAction);
-        actionMap.put(replaceGreaterAction.getName(), removeGreaterAction);
+        actionMap.put(replaceGreaterAction.getName(), replaceGreaterAction);
         actionMap.put(saveDataAction.getName(), saveDataAction);
         actionMap.put(updateItemAction.getName(), updateItemAction);
     }

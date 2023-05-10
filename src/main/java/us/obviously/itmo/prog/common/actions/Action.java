@@ -25,19 +25,22 @@ public abstract class Action<T, D> {
     }
 
     public void send(Client client, T arguments) {
-        try {
+        /*try {
             client.connect(client.getPort());
         } catch (IOException e) {
-        }
+        }*/
         byte[] body = null;
         body = this.request.serialize(arguments);
         //System.out.println(Arrays.toString(body));
         try {
             client.request(new Request(this.name, body));
         } catch (IOException e) {
-
+            try {
+                client.connect(client.getPort());
+                client.request(new Request(this.name, body));
+            } catch (IOException ex) {
+            }
         }
-
     }
     public D recieve(Client client) throws BadRequestException, FailedToReadRemoteException {
         Response response1 = client.waitResponse();
@@ -50,7 +53,7 @@ public abstract class Action<T, D> {
             var errorSerializer = new StringSerializer();
             throw new BadRequestException(errorSerializer.parse(response1.getBody()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FailedToReadRemoteException(e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
