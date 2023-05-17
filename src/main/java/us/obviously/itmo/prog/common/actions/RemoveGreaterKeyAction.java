@@ -3,12 +3,10 @@ package us.obviously.itmo.prog.common.actions;
 import us.obviously.itmo.prog.common.action_models.KeyModel;
 import us.obviously.itmo.prog.common.action_models.VoidModel;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
-import us.obviously.itmo.prog.common.serializers.KeySerializer;
-import us.obviously.itmo.prog.common.serializers.VoidSerializer;
 
 public class RemoveGreaterKeyAction extends Action<KeyModel, VoidModel> {
     public RemoveGreaterKeyAction() {
-        super("remove-greater", new KeySerializer(), new VoidSerializer());
+        super("remove-greater");
     }
 
     @Override

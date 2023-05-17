@@ -148,20 +148,9 @@ public class Server implements ServerConnectionManager {
                 logger.warning("Не получилось присоединить клиента: " + e.getMessage());
             } catch (ClassNotFoundException e) {
                 logger.warning("Не удалось получить Приказ клиента");
-            } catch (UsedKeyException e) {
-                throw new RuntimeException(e);
-            } catch (IncorrectValuesTypeException e) {
-                throw new RuntimeException(e);
-            } catch (IncorrectValueException e) {
-                throw new RuntimeException(e);
-            } catch (FileNotWritableException e) {
-                throw new RuntimeException(e);
-            } catch (CantParseDataException e) {
-                throw new RuntimeException(e);
-            } catch (CantWriteDataException e) {
-                throw new RuntimeException(e);
-            } catch (NoSuchIdException e) {
-                throw new RuntimeException(e);
+            } catch (UsedKeyException | CantWriteDataException | NoSuchIdException | CantParseDataException |
+                     FileNotWritableException | IncorrectValueException | IncorrectValuesTypeException e) {
+                logger.warning("Ошибка при выполнении запроса");
             }
         }
     }
@@ -202,7 +191,6 @@ public class Server implements ServerConnectionManager {
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
-            //TODO exception
         }
     }
 
@@ -251,6 +239,10 @@ public class Server implements ServerConnectionManager {
                 buf[buf.length - 1] = 1;
             } else {
                 buf[buf.length - 1] = 0;
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
             }
             socketChannel.write(ByteBuffer.wrap(buf));
             System.out.println("sent: " + i);

@@ -1,6 +1,6 @@
 package us.obviously.itmo.prog.common.actions;
 
-import us.obviously.itmo.prog.common.serializers.StringSerializer;
+import us.obviously.itmo.prog.common.serializers.Serializer;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ public class Response implements Serializable {
     }
 
     public Response(String body, ResponseStatus status) {
-        this.body = new StringSerializer().serialize(body);
+        this.body = new Serializer<String>().serialize(body);
         this.status = status;
     }
 

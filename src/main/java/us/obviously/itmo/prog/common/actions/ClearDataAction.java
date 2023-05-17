@@ -2,11 +2,10 @@ package us.obviously.itmo.prog.common.actions;
 
 import us.obviously.itmo.prog.common.action_models.VoidModel;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
-import us.obviously.itmo.prog.common.serializers.VoidSerializer;
 
 public class ClearDataAction extends Action<VoidModel, VoidModel> {
     public ClearDataAction() {
-        super("clear", new VoidSerializer(), new VoidSerializer());
+        super("clear");
     }
 
     @Override

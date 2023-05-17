@@ -6,22 +6,19 @@ import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.serializers.Serializer;
-import us.obviously.itmo.prog.common.serializers.StringSerializer;
 import us.obviously.itmo.prog.server.exceptions.*;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public abstract class Action<T, D> {
     private final Serializer<T> request;
     private final Serializer<D> response;
     private final String name;
 
-    public Action(String name, Serializer<T> request, Serializer<D> response) {
+    public Action(String name/*, Serializer<T> request, Serializer<D> response*/) {
         this.name = name;
-        this.request = request;
-        this.response = response;
+        this.request = new Serializer<>();
+        this.response = new Serializer<>();
     }
 
     public void send(Client client, T arguments) {
@@ -50,7 +47,7 @@ public abstract class Action<T, D> {
                     return response.parse(response1.getBody());
                 }
             }
-            var errorSerializer = new StringSerializer();
+            var errorSerializer = new Serializer<String>();
             throw new BadRequestException(errorSerializer.parse(response1.getBody()));
         } catch (IOException e) {
             throw new FailedToReadRemoteException(e.getMessage());
