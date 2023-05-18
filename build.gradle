@@ -26,6 +26,27 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
+
+task fatJarServer(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'us.obviously.itmo.prog.server.MainServer'
+    }
+    baseName = 'lab6-server'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task fatJarClient(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'us.obviously.itmo.prog.client.MainClient'
+    }
+    baseName = 'lab6-client'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 test {
     useJUnitPlatform()
 }
