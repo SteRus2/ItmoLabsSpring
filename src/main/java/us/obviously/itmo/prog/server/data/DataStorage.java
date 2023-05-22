@@ -1,14 +1,12 @@
 package us.obviously.itmo.prog.server.data;
 
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.data.DataInfo;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.exceptions.*;
-import us.obviously.itmo.prog.server.reader.DataReader;
 
 import java.util.*;
 import java.util.function.Function;

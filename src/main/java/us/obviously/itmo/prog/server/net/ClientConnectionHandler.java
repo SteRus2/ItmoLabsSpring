@@ -6,6 +6,7 @@ import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.actions.ResponseStatus;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
+import us.obviously.itmo.prog.common.serializers.Serializer;
 import us.obviously.itmo.prog.server.ActionManager;
 import us.obviously.itmo.prog.server.database.DatabaseManager;
 import us.obviously.itmo.prog.server.exceptions.*;
@@ -21,10 +22,13 @@ import static us.obviously.itmo.prog.server.net.Server.logger;
 public class ClientConnectionHandler {
     private SocketChannel socketChannel;
     private final int DATA_SIZE = 15000;
+    private final Serializer<UserInfo> userInfoSerializer = new Serializer<>();
     private String remoteAddress;
     private ActionManager actionManager;
     private LocalDataCollection data;
     private DatabaseManager databaseManager;
+    private UserInfo authorizedUserInfo;
+
 
     public ClientConnectionHandler(SocketChannel socketChannel, LocalDataCollection data, DatabaseManager databaseManager){
         this.socketChannel = socketChannel;
@@ -35,6 +39,7 @@ public class ClientConnectionHandler {
             remoteAddress = socketChannel.getRemoteAddress().toString();
             socketChannel.configureBlocking(true);
         } catch (IOException ignored) {
+            remoteAddress = "Не определен";
         }
     }
 
@@ -44,11 +49,35 @@ public class ClientConnectionHandler {
                 // Получение запроса
                 Request request = readRequest(socketChannel);
                 logger.info("запрос от клиента ( " + socketChannel.getRemoteAddress() + " ), Запрос: " + request.toString());
-                var action = actionManager.getAction(request.getCommand());
 
                 // Обработка запроса
+
+                var action = actionManager.getAction(request.getCommand());
                 Response response;
-                if (action == null) {
+                if (request.getCommand().equals("login")){
+                    var localUserInfo = userInfoSerializer.parse(request.getBody());
+                    var isCorrect = databaseManager.checkUser(localUserInfo);
+                    if (isCorrect == AuthorizedState.OK){
+                        authorizedUserInfo = localUserInfo;
+                    }
+                    response = switch (isCorrect){
+                        case OK -> new Response("Вы успешно вошли в аккаунт", ResponseStatus.OK);
+                        case NOT_FOUND_LOGIN -> new Response("Пользователь с таким именем не найден", ResponseStatus.UNAUTHORIZED);
+                        case INCORRECT_PASSWORD -> new Response("Неверный пароль", ResponseStatus.UNAUTHORIZED);
+                    };
+                } else if (request.getCommand().equals("register")){
+                    var localUserInfo = userInfoSerializer.parse(request.getBody());
+                    try {
+                        databaseManager.registerUser(localUserInfo);
+                        response = new Response("Регистрация прошла успешно", ResponseStatus.OK);
+                    } catch (FailedToRegisterUserException e) {
+                        response = new Response("Ошибка во время регистрации пользователя: " + e.getMessage(), ResponseStatus.UNAUTHORIZED);
+                    }
+                } else if (request.getPassword() == null || request.getLogin() == null) {
+                    response = new Response("Пользователь не авторизован", ResponseStatus.UNAUTHORIZED);
+                } else if (!(authorizedUserInfo.getPassword().equals(request.getPassword()) && authorizedUserInfo.getLogin().equals(request.getLogin()))) {
+                    response = new Response("Пользователь не авторизован", ResponseStatus.UNAUTHORIZED);
+                } else if (action == null) {
                     response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
                 } else {
                     response = action.run(data, request.getBody(), new UserInfo(request.getLogin(), request.getPassword()), null);

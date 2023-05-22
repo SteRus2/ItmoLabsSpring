@@ -39,9 +39,8 @@ public class Request implements Serializable {
     public String toString() {
         return "Request{" +
                 "command='" + command + '\'' +
-                ", body=" + Arrays.toString(body) +
+                ", body=" + body.toString() +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
                 '}';
     }
 }

@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.common;
 
-public class UserInfo {
+import java.io.Serializable;
+
+public class UserInfo implements Serializable {
     private String login;
     private String password;
 

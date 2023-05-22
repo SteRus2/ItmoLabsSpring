@@ -1,5 +1,6 @@
 package us.obviously.itmo.prog.common.data;
 
+import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.common.model.Person;
@@ -40,5 +41,12 @@ public interface DataCollection {
 
     boolean canSaveData() throws BadRequestException, ServerErrorException;
 
+    default String loginUser(UserInfo userInfo) throws BadRequestException {
+        return "";
+    }
+
+    default String registerUser(UserInfo userInfo) throws BadRequestException {
+        return "";
+    }
 
 }

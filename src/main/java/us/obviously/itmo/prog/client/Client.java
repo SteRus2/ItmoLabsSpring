@@ -24,7 +24,8 @@ public class Client implements ClientConnectionManager {
     private InetSocketAddress address;
     private int port;
     private boolean isActive;
-
+    private String login = null;
+    private String password = null;
     public Client(int port) throws FailedToConnectToServerException {
         this.port = port;
         try {
@@ -66,7 +67,7 @@ public class Client implements ClientConnectionManager {
         int l = 0;
         do {
             int check = bufferedInputStream.read(buf);
-            System.out.println("read: " + l++);
+            //System.out.println("read: " + l++);
             if (check == -1){
                 throw new IOException("Ошибка при чтении данных");
             }
@@ -96,12 +97,10 @@ public class Client implements ClientConnectionManager {
     public Response waitResponse() throws FailedToReadRemoteException {
         ByteBuffer byteBuffer;
         try {
-            System.out.println(6666);
             byteBuffer = read();
         } catch (IOException e) {
             throw new FailedToReadRemoteException("Не удается получить данные с сервера, попробуйте позднее");
         }
-        System.out.println(7777);
         ByteArrayInputStream bis = new ByteArrayInputStream(byteBuffer.array());
         ObjectInputStream objectInputStream;
         Response response;
@@ -118,7 +117,6 @@ public class Client implements ClientConnectionManager {
 
     @Override
     public void request(Request request) throws IOException {
-
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(bos);
         objectOutputStream.writeObject(request);
@@ -138,5 +136,21 @@ public class Client implements ClientConnectionManager {
 
     public int getPort() {
         return port;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

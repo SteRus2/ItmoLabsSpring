@@ -17,11 +17,11 @@ public class RequestManager<T, D> {
         body = this.requestSer.serialize(arguments);
         //System.out.println(Arrays.toString(body));
         try {
-            client.request(new Request(commandName, body));
+            client.request(new Request(commandName, body, client.getLogin(), client.getPassword()));
         } catch (IOException e) {
             try {
                 client.connect(client.getPort());
-                client.request(new Request(commandName, body));
+                client.request(new Request(commandName, body, client.getLogin(), client.getPassword()));
             } catch (IOException ex) {
             }
         }

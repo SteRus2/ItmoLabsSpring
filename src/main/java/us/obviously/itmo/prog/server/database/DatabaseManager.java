@@ -1,14 +1,16 @@
 package us.obviously.itmo.prog.server.database;
 
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
+import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.model.*;
-import us.obviously.itmo.prog.server.exceptions.CantFindFileException;
-import us.obviously.itmo.prog.server.exceptions.FailedToConnectToDatabaseException;
-import us.obviously.itmo.prog.server.exceptions.IgnoredException;
-import us.obviously.itmo.prog.server.exceptions.MissingPropertyException;
+import us.obviously.itmo.prog.server.database.security.MD2Secure;
+import us.obviously.itmo.prog.server.database.security.SecureControl;
+import us.obviously.itmo.prog.server.exceptions.*;
 import us.obviously.itmo.prog.common.UserInfo;
+import us.obviously.itmo.prog.server.net.AuthorizedState;
 
 import java.io.IOException;
+import java.net.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
@@ -23,8 +25,11 @@ public class DatabaseManager {
     private final Logger databaseLogger;
     private final String initSqlTables = "initTables.sql";
     private final String initSqlTypes = "initTypes.sql";
+    private final String PEPPER = "}]<wzk}n";
+    private SecureControl secureControl;
 
     {
+        secureControl = new MD2Secure();
         databaseLogger = Logger.getLogger(DatabaseManager.class.getName());
     }
 
@@ -114,4 +119,53 @@ public class DatabaseManager {
 
         }
     }
+
+    public AuthorizedState checkUser(UserInfo localUserInfo) {
+        String login = localUserInfo.getLogin();
+        try {
+            PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.getUser);
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                String salt = resultSet.getString("salt");
+                if (secureControl.getHashCode(PEPPER + localUserInfo.getPassword() + salt).equals(resultSet.getString("password"))){
+                    databaseLogger.info("Пользователь: (" + localUserInfo.getLogin() + ") вошел в аккаунт");
+                    return AuthorizedState.OK;
+                } else {
+                    return AuthorizedState.INCORRECT_PASSWORD;
+                }
+            } else {
+                return AuthorizedState.NOT_FOUND_LOGIN;
+            }
+
+        } catch (SQLException e) {
+            return AuthorizedState.NOT_FOUND_LOGIN;
+        }
+    }
+
+    public void registerUser(UserInfo localUserInfo) throws FailedToRegisterUserException {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertUser);
+        } catch (SQLException e) {
+            databaseLogger.severe("Невозможно зарегистрировать пользователя, ошибка базы данных: " + e.getMessage());
+            throw new FailedToRegisterUserException("Временная ошибка базы данных, регистрация пользователя невозможна");
+        }
+
+        try {
+            String salt = secureControl.getSalt();
+            preparedStatement.setString(1, localUserInfo.getLogin());
+            preparedStatement.setString(2, secureControl.getHashCode(PEPPER + localUserInfo.getPassword() + salt));
+            preparedStatement.setString(3, salt);
+            preparedStatement.execute();
+            databaseLogger.info("Пользователь: (" + localUserInfo.getLogin() + ") зарегистрирован");
+        } catch (SQLException e) {
+            throw new FailedToRegisterUserException("Пользователь с таким именем уже существует, выберите другое имя");
+        }
+    }
+    /*CREATE TABLE IF NOT EXISTS USERS (
+         login TEXT PRIMARY KEY,
+         password TEXT NOT NULL,
+         salt TEXT NOT NULL
+    );*/
 }

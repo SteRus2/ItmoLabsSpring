@@ -2,17 +2,20 @@ package us.obviously.itmo.prog.client;
 
 
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
+import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
 import us.obviously.itmo.prog.common.action_models.KeyModel;
 import us.obviously.itmo.prog.common.action_models.VoidModel;
-import us.obviously.itmo.prog.common.actions.*;
+import us.obviously.itmo.prog.common.actions.ResponseStatus;
 import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.data.DataInfo;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.common.serializers.Serializer;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -287,6 +290,38 @@ public class RemoteDataCollection implements DataCollection {
             throw new BadRequestException(e.getMessage());
 
         }*/
+    }
+
+    @Override
+    public String loginUser(UserInfo userInfo) throws BadRequestException{
+        var rm = new RequestManager<UserInfo, String>();
+        rm.send(client, userInfo, "login");
+        try {
+            var response = client.waitResponse();
+            if(response.getStatus() == ResponseStatus.OK){
+                client.setLogin(userInfo.getLogin());
+                client.setPassword(userInfo.getPassword());
+            }
+            String answer = null;
+            try {
+                answer = new Serializer<String>().parse(response.getBody());
+            } catch (IOException | ClassNotFoundException e) {
+            }
+            return answer;
+        } catch (FailedToReadRemoteException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String registerUser(UserInfo userInfo) throws BadRequestException{
+        var rm = new RequestManager<UserInfo, String>();
+        rm.send(client, userInfo, "register");
+        try {
+            return rm.recieve(client);
+        } catch (FailedToReadRemoteException e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
 
