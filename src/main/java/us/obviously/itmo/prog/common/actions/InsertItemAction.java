@@ -13,6 +13,7 @@ public class InsertItemAction extends Action<KeyGroupModel, VoidModel> {
     @Override
     public Response execute(LocalDataCollection dataCollection, KeyGroupModel arguments) {
         try {
+            //getDatabaseManager().insertItem(arguments, getUserInfo());
             dataCollection.insertItem(arguments.getStudyGroup(), arguments.getKey());
         } catch (UsedKeyException e) {
             return new Response("Ключ уже используется", ResponseStatus.BAD_REQUEST);

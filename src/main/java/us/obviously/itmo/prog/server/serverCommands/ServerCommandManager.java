@@ -13,9 +13,7 @@ public class ServerCommandManager {
         this.server = server;
         commands = new HashMap<>();
         var exitCommand = new ExitServerCommand(server);
-        var saveCommand = new SaveServerCommand(server);
         commands.put(exitCommand.getName(), exitCommand);
-        commands.put(saveCommand.getName(), saveCommand);
     }
 
     public ServerCommand getCommand(String name){

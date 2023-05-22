@@ -13,6 +13,7 @@ import java.util.HashMap;
  * @see FileReader
  * @see FileFormatReader
  */
+@Deprecated
 public abstract class DataReader {
     protected Parser parser;
 

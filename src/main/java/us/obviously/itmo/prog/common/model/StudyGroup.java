@@ -25,6 +25,17 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     public StudyGroup() {
     }
 
+    public StudyGroup(Integer id, String name, Coordinates coordinates, Date creationDate, Integer studentsCount, FormOfEducation formOfEducation, Semester semesterEnum, Person groupAdmin) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = creationDate;
+        this.studentsCount = studentsCount;
+        this.formOfEducation = formOfEducation;
+        this.semesterEnum = semesterEnum;
+        this.groupAdmin = groupAdmin;
+    }
+
     public static StudyGroup.Builder newBuilder() {
         return new StudyGroup().new Builder();
     }

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Client implements ClientConnectionManager {
-    private static final int DATA_SIZE = 5000;
+    private static final int DATA_SIZE = 15000;
     private static InetAddress host;
     private static Socket connection;
     private InputStream is;

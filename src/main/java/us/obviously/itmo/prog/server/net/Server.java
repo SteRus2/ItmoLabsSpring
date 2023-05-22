@@ -4,13 +4,11 @@ package us.obviously.itmo.prog.server.net;
 import us.obviously.itmo.prog.client.console.ConsoleColor;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
-import us.obviously.itmo.prog.common.actions.ResponseStatus;
-import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.server.ActionManager;
+import us.obviously.itmo.prog.server.database.DatabaseManager;
 import us.obviously.itmo.prog.server.exceptions.*;
 import us.obviously.itmo.prog.server.serverCommands.ServerCommand;
 import us.obviously.itmo.prog.server.serverCommands.ServerCommandManager;
@@ -18,18 +16,15 @@ import us.obviously.itmo.prog.server.serverCommands.ServerCommandManager;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static java.nio.channels.SelectionKey.OP_READ;
 
 public class Server implements ServerConnectionManager {
-    public Logger logger;
-    private final int DATA_SIZE = 5000;
+    public static Logger logger;
     private final Scanner serverCommandReader;
     public final LocalDataCollection data;
     private final Selector selector;
@@ -40,6 +35,7 @@ public class Server implements ServerConnectionManager {
     private ServerCommandManager serverCommandManager;
     private ActionManager actionManager;
     private Map<SocketChannel, ArrayList<Request>> clientSocketMap;
+    private DatabaseManager databaseManager;
 
 
     {
@@ -50,7 +46,8 @@ public class Server implements ServerConnectionManager {
         clientSocketMap = new HashMap<>();
     }
 
-    public Server(LocalDataCollection dataCollection, int port) throws FailedToStartServerException {
+    public Server(LocalDataCollection dataCollection, int port, DatabaseManager databaseManager) throws FailedToStartServerException {
+        this.databaseManager = databaseManager;
         this.data = dataCollection;
         try {
             selector = Selector.open();
@@ -91,7 +88,7 @@ public class Server implements ServerConnectionManager {
     public void run() {
         while (isActive) {
             try {
-                int nowChannels = selector.select(1000);
+                selector.select();
                 selectionKeySet = selector.selectedKeys();
                 for (var iter = selectionKeySet.iterator(); iter.hasNext(); ) {
                     SelectionKey key = iter.next();
@@ -101,7 +98,7 @@ public class Server implements ServerConnectionManager {
                             acceptClient(key);
                             logger.info("Клиенты: " + clientSocketMap.toString());
                         }
-                        if (key.isReadable()) {
+                        /*if (key.isReadable()) {
                             try {
                                 SocketChannel socketChannel = (SocketChannel) key.channel();
                                 Request request = readRequest(socketChannel);
@@ -129,7 +126,7 @@ public class Server implements ServerConnectionManager {
                                 if (action == null) {
                                     response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
                                 } else {
-                                    response = action.run(data, request.getBody());
+                                    response = action.run(data, request.getBody(), new UserInfo(request.getLogin(), request.getPassword()),databaseManager);
                                 }
                                 logger.info("Ответ клиенту ( " + socketChannel.getRemoteAddress() + " ), ответ " + response.toString());
                                 giveResponse(response, socketChannel);
@@ -137,21 +134,21 @@ public class Server implements ServerConnectionManager {
                                     socketChannel.register(key.selector(), OP_READ);
                                 }
                             }
-                        }
+                        }*/
                     } else {
                         key.cancel();
                     }
                 }
-            } catch (IOException e) {
-                logger.warning("Клиент отключен " + Arrays.toString(e.getStackTrace()));
             } catch (FailedToAcceptClientException e) {
                 logger.warning("Не получилось присоединить клиента: " + e.getMessage());
-            } catch (ClassNotFoundException e) {
+            } catch (IOException e) {
+                logger.warning("Клиент отключен " + Arrays.toString(e.getStackTrace()));
+            } /*catch (ClassNotFoundException e) {
                 logger.warning("Не удалось получить Приказ клиента");
             } catch (UsedKeyException | CantWriteDataException | NoSuchIdException | CantParseDataException |
                      FileNotWritableException | IncorrectValueException | IncorrectValuesTypeException e) {
                 logger.warning("Ошибка при выполнении запроса");
-            }
+            }*/
         }
     }
 
@@ -159,40 +156,19 @@ public class Server implements ServerConnectionManager {
         var clientSocket = (ServerSocketChannel) selectionKey.channel();
         try {
             var client = clientSocket.accept();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    new ClientConnectionHandler(client, data, databaseManager).run();
+                }
+            }).start();
             clientSocketMap.put(client, new ArrayList<>());
-            client.configureBlocking(false);
-            client.register(selectionKey.selector(), OP_READ);
             logger.info("Новый клиент: " + client.getRemoteAddress());
         } catch (IOException e) {
             throw new FailedToAcceptClientException("Во время соединения с клиентом произошла ошибка");
         }
     }
 
-    private Request readRequest(SocketChannel socketChannel) throws IOException, ClassNotFoundException {
-        ByteBuffer buf = ByteBuffer.allocate(DATA_SIZE);
-        try {
-            socketChannel.read(buf);
-        } catch (SocketException e) {
-            socketChannel.close();
-            logger.warning("Клиент отключен " + Arrays.toString(e.getStackTrace()));
-        }
-        return deserializeRequest(buf);
-    }
-
-    private Request deserializeRequest(ByteBuffer buf) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(buf.array());
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        return (Request) objectInputStream.readObject();
-    }
-
-    private byte[] serializeResponse(Response response) {
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
-            objectOutputStream.writeObject(response);
-            return byteArrayOutputStream.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public ByteBuffer read() throws IOException {
@@ -208,45 +184,11 @@ public class Server implements ServerConnectionManager {
     @Override
     public void waitRequest() throws FailedToReadRemoteException, FailedToSentRequestsException {
 
-        /*try {
-            System.out.println(123);
-            byteBuffer.clear();
-            byteBuffer = read();
-            System.out.println(234);
-        } catch (IOException e) {
-            throw new FailedToReadRemoteException("Сервер не может получить данные от Клиента. Он сам виновать.");
-        }
-        String result = UTF_8.decode(byteBuffer).toString();
-        System.out.println(result + " - from server");
-        //giveResponse(result + " - from server");
-        byteBuffer.clear();*/
     }
 
     @Override
     public void giveResponse(Response response, SocketChannel socketChannel) throws IOException {
-        byte[] bytes = serializeResponse(response);
-        int n = bytes.length;
 
-        int count;
-        if (n % DATA_SIZE == 0){
-            count = n / DATA_SIZE;
-        } else {
-            count = n / DATA_SIZE + 1;
-        }
-        for (int i = 0; i < count; i++){
-            byte[] buf = Arrays.copyOfRange(bytes, i * DATA_SIZE, (i + 1) * DATA_SIZE + 1);
-            if (i == count - 1){
-                buf[buf.length - 1] = 1;
-            } else {
-                buf[buf.length - 1] = 0;
-            }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-            }
-            socketChannel.write(ByteBuffer.wrap(buf));
-            System.out.println("sent: " + i);
-        }
     }
 
     public void activeServer() {
@@ -263,6 +205,6 @@ public class Server implements ServerConnectionManager {
         }
         logger.info("Сервер закрыт!");
         System.exit(0);
-
     }
 }
+

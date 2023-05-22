@@ -52,6 +52,8 @@ public class Manager<T> implements Management {
         new GroupCountingByNameCommand(this);
         new FilterGreaterThanGroupAdminCommand(this);
         new PrintFieldAscendingSemesterEnumCommand(this);
+        new LoginCommand(this);
+        new RegisterCommand(this);
     }
 
     /**

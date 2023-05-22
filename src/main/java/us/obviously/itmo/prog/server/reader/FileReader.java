@@ -11,6 +11,7 @@ import java.util.Scanner;
  *
  * @see FileFormatReader
  */
+@Deprecated
 public abstract class FileReader extends DataReader {
     protected String filePath;
     protected File file;

@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  * Класс, предоставляющий основной функционал по работе с коллекцией данных
  */
 public class DataStorage implements LocalDataCollection {
-    private final DataReader dataReader;
     private HashMap<Integer, StudyGroup> data;
     private final String type;
     private final Date initDate;
@@ -26,15 +25,14 @@ public class DataStorage implements LocalDataCollection {
     /**
      * Конструктор, с помощью которого происходит инициализация коллекции, коллекцию получаем из dataReader
      *
-     * @param dataReader Источник данных
+     * @param initData Источник данных
      * @throws IncorrectValueException      Выбросит исключение, если данные не пройдут валидацию
      * @throws IncorrectValuesTypeException Выбросит исключение, если данные будут в неправильном формате
      * @throws CantParseDataException       Выбросит исключение, если не сможет перевести дынные в нужный формат
      * @throws CantFindFileException        Выбросит исключение, если не сможет найти путь до данных
      */
-    public DataStorage(DataReader dataReader) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
-        this.dataReader = dataReader;
-        this.data = dataReader.getData();
+    public DataStorage(HashMap<Integer, StudyGroup> initData) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
+        this.data = initData;
         type = StudyGroup.class.getName();
         initDate = new Date();
     }
@@ -117,16 +115,11 @@ public class DataStorage implements LocalDataCollection {
         data.clear();
     }
 
-    /**
-     * Метод, позволяющий сохранить коллекцию
-     *
-     * @throws FailedToDumpsEx        Выбросит исключение, если не сможет перевести коллекцию в нужный формат
-     * @throws CantWriteDataException Выбросит исключение, если не сможет записать данные
-     */
     @Override
     public void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException {
-        dataReader.saveData(data);
+
     }
+
 
     /**
      * Метод, позволяющий заменить объект по заданному ключу новым объектом, если новый объект больше старого
@@ -212,7 +205,9 @@ public class DataStorage implements LocalDataCollection {
     }
 
     @Override
-    public boolean canSaveData(){
-        return dataReader.canSaveData();
+    public boolean canSaveData() {
+        return true;
     }
+
+
 }

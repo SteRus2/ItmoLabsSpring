@@ -6,7 +6,9 @@ import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.serializers.Serializer;
+import us.obviously.itmo.prog.server.database.DatabaseManager;
 import us.obviously.itmo.prog.server.exceptions.*;
+import us.obviously.itmo.prog.common.UserInfo;
 
 import java.io.IOException;
 
@@ -14,13 +16,15 @@ public abstract class Action<T, D> {
     private final Serializer<T> request;
     private final Serializer<D> response;
     private final String name;
+    private DatabaseManager databaseManager;
+    private UserInfo userInfo;
 
     public Action(String name/*, Serializer<T> request, Serializer<D> response*/) {
         this.name = name;
         this.request = new Serializer<>();
         this.response = new Serializer<>();
     }
-
+    @Deprecated
     public void send(Client client, T arguments) {
         /*try {
             client.connect(client.getPort());
@@ -39,6 +43,7 @@ public abstract class Action<T, D> {
             }
         }
     }
+    @Deprecated
     public D recieve(Client client) throws BadRequestException, FailedToReadRemoteException {
         Response response1 = client.waitResponse();
         try {
@@ -56,7 +61,9 @@ public abstract class Action<T, D> {
         }
     }
 
-    public Response run(LocalDataCollection dataCollection, byte[] arguments) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, IOException, CantWriteDataException, NoSuchIdException, ClassNotFoundException {
+    public Response run(LocalDataCollection dataCollection, byte[] arguments, UserInfo userInfo, DatabaseManager databaseManager) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, IOException, CantWriteDataException, NoSuchIdException, ClassNotFoundException {
+        this.databaseManager = databaseManager;
+        this.userInfo = userInfo;
         T args = this.request.parse(arguments);
         return this.execute(dataCollection, args);
     }
@@ -73,5 +80,13 @@ public abstract class Action<T, D> {
 
     public String getName() {
         return name;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 }

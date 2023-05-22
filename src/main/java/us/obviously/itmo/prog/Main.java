@@ -29,7 +29,7 @@ public class Main {
             return;
         }
         try {
-            DataReader reader = new FileFormatReader(args[0], FileFormat.XML); //TODO обработать использование парсера по названию файла
+            /*DataReader reader = new FileFormatReader(args[0], FileFormat.XML); //TODO обработать использование парсера по названию файла
             DataCollection dataCollection = new DataStorage(reader);
             Scanner scanner = new Scanner(System.in);
             Management manager = new Manager<StudyGroup>(dataCollection, scanner);
@@ -49,6 +49,9 @@ public class Main {
             Messages.printStatement("~reНеверный запрос: " + e.getMessage() + "~=");
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
+        }*/
+        } catch (Exception e) {
+
         }
     }
 }

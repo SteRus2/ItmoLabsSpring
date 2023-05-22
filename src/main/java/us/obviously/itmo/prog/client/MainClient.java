@@ -20,7 +20,7 @@ import java.util.Scanner;
 
 public class MainClient {
     public static Client client;
-    public static int port = 9999;
+    public static int port = 11253;
     public static void main(String[] args) {
         try {
             ConsoleColor.initColors();

@@ -39,4 +39,6 @@ public interface DataCollection {
     List<Semester> printFieldAscendingSemesterEnum() throws BadRequestException, ServerErrorException;
 
     boolean canSaveData() throws BadRequestException, ServerErrorException;
+
+
 }

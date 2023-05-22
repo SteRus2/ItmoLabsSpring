@@ -13,22 +13,15 @@ import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RemoteDataCollection implements DataCollection {
     private final Client client;
-    private final Map<String, Action<Object, Object>> actions;
 
     public RemoteDataCollection(Client client)  {
         this.client = client;
-        this.actions = new HashMap<>();
-    }
-
-    public void addAction(Action<Object, Object> action) throws BadRequestException {
-        this.actions.put(action.getName(), action);
     }
 
     @Override
@@ -52,13 +45,6 @@ public class RemoteDataCollection implements DataCollection {
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
-        /*var action = new GetDataAction();
-        new GetDataAction().send(this.client, new VoidModel());
-        try {
-            return action.recieve(client);
-        } catch (FailedToReadRemoteException e) {
-            throw new BadRequestException(e.getMessage());
-        }*/
     }
 
     @Override
@@ -263,14 +249,23 @@ public class RemoteDataCollection implements DataCollection {
 
     @Override
     public List<Semester> printFieldAscendingSemesterEnum() throws BadRequestException {
-        var action = new PrintFieldAscendingSemesterEnumAction();
+        var rm = new RequestManager<VoidModel, List<Semester>>();
+        rm.send(client, new VoidModel(), "ascending-semester");
+        try {
+            return rm.recieve(client);
+        } catch (FailedToReadRemoteException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+
+
+        /*var action = new PrintFieldAscendingSemesterEnumAction();
         action.send(this.client, new VoidModel());
         try {
             return action.recieve(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
 
-        }
+        }*/
     }
 
     @Override

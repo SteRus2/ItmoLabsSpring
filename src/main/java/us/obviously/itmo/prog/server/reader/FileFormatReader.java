@@ -16,6 +16,7 @@ import java.util.Scanner;
 /**
  * {@inheritDoc}
  */
+@Deprecated
 public class FileFormatReader extends FileReader {
     private String baseString;
     /**
