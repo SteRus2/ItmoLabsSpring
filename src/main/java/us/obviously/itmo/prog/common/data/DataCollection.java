@@ -17,7 +17,7 @@ public interface DataCollection {
 
     HashMap<Integer, StudyGroup> getData() throws BadRequestException, ServerErrorException;
 
-    void insertItem(StudyGroup item, int key) throws UsedKeyException, BadRequestException, ServerErrorException;
+    Integer insertItem(StudyGroup item, int key) throws UsedKeyException, BadRequestException, ServerErrorException;
 
     void updateItem(StudyGroup item, int key) throws NoSuchIdException, BadRequestException, ServerErrorException;
 
@@ -48,5 +48,9 @@ public interface DataCollection {
     default String registerUser(UserInfo userInfo) throws BadRequestException {
         return "";
     }
+
+    StudyGroup checkGroup(Integer id) throws BadRequestException;
+
+
 
 }

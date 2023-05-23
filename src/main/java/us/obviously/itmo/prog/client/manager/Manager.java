@@ -139,7 +139,8 @@ public class Manager<T> implements Management {
      */
     @Override
     public boolean isIdExists(Integer id) throws BadRequestException, ServerErrorException {
-        return dataCollection.getData().get(id) != null;
+        //return dataCollection.getData().get(id) != null;
+        return false;
     }
 
 

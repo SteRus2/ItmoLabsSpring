@@ -28,7 +28,7 @@ public class TablesPrinter {
             var title = (
                     "~bl%s~=" + " "
                             + ConsoleColors.YELLOW + "%s~=")
-                    .formatted(group.getName(), group.getId());
+                    .formatted(group.getName(), key);
             var left = ("%-" + space1 + "s").formatted(title);
             builder1.append(left).append(coordinates);
             builder1.append(" |%n".formatted());

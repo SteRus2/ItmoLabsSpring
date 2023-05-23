@@ -24,6 +24,7 @@ public class ActionManager {
         var replaceGreaterAction = new ReplaceIfGreaterAction();
         var saveDataAction = new SaveDataAction();
         var updateItemAction = new UpdateItemAction();
+        var checkGroupAction = new CheckGroupAction();
 
         actionMap.put(canSaveDataAction.getName(), canSaveDataAction);
         actionMap.put(clearDataAction.getName(), clearDataAction);
@@ -39,6 +40,7 @@ public class ActionManager {
         actionMap.put(replaceGreaterAction.getName(), replaceGreaterAction);
         actionMap.put(saveDataAction.getName(), saveDataAction);
         actionMap.put(updateItemAction.getName(), updateItemAction);
+        actionMap.put(checkGroupAction.getName(), checkGroupAction);
     }
     public Action getAction(String name){
         return actionMap.get(name.toLowerCase().trim());

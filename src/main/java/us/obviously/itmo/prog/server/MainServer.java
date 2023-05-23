@@ -32,8 +32,8 @@ public class MainServer {
         try {
             DatabaseManager databaseManager = new DatabaseManager();
 
-            //initData = databaseManager.getData();
-            initData = new FileFormatReader("big-data.xml", FileFormat.XML).getData();
+            initData = databaseManager.getData();
+            //initData = new FileFormatReader("big-data.xml", FileFormat.XML).getData();
             LocalDataCollection dataCollection = new DataStorage(initData);
             server = new Server(dataCollection, port, databaseManager);
             server.run();
@@ -48,6 +48,8 @@ public class MainServer {
             Messages.printStatement("~reНет разрешение на чтение файла. Воспользуйтесь командой ~grchmod~=");
         } catch (FailedToStartServerException e) {
             Messages.printStatement("~reСервер не запущен: " + e.getMessage() + "~=");
+        } catch (SQLException e) {
+            Messages.printStatement("~reОшибка при выполнении запроса: " + e.getMessage() + "~=");
         }
     }
 }

@@ -1,5 +1,6 @@
 package us.obviously.itmo.prog.common.data;
 
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
@@ -14,7 +15,7 @@ public interface LocalDataCollection extends DataCollection {
 
     HashMap<Integer, StudyGroup> getData();
 
-    void insertItem(StudyGroup item, int key) throws UsedKeyException;
+    Integer insertItem(StudyGroup item, int key) throws UsedKeyException;
 
     void updateItem(StudyGroup item, int key) throws NoSuchIdException;
 
@@ -37,4 +38,6 @@ public interface LocalDataCollection extends DataCollection {
     List<Semester> printFieldAscendingSemesterEnum();
 
     boolean canSaveData();
+
+    StudyGroup checkGroup(Integer id);
 }

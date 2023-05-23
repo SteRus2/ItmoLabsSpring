@@ -21,9 +21,14 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     private FormOfEducation formOfEducation; // Поле не может быть null
     private Semester semesterEnum; // Поле не может быть null
     private Person groupAdmin; // Поле не может быть null
+    private String owner;
 
     public StudyGroup() {
     }
+    public Person getPerson(){
+        return groupAdmin;
+    }
+
 
     public StudyGroup(Integer id, String name, Coordinates coordinates, Date creationDate, Integer studentsCount, FormOfEducation formOfEducation, Semester semesterEnum, Person groupAdmin) {
         this.id = id;
@@ -149,6 +154,14 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, coordinates, creationDate, studentsCount, formOfEducation, semesterEnum, groupAdmin);
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
 

@@ -35,7 +35,6 @@ public class RemoteDataCollection implements DataCollection {
             return rm.recieve(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
-
         }
     }
 
@@ -51,11 +50,11 @@ public class RemoteDataCollection implements DataCollection {
     }
 
     @Override
-    public void insertItem(StudyGroup item, int key) throws BadRequestException {
-        var rm = new RequestManager<KeyGroupModel, VoidModel>();
+    public Integer insertItem(StudyGroup item, int key) throws BadRequestException {
+        var rm = new RequestManager<KeyGroupModel, Integer>();
         rm.send(client, new KeyGroupModel(item, key), "insert");
         try {
-            rm.recieve(client);
+            return rm.recieve(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -317,6 +316,17 @@ public class RemoteDataCollection implements DataCollection {
     public String registerUser(UserInfo userInfo) throws BadRequestException{
         var rm = new RequestManager<UserInfo, String>();
         rm.send(client, userInfo, "register");
+        try {
+            return rm.recieve(client);
+        } catch (FailedToReadRemoteException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public StudyGroup checkGroup(Integer id) throws BadRequestException {
+        var rm = new RequestManager<Integer, StudyGroup>();
+        rm.send(client, id,"check");
         try {
             return rm.recieve(client);
         } catch (FailedToReadRemoteException e) {

@@ -9,10 +9,12 @@ public class UpdateItemAction extends Action<KeyGroupModel, VoidModel> {
     public UpdateItemAction() {
         super("update");
     }
+    private boolean updated;
 
     @Override
     public Response execute(LocalDataCollection dataCollection, KeyGroupModel arguments) {
         try {
+            //updated = getDatabaseManager().updateItem(arguments.getStudyGroup(), arguments.getKey());
             dataCollection.updateItem(arguments.getStudyGroup(), arguments.getKey());
         } catch (NoSuchIdException e) {
             return new Response("Элемента с таким id не существует", ResponseStatus.NOT_FOUND);

@@ -1,7 +1,6 @@
 package us.obviously.itmo.prog.server.database;
 
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
-import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.model.*;
 import us.obviously.itmo.prog.server.database.security.MD2Secure;
 import us.obviously.itmo.prog.server.database.security.SecureControl;
@@ -10,12 +9,9 @@ import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.server.net.AuthorizedState;
 
 import java.io.IOException;
-import java.net.http.HttpHeaders;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -87,16 +83,16 @@ public class DatabaseManager {
             var localPerson = new Person(
                     resultSet.getString("person_name"),
                     resultSet.getTimestamp("birthday").toLocalDateTime().atZone(ZoneId.systemDefault()),
-                    Color.valueOf(resultSet.getString("eye_сolor")),
-                    Color.valueOf(resultSet.getString("hair_сolor")),
-                    Country.valueOf(resultSet.getString("nationality"))
+                    (resultSet.getString("eye_сolor") == null) ? null : Color.valueOf(resultSet.getString("eye_сolor")),
+                    (resultSet.getString("hair_сolor") == null) ? null : Color.valueOf(resultSet.getString("hair_сolor")),
+                    (resultSet.getString("nationality") == null) ? null : Country.valueOf(resultSet.getString("nationality"))
             );
             localData.put(resultSet.getInt("id"), new StudyGroup(
                     resultSet.getInt("id"),
                     resultSet.getString("name"),
                     new Coordinates(
                             resultSet.getLong("coordinates_x"),
-                            resultSet.getFloat("coordinates_y")
+                            (resultSet.getFloat("coordinates_y"))
                     ),
                     resultSet.getDate("creation_date"),
                     resultSet.getInt("students_count"),
@@ -108,8 +104,62 @@ public class DatabaseManager {
         return localData;
     }
 
-    public void insertItem(KeyGroupModel arguments, UserInfo userInfo) {
-        
+    public Integer insertItem(KeyGroupModel arguments, UserInfo userInfo) throws SQLException {
+        try {
+
+            PreparedStatement preparedStatement = null;
+            try {
+                preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertPerson);
+            } catch (SQLException e) {
+                databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
+                throw e;
+            }
+            var group = arguments.getStudyGroup();
+            var localPerson = group.getPerson();
+            preparedStatement.setString(1, localPerson.getName());
+            preparedStatement.setTimestamp(2, Timestamp.from(localPerson.getBirthday().toInstant()));
+            preparedStatement.setObject(3, localPerson.getEyeColor(), Types.OTHER);
+            preparedStatement.setObject(4, localPerson.getHairColor(), Types.OTHER);
+            preparedStatement.setObject(5, localPerson.getNationality(), Types.OTHER);
+            ResultSet personResult = preparedStatement.executeQuery();
+            if (!personResult.next()) {
+                databaseLogger.warning("Ошибка при добавлении");
+                return -1;
+            }
+            var personId = personResult.getInt(1);
+
+            try {
+                preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertStudyGroup);
+            } catch (SQLException e) {
+                databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
+                throw e;
+            }
+            preparedStatement.setString(1, group.getName());
+            preparedStatement.setLong(2, group.getCoordinates().getX());
+            if (group.getCoordinates().getY() != null){preparedStatement.setFloat(3, group.getCoordinates().getY());}
+            else {preparedStatement.setObject(3, null);}
+            preparedStatement.setTimestamp(4, new Timestamp(group.getCreationDate().getTime()));
+            if (group.getStudentsCount() != null){preparedStatement.setInt(5, group.getStudentsCount());}
+            else {preparedStatement.setObject(5, null);} ;
+            preparedStatement.setObject(6, group.getFormOfEducation(), Types.OTHER);
+            preparedStatement.setObject(7, group.getSemesterEnum(), Types.OTHER);
+            preparedStatement.setInt(8, personId);
+            preparedStatement.setString(9, userInfo.getLogin());
+
+            ResultSet groupResultSet = preparedStatement.executeQuery();
+            if (!groupResultSet.next()) {
+                databaseLogger.warning("Ошибка при добавлении");
+                return -1;
+            }
+            databaseLogger.info("Объект группы добавлен");
+
+            //"insert into STUDY_GROUP(name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin) values (?, ?, ?, ?, ?, ?, ?, ?) returning id;
+            //person_name, birthday, eye_сolor, hair_сolor, nationality
+            return groupResultSet.getInt(1);
+        } catch (SQLException e){
+            databaseLogger.severe("ОШИБКА: " + e.getMessage());
+            throw e;
+        }
     }
 
     public void closeConnection() {
@@ -160,6 +210,7 @@ public class DatabaseManager {
             preparedStatement.execute();
             databaseLogger.info("Пользователь: (" + localUserInfo.getLogin() + ") зарегистрирован");
         } catch (SQLException e) {
+            databaseLogger.warning("Регистрация пользователя не удалась: " + e.getMessage());
             throw new FailedToRegisterUserException("Пользователь с таким именем уже существует, выберите другое имя");
         }
     }

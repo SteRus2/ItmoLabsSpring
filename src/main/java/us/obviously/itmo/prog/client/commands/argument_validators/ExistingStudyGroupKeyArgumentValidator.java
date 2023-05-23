@@ -22,7 +22,7 @@ public class ExistingStudyGroupKeyArgumentValidator extends AbstractArgumentVali
     public StudyGroup validate(String value) throws InvalidArgumentException, BadRequestException, ServerErrorException {
         try {
             Integer valueInt = Integer.parseInt(value);
-            var group = this.manager.getDataCollection().getData().get(valueInt);
+            var group = this.manager.getDataCollection().checkGroup(valueInt);
             if (group == null) {
                 throw new InvalidArgumentException("Группа с ключом " + valueInt + " не существует.");
             }

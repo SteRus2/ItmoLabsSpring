@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class InsertCommand extends AbstractCommand {
     public InsertCommand(Management manager) {
         super(manager, "insert", "Добавить новый элемент с заданным ключом");
-        addParameter("key", "Значение ID");
+        //addParameter("key", "Значение ID");
     }
 
     /**
@@ -28,13 +28,16 @@ public class InsertCommand extends AbstractCommand {
     @Override
     public void execute(HashMap<String, String> args) {
         var studyGroupForm = new StudyGroupForm(this.manager);
-        var key = args.get("key");
+        //var key = args.get("key");
         try {
-            studyGroupForm.create(key);
+            studyGroupForm.create(String.valueOf(1));
             StudyGroup studyGroup = studyGroupForm.build();
             try {
-                this.manager.getDataCollection().insertItem(studyGroup, studyGroup.getId());
-                Messages.printStatement("~blНовый studyGroup сохранён под id %s~=", studyGroup.getId());
+                var newId = this.manager.getDataCollection().insertItem(studyGroup, studyGroup.getId());
+                if (newId.equals(-1)){
+                    throw new UsedKeyException("Невозможно сохранить объект");
+                }
+                Messages.printStatement("~blНовый studyGroup сохранён под id %s~=", newId);
             } catch (UsedKeyException e) {
                 Messages.printStatement("~reОшибка при сохранении: " + e.getMessage() + "~=");
             }

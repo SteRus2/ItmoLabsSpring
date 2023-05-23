@@ -3,6 +3,7 @@ package us.obviously.itmo.prog.server.data;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.DataInfo;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
+import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
@@ -62,15 +63,17 @@ public class DataStorage implements LocalDataCollection {
      *
      * @param item Новый элемент коллекции
      * @param key  Ключ элемента
+     * @return
      * @throws UsedKeyException Выбросит исключение, если ключ уже используется
      */
     @Override
-    public void insertItem(StudyGroup item, int key) throws UsedKeyException {
+    public Integer insertItem(StudyGroup item, int key) throws UsedKeyException {
         if (data.containsKey(key)) {
             throw new UsedKeyException("К сожалению, ключ уже используется");
         } else {
             data.put(key, item);
         }
+        return 0;
     }
 
     /**
@@ -205,6 +208,11 @@ public class DataStorage implements LocalDataCollection {
     @Override
     public boolean canSaveData() {
         return true;
+    }
+
+    @Override
+    public StudyGroup checkGroup(Integer id) {
+        return data.get(id);
     }
 
 

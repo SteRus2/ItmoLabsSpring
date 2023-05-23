@@ -107,7 +107,8 @@ public class StudyGroupForm extends Form<StudyGroup> {
         FormField.exited = false;
         Messages.printStatement("Для прерывания введите ~gr/exit~=");
         Messages.printStatement("~0bkЗаполнение стади группы...~=");
-        new IntegerFormField(manager, "id", this::setId, false, null, key).run();
+        //new IntegerFormField(manager, "id", this::setId, false, null, key).run();
+        setId(1);
         new StringFormField(manager, "name", this::setName).run();
         new DropdownSelectFormField<>(manager, "semesterEnum", this::setSemesterEnum, this.semesters).run();
         new DropdownSelectFormField<>(manager, "formOfEducation", this::setFormOfEducation, this.formsOfEducation).run();
@@ -152,11 +153,11 @@ public class StudyGroupForm extends Form<StudyGroup> {
      *
      * @throws IncorrectValueException Выбросит исключение, если поле невалидно
      */
-    public void setId(Integer value) throws IncorrectValueException, BadRequestException, ServerErrorException {
-        StudyGroupValidation.validateId(value);
+    public void setId(Integer value)  {
+        //StudyGroupValidation.validateId(value);
         Integer id = this.value.getId();
         if (id != null && id.equals(value)) return;
-        if (this.manager.isIdExists(value)) throw new IncorrectValueException("Поле id должно быть уникальным.");
+        //if (this.manager.isIdExists(value)) throw new IncorrectValueException("Поле id должно быть уникальным.");
         this.builder.setId(value);
     }
 

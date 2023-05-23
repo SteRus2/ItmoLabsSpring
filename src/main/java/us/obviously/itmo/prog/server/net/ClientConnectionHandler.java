@@ -51,7 +51,6 @@ public class ClientConnectionHandler {
                 logger.info("запрос от клиента ( " + socketChannel.getRemoteAddress() + " ), Запрос: " + request.toString());
 
                 // Обработка запроса
-
                 var action = actionManager.getAction(request.getCommand());
                 Response response;
                 if (request.getCommand().equals("login")){
@@ -73,14 +72,14 @@ public class ClientConnectionHandler {
                     } catch (FailedToRegisterUserException e) {
                         response = new Response("Ошибка во время регистрации пользователя: " + e.getMessage(), ResponseStatus.UNAUTHORIZED);
                     }
-                } else if (request.getPassword() == null || request.getLogin() == null) {
+                } else if (request.getPassword() == null || request.getLogin() == null || authorizedUserInfo == null) {
                     response = new Response("Пользователь не авторизован", ResponseStatus.UNAUTHORIZED);
                 } else if (!(authorizedUserInfo.getPassword().equals(request.getPassword()) && authorizedUserInfo.getLogin().equals(request.getLogin()))) {
                     response = new Response("Пользователь не авторизован", ResponseStatus.UNAUTHORIZED);
                 } else if (action == null) {
                     response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
                 } else {
-                    response = action.run(data, request.getBody(), new UserInfo(request.getLogin(), request.getPassword()), null);
+                    response = action.run(data, request.getBody(), new UserInfo(request.getLogin(), request.getPassword()), databaseManager);
                 }
 
                 //Отправка ответов клиенту

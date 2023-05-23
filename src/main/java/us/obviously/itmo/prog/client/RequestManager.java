@@ -39,7 +39,7 @@ public class RequestManager<T, D> {
         } catch (IOException e) {
             throw new FailedToReadRemoteException(e.getMessage());
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException();
         }
     }
 

@@ -6,20 +6,20 @@ CREATE TABLE IF NOT EXISTS USERS (
 CREATE TABLE IF NOT EXISTS PERSONS(
     person_id SERIAL PRIMARY KEY,
     person_name TEXT NOT NULL,
-    birthday TIMESTAMP NOT NULL,
-    eye_сolor COLOR NOT NULL,
-    hair_сolor COLOR NOT NULL,
-    nationality COUNTRY NOT NULL
+    birthday TIMESTAMP with time zone NOT NULL,
+    eye_сolor COLOR,
+    hair_сolor COLOR,
+    nationality COUNTRY
 );
 CREATE TABLE IF NOT EXISTS STUDY_GROUP (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     coordinates_x NUMERIC NOT NULL,
-    coordinates_y NUMERIC NOT NULL,
+    coordinates_y NUMERIC,
     creation_date TIMESTAMP NOT NULL,
     students_count INTEGER,
     form_of_education FORM_OF_EDUCATION NOT NULL,
     semester_enum SEMESTER NOT NULL,
-    group_admin INTEGER REFERENCES PERSONS,
-    owner_id TEXT REFERENCES USERS
+    group_admin INTEGER REFERENCES PERSONS ON DELETE CASCADE,
+    owner_id TEXT REFERENCES USERS ON DELETE CASCADE
 );
