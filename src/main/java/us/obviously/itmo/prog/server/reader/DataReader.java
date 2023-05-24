@@ -36,5 +36,6 @@ public abstract class DataReader {
      * @throws CantWriteDataException Выбросит исключение, если не сможет записать данные
      */
     public abstract void saveData(HashMap<Integer, StudyGroup> data) throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException;
+
     public abstract boolean canSaveData();
 }

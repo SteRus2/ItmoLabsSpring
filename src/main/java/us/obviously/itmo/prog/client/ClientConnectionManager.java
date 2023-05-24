@@ -12,8 +12,10 @@ import java.net.UnknownHostException;
 
 public interface ClientConnectionManager extends ConnectionManager {
     Response waitResponse() throws IOException, FailedToReadRemoteException;
+
     void request(Request request) throws FailedToSentRequestsException, IOException;
 
     void stop() throws IOException, FailedToCloseConnection;
+
     void connect(int port) throws UnknownHostException, IOException;
 }

@@ -8,16 +8,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.model.StudyGroup;
-import us.obviously.itmo.prog.common.validation.StudyGroupValidation;
 import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.server.exceptions.FailedToDumpsEx;
 import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -43,7 +39,8 @@ public class CommonXMLParser<T> extends CommonParser<T> {
     public T loads(String value) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
         List<T> l1;
         try {
-            l1 = xmlMapper.readValue(value, new TypeReference<>() {});
+            l1 = xmlMapper.readValue(value, new TypeReference<>() {
+            });
         } catch (JsonMappingException e) {
             throw new IncorrectValuesTypeException("Данные в файле имеют некорректный тип");
         } catch (JsonProcessingException e) {

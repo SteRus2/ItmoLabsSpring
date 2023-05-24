@@ -25,7 +25,8 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
 
     public StudyGroup() {
     }
-    public Person getPerson(){
+
+    public Person getPerson() {
         return groupAdmin;
     }
 
@@ -40,6 +41,7 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
         this.semesterEnum = semesterEnum;
         this.groupAdmin = groupAdmin;
     }
+
     public StudyGroup(Integer id, String name, Coordinates coordinates, Date creationDate, Integer studentsCount, FormOfEducation formOfEducation, Semester semesterEnum, Person groupAdmin, String ownerId) {
         this.id = id;
         this.name = name;

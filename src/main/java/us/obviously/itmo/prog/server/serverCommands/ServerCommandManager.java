@@ -3,20 +3,20 @@ package us.obviously.itmo.prog.server.serverCommands;
 import us.obviously.itmo.prog.server.net.Server;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class ServerCommandManager {
     private Server server;
     private Map<String, ServerCommand> commands;
-    public ServerCommandManager(Server server){
+
+    public ServerCommandManager(Server server) {
         this.server = server;
         commands = new HashMap<>();
         var exitCommand = new ExitServerCommand(server);
         commands.put(exitCommand.getName(), exitCommand);
     }
 
-    public ServerCommand getCommand(String name){
+    public ServerCommand getCommand(String name) {
         return commands.get(name.toLowerCase().trim());
     }
 

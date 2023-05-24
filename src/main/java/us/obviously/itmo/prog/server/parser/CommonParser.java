@@ -1,12 +1,9 @@
 package us.obviously.itmo.prog.server.parser;
 
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.server.exceptions.FailedToDumpsEx;
 import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
-
-import java.util.HashMap;
 
 /**
  * Класс, позволяющий переводить коллекцию в строку некоторого формата и наоборот
@@ -24,7 +21,7 @@ public abstract class CommonParser<T> {
      * @throws IncorrectValuesTypeException Выбросит исключение, если данные в файле будут в неправильном формате
      * @throws CantParseDataException       Выбросит исключение, если строка будет не корректна
      */
-        public abstract T loads(String value) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException;
+    public abstract T loads(String value) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException;
 
     /**
      * Метод, позволяющий получать строку в некотором формате из коллекции

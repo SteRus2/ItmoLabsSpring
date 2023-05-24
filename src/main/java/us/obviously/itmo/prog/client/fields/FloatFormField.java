@@ -9,6 +9,7 @@ public class FloatFormField extends FormField<Float> {
     public FloatFormField(Management manager, String key, Callback<Float> callback, Boolean nil, Float defaultInput, String autofill) {
         super(manager, key, callback, nil, defaultInput, defaultInput.toString(), autofill);
     }
+
     public FloatFormField(Management manager, String key, Callback<Float> callback, Boolean nil) {
         super(manager, key, callback, nil, null, null, null);
     }
@@ -28,7 +29,8 @@ public class FloatFormField extends FormField<Float> {
 
     @Override
     public Float convert(String value) throws IncorrectValueException {
-        if (value.length() > 9) throw new IncorrectValueException("Слишком большое число. Наши системы не поддерживают работу с рациональными числами, в которых символов больше 9-ти. Удалите %d лишних символов.".formatted(value.length() - 9));
+        if (value.length() > 9)
+            throw new IncorrectValueException("Слишком большое число. Наши системы не поддерживают работу с рациональными числами, в которых символов больше 9-ти. Удалите %d лишних символов.".formatted(value.length() - 9));
         if (value.equals("")) return null;
         try {
             var maxLen = String.valueOf(Float.MAX_VALUE).length() - 1;

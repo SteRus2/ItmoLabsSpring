@@ -2,13 +2,13 @@ package us.obviously.itmo.prog.client.forms;
 
 import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.console.TablesPrinter;
+import us.obviously.itmo.prog.client.exceptions.FormInterruptException;
+import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.fields.*;
+import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.common.model.*;
-import us.obviously.itmo.prog.client.exceptions.FormInterruptException;
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.common.validation.StudyGroupValidation;
 
 import java.util.HashMap;
@@ -153,7 +153,7 @@ public class StudyGroupForm extends Form<StudyGroup> {
      *
      * @throws IncorrectValueException Выбросит исключение, если поле невалидно
      */
-    public void setId(Integer value)  {
+    public void setId(Integer value) {
         //StudyGroupValidation.validateId(value);
         Integer id = this.value.getId();
         if (id != null && id.equals(value)) return;

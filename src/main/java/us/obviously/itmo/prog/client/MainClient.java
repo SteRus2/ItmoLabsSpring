@@ -14,13 +14,12 @@ import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.server.exceptions.FileNotReadableException;
 import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.Scanner;
 
 public class MainClient {
     public static Client client;
     public static int port = 11253;
+
     public static void main(String[] args) {
         try {
             ConsoleColor.initColors();

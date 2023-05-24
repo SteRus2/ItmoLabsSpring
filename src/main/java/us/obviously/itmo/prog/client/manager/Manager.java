@@ -1,17 +1,15 @@
 package us.obviously.itmo.prog.client.manager;
 
 import us.obviously.itmo.prog.client.commands.*;
+import us.obviously.itmo.prog.client.console.ConsoleColors;
+import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.exceptions.MissedArgumentException;
 import us.obviously.itmo.prog.client.exceptions.RecurrentExecuteScripts;
 import us.obviously.itmo.prog.common.data.DataCollection;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
-import us.obviously.itmo.prog.server.data.DataStorage;
-import us.obviously.itmo.prog.client.console.ConsoleColors;
-import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.server.exceptions.*;
-import us.obviously.itmo.prog.server.reader.DataReader;
 
 import java.io.File;
 import java.io.FileNotFoundException;

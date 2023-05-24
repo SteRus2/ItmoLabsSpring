@@ -9,12 +9,13 @@ public abstract class SecureControl {
     private final int SALT_CAPACITY = 10;
 
 
-    public String getSalt(){
+    public String getSalt() {
         var stringBuilder = new StringBuilder(SALT_CAPACITY);
-        for (int i = 0; i < SALT_CAPACITY; i++){
+        for (int i = 0; i < SALT_CAPACITY; i++) {
             stringBuilder.append(LETTERS.charAt(secureRandom.nextInt(LETTERS.length())));
         }
         return stringBuilder.toString();
     }
+
     public abstract String getHashCode(String args);
 }

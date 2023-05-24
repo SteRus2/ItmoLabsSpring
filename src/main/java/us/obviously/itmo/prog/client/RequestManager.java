@@ -26,6 +26,7 @@ public class RequestManager<T, D> {
             }
         }
     }
+
     public D recieve(Client client) throws BadRequestException, FailedToReadRemoteException {
         Response response1 = client.waitResponse();
         try {

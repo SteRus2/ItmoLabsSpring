@@ -16,7 +16,6 @@ public class Parameter {
 
     /**
      * @return Строка с описанием для списка всех команд
-     *
      * @see HelpCommand
      */
     public String getHelp() {

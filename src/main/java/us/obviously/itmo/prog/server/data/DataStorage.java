@@ -85,7 +85,8 @@ public class DataStorage implements LocalDataCollection {
             item.setOwner(login);
             data.put(key, item);
         }
-        return 0;    }
+        return 0;
+    }
 
     /**
      * Позволяет обновить объект в коллекции по заданному ключу

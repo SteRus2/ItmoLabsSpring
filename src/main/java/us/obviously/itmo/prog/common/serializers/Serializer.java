@@ -1,10 +1,5 @@
 package us.obviously.itmo.prog.common.serializers;
 
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
-import us.obviously.itmo.prog.server.exceptions.FailedToDumpsEx;
-import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
-
 import java.io.*;
 
 public final class Serializer<T> {

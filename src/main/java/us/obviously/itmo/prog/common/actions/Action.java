@@ -3,12 +3,12 @@ package us.obviously.itmo.prog.common.actions;
 import us.obviously.itmo.prog.client.Client;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.serializers.Serializer;
 import us.obviously.itmo.prog.server.database.DatabaseManager;
 import us.obviously.itmo.prog.server.exceptions.*;
-import us.obviously.itmo.prog.common.UserInfo;
 
 import java.io.IOException;
 
@@ -24,6 +24,7 @@ public abstract class Action<T, D> {
         this.request = new Serializer<>();
         this.response = new Serializer<>();
     }
+
     @Deprecated
     public void send(Client client, T arguments) {
         /*try {
@@ -43,6 +44,7 @@ public abstract class Action<T, D> {
             }
         }
     }
+
     @Deprecated
     public D recieve(Client client) throws BadRequestException, FailedToReadRemoteException {
         Response response1 = client.waitResponse();

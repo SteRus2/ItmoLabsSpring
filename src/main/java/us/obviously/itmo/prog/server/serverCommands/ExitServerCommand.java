@@ -1,14 +1,9 @@
 package us.obviously.itmo.prog.server.serverCommands;
 
-import us.obviously.itmo.prog.client.console.ConsoleColor;
-import us.obviously.itmo.prog.client.console.Messages;
-import us.obviously.itmo.prog.server.exceptions.CantWriteDataException;
-import us.obviously.itmo.prog.server.exceptions.FailedToDumpsEx;
-import us.obviously.itmo.prog.server.exceptions.FileNotWritableException;
-import us.obviously.itmo.prog.server.net.Server;
 import us.obviously.itmo.prog.server.exceptions.FailedToCloseServerException;
+import us.obviously.itmo.prog.server.net.Server;
 
-public class ExitServerCommand extends ServerCommand{
+public class ExitServerCommand extends ServerCommand {
 
 
     public ExitServerCommand(Server server) {
@@ -21,7 +16,7 @@ public class ExitServerCommand extends ServerCommand{
         try {
             try {
                 targetServer.data.saveData();
-            }  catch (Exception e){
+            } catch (Exception e) {
                 targetServer.logger.severe("~reОшибка при сохранении коллекции: " + e.getMessage() + "~=");
             }
             targetServer.deactivateServer();

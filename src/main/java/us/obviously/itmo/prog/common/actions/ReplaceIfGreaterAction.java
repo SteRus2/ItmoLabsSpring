@@ -13,11 +13,11 @@ public class ReplaceIfGreaterAction extends Action<KeyGroupModel, VoidModel> {
     @Override
     public Response execute(LocalDataCollection dataCollection, KeyGroupModel arguments) {
         try {
-            if (dataCollection.getData().get(arguments.getKey()).compareTo(arguments.getStudyGroup()) <= 0){
+            if (dataCollection.getData().get(arguments.getKey()).compareTo(arguments.getStudyGroup()) <= 0) {
                 return new Response(this.getResponse().serialize(new VoidModel()), ResponseStatus.OK);
             }
             var updated = getDatabaseManager().updateItem(arguments.getStudyGroup(), arguments.getKey(), getUserInfo().getLogin());
-            if (!updated){
+            if (!updated) {
                 return new Response("Не удалось обновить объект, причина не известна", ResponseStatus.BAD_REQUEST);
             }
             dataCollection.replaceIfGreater(arguments.getStudyGroup(), arguments.getKey());

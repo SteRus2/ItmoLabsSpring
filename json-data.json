@@ -1,1 +1,40 @@
-[{"id":26,"name":"P3134","coordinates":{"x":124,"y":14.2},"creationDate":"02-03-1901","studentsCount":15,"formOfEducation":"FULL_TIME_EDUCATION","semesterEnum":"SECOND","groupAdmin":{"name":"Kolyan","birthday":"0005-05-05T12:35:00.000+0000","eyeColor":"WHITE","hairColor":"ORANGE","nationality":"JAPAN"}},{"id":15,"name":"P3134","coordinates":{"x":124,"y":14.2},"creationDate":"02-03-1901","studentsCount":15,"formOfEducation":"FULL_TIME_EDUCATION","semesterEnum":"SECOND","groupAdmin":{"name":"Kolyan","birthday":"0005-05-05T12:35:00.000+0000","eyeColor":"WHITE","hairColor":"ORANGE","nationality":"JAPAN"}}]
+[
+  {
+    "id": 26,
+    "name": "P3134",
+    "coordinates": {
+      "x": 124,
+      "y": 14.2
+    },
+    "creationDate": "02-03-1901",
+    "studentsCount": 15,
+    "formOfEducation": "FULL_TIME_EDUCATION",
+    "semesterEnum": "SECOND",
+    "groupAdmin": {
+      "name": "Kolyan",
+      "birthday": "0005-05-05T12:35:00.000+0000",
+      "eyeColor": "WHITE",
+      "hairColor": "ORANGE",
+      "nationality": "JAPAN"
+    }
+  },
+  {
+    "id": 15,
+    "name": "P3134",
+    "coordinates": {
+      "x": 124,
+      "y": 14.2
+    },
+    "creationDate": "02-03-1901",
+    "studentsCount": 15,
+    "formOfEducation": "FULL_TIME_EDUCATION",
+    "semesterEnum": "SECOND",
+    "groupAdmin": {
+      "name": "Kolyan",
+      "birthday": "0005-05-05T12:35:00.000+0000",
+      "eyeColor": "WHITE",
+      "hairColor": "ORANGE",
+      "nationality": "JAPAN"
+    }
+  }
+]

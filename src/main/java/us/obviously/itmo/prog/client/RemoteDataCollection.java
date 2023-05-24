@@ -23,7 +23,7 @@ import java.util.Map;
 public class RemoteDataCollection implements DataCollection {
     private final Client client;
 
-    public RemoteDataCollection(Client client)  {
+    public RemoteDataCollection(Client client) {
         this.client = client;
     }
 
@@ -31,7 +31,7 @@ public class RemoteDataCollection implements DataCollection {
     public DataInfo getInfo() throws BadRequestException {
         var rm = new RequestManager<VoidModel, DataInfo>();
         rm.send(client, new VoidModel(), "filter_greater_than_group_admin");
-        try{
+        try {
             return rm.recieve(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
@@ -292,12 +292,12 @@ public class RemoteDataCollection implements DataCollection {
     }
 
     @Override
-    public String loginUser(UserInfo userInfo) throws BadRequestException{
+    public String loginUser(UserInfo userInfo) throws BadRequestException {
         var rm = new RequestManager<UserInfo, String>();
         rm.send(client, userInfo, "login");
         try {
             var response = client.waitResponse();
-            if(response.getStatus() == ResponseStatus.OK){
+            if (response.getStatus() == ResponseStatus.OK) {
                 client.setLogin(userInfo.getLogin());
                 client.setPassword(userInfo.getPassword());
             }
@@ -313,7 +313,7 @@ public class RemoteDataCollection implements DataCollection {
     }
 
     @Override
-    public String registerUser(UserInfo userInfo) throws BadRequestException{
+    public String registerUser(UserInfo userInfo) throws BadRequestException {
         var rm = new RequestManager<UserInfo, String>();
         rm.send(client, userInfo, "register");
         try {
@@ -326,7 +326,7 @@ public class RemoteDataCollection implements DataCollection {
     @Override
     public StudyGroup checkGroup(Integer id) throws BadRequestException {
         var rm = new RequestManager<Integer, StudyGroup>();
-        rm.send(client, id,"check");
+        rm.send(client, id, "check");
         try {
             return rm.recieve(client);
         } catch (FailedToReadRemoteException e) {

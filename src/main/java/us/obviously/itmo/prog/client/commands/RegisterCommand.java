@@ -7,7 +7,7 @@ import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 
 import java.util.HashMap;
 
-public class RegisterCommand extends AbstractCommand{
+public class RegisterCommand extends AbstractCommand {
 
     public RegisterCommand(Management manager) {
         super(manager, "register", "Зарегистрироваться в системе");

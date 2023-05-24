@@ -52,5 +52,4 @@ public interface DataCollection {
     StudyGroup checkGroup(Integer id) throws BadRequestException;
 
 
-
 }

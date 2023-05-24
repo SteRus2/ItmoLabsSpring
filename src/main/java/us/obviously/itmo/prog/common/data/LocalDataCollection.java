@@ -1,6 +1,5 @@
 package us.obviously.itmo.prog.common.data;
 
-import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
@@ -16,6 +15,7 @@ public interface LocalDataCollection extends DataCollection {
     HashMap<Integer, StudyGroup> getData();
 
     Integer insertItem(StudyGroup item, int key) throws UsedKeyException;
+
     Integer insertItem(StudyGroup item, int key, String login) throws UsedKeyException;
 
 
@@ -30,10 +30,12 @@ public interface LocalDataCollection extends DataCollection {
     void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException;
 
     void removeGreaterKey(int key);
+
     void removeGreaterKey(int key, String login);
 
 
     void removeLowerKey(int key);
+
     void removeLowerKey(int key, String login);
 
 

@@ -4,16 +4,13 @@ package us.obviously.itmo.prog.client;
 import us.obviously.itmo.prog.client.exceptions.FailedToCloseConnection;
 import us.obviously.itmo.prog.client.exceptions.FailedToConnectToServerException;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
-import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 
 import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Client implements ClientConnectionManager {
     private static final int DATA_SIZE = 15000;
@@ -26,6 +23,7 @@ public class Client implements ClientConnectionManager {
     private boolean isActive;
     private String login = null;
     private String password = null;
+
     public Client(int port) throws FailedToConnectToServerException {
         this.port = port;
         try {
@@ -38,6 +36,7 @@ public class Client implements ClientConnectionManager {
             throw new FailedToConnectToServerException("Не удается подключиться к серверу, попробуйте позже");
         }
     }
+
     @Override
     public void connect(int port) throws IOException {
         host = InetAddress.getLocalHost();
@@ -68,16 +67,16 @@ public class Client implements ClientConnectionManager {
         do {
             int check = bufferedInputStream.read(buf);
             //System.out.println("read: " + l++);
-            if (check == -1){
+            if (check == -1) {
                 throw new IOException("Ошибка при чтении данных");
             }
-            for (int i = 0; i < DATA_SIZE; i++){
+            for (int i = 0; i < DATA_SIZE; i++) {
                 bytes.add(buf[i]);
             }
         } while (buf[DATA_SIZE] != 1);
 
         byte[] responseBytes = new byte[bytes.size()];
-        for (int i = 0; i < bytes.size(); i++){
+        for (int i = 0; i < bytes.size(); i++) {
             responseBytes[i] = bytes.get(i);
         }
         return ByteBuffer.wrap(responseBytes);
