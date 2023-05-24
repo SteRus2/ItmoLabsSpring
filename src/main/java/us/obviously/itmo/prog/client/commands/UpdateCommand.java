@@ -35,7 +35,7 @@ public class UpdateCommand extends AbstractCommand {
             var group = new ExistingStudyGroupKeyArgumentValidator(manager).validate(key);
             studyGroupForm.update(group);
             StudyGroup studyGroup = studyGroupForm.build();
-            this.manager.getDataCollection().updateItem(studyGroup, studyGroup.getId());
+            this.manager.getDataCollection().updateItem(studyGroup, Integer.parseInt(key));
             Messages.printStatement("~blstudyGroup обновлён под id %s~=", studyGroup.getId());
         } catch (NoSuchIdException e) {
             Messages.printStatement("~reОшибка при сохранении: " + e.getMessage() + "~=");

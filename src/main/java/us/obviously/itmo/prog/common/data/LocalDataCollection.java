@@ -16,6 +16,8 @@ public interface LocalDataCollection extends DataCollection {
     HashMap<Integer, StudyGroup> getData();
 
     Integer insertItem(StudyGroup item, int key) throws UsedKeyException;
+    Integer insertItem(StudyGroup item, int key, String login) throws UsedKeyException;
+
 
     void updateItem(StudyGroup item, int key) throws NoSuchIdException;
 

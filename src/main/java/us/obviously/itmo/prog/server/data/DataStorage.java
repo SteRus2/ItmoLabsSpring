@@ -76,6 +76,16 @@ public class DataStorage implements LocalDataCollection {
         return 0;
     }
 
+    @Override
+    public Integer insertItem(StudyGroup item, int key, String login) throws UsedKeyException {
+        if (data.containsKey(key)) {
+            throw new UsedKeyException("К сожалению, ключ уже используется");
+        } else {
+            item.setOwner(login);
+            data.put(key, item);
+        }
+        return 0;    }
+
     /**
      * Позволяет обновить объект в коллекции по заданному ключу
      *
