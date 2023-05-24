@@ -83,8 +83,8 @@ public class DatabaseManager {
             var localPerson = new Person(
                     resultSet.getString("person_name"),
                     resultSet.getTimestamp("birthday").toLocalDateTime().atZone(ZoneId.systemDefault()),
-                    (resultSet.getString("eye_сolor") == null) ? null : Color.valueOf(resultSet.getString("eye_сolor")),
-                    (resultSet.getString("hair_сolor") == null) ? null : Color.valueOf(resultSet.getString("hair_сolor")),
+                    (resultSet.getString("eye_color") == null) ? null : Color.valueOf(resultSet.getString("eye_color")),
+                    (resultSet.getString("hair_color") == null) ? null : Color.valueOf(resultSet.getString("hair_color")),
                     (resultSet.getString("nationality") == null) ? null : Country.valueOf(resultSet.getString("nationality"))
             );
             localData.put(resultSet.getInt("id"), new StudyGroup(
@@ -154,7 +154,7 @@ public class DatabaseManager {
             databaseLogger.info("Объект группы добавлен");
 
             //"insert into STUDY_GROUP(name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin) values (?, ?, ?, ?, ?, ?, ?, ?) returning id;
-            //person_name, birthday, eye_сolor, hair_сolor, nationality
+            //person_name, birthday, eye_color, hair_color, nationality
             return groupResultSet.getInt(1);
         } catch (SQLException e){
             databaseLogger.severe("ОШИБКА: " + e.getMessage());
