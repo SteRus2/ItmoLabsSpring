@@ -3,13 +3,15 @@ package us.obviously.itmo.prog.server.data;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.DataInfo;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
-import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.exceptions.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,9 +19,9 @@ import java.util.stream.Collectors;
  * Класс, предоставляющий основной функционал по работе с коллекцией данных
  */
 public class DataStorage implements LocalDataCollection {
-    private HashMap<Integer, StudyGroup> data;
     private final String type;
     private final Date initDate;
+    private HashMap<Integer, StudyGroup> data;
 
     /**
      * Конструктор, с помощью которого происходит инициализация коллекции, коллекцию получаем из dataReader
@@ -43,7 +45,7 @@ public class DataStorage implements LocalDataCollection {
      * @see DataInfo
      */
     @Override
-    public DataInfo getInfo() {
+    synchronized public DataInfo getInfo() {
         int count = data.size();
         return new DataInfo(type, initDate, count);
     }
@@ -54,7 +56,7 @@ public class DataStorage implements LocalDataCollection {
      * @return Коллекция
      */
     @Override
-    public HashMap<Integer, StudyGroup> getData() {
+    synchronized public HashMap<Integer, StudyGroup> getData() {
         return data;
     }
 
@@ -63,11 +65,10 @@ public class DataStorage implements LocalDataCollection {
      *
      * @param item Новый элемент коллекции
      * @param key  Ключ элемента
-     * @return
      * @throws UsedKeyException Выбросит исключение, если ключ уже используется
      */
     @Override
-    public Integer insertItem(StudyGroup item, int key) throws UsedKeyException {
+    synchronized public Integer insertItem(StudyGroup item, int key) throws UsedKeyException {
         if (data.containsKey(key)) {
             throw new UsedKeyException("К сожалению, ключ уже используется");
         } else {
@@ -94,7 +95,7 @@ public class DataStorage implements LocalDataCollection {
      * @throws NoSuchIdException Выбросит исключение, если подобного ключа в коллекции нет
      */
     @Override
-    public void updateItem(StudyGroup item, int key) throws NoSuchIdException {
+    synchronized public void updateItem(StudyGroup item, int key) throws NoSuchIdException {
         if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }
@@ -111,7 +112,7 @@ public class DataStorage implements LocalDataCollection {
      *                           <br>в целом, если его там и так не было, то зачем выбрасывать исключение? Элемента в коллекции уже нет, разработчики решили, что надо)
      */
     @Override
-    public void removeItem(int key) throws NoSuchIdException {
+    synchronized public void removeItem(int key) throws NoSuchIdException {
         if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }
@@ -122,12 +123,12 @@ public class DataStorage implements LocalDataCollection {
      * Метод, позволяющий полностью очистить коллекцию
      */
     @Override
-    public void clearData() {
+    synchronized public void clearData() {
         data.clear();
     }
 
     @Override
-    public void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException {
+    synchronized public void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException {
 
     }
 
@@ -140,7 +141,7 @@ public class DataStorage implements LocalDataCollection {
      * @throws NoSuchIdException Выбросит исключение, если объекта с данным ключом нет в коллекции
      */
     @Override
-    public void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException {
+    synchronized public void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException {
         if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }
@@ -155,15 +156,12 @@ public class DataStorage implements LocalDataCollection {
      * @param key Ключ
      */
     @Override
-    public void removeGreaterKey(int key) {
-        data = data.keySet()
-                .stream()
-                .filter(x -> x <= key)
-                .collect(Collectors.toMap(Function.identity(), data::get, (prev, next) -> next, HashMap::new));
+    synchronized public void removeGreaterKey(int key) {
+        data = data.keySet().stream().filter(x -> x <= key).collect(Collectors.toMap(Function.identity(), data::get, (prev, next) -> next, HashMap::new));
     }
 
     @Override
-    public void removeGreaterKey(int key, String login) {
+    synchronized public void removeGreaterKey(int key, String login) {
         data.entrySet().removeIf(entry -> (entry.getKey() > key && entry.getValue().getOwner().equals(login)));
     }
 
@@ -173,15 +171,12 @@ public class DataStorage implements LocalDataCollection {
      * @param key Ключ
      */
     @Override
-    public void removeLowerKey(int key) {
-        data  = data.keySet()
-                .stream()
-                .filter(x -> x >= key)
-                .collect(Collectors.toMap(Function.identity(), data::get, (prev, next) -> next, HashMap::new));
+    synchronized public void removeLowerKey(int key) {
+        data = data.keySet().stream().filter(x -> x >= key).collect(Collectors.toMap(Function.identity(), data::get, (prev, next) -> next, HashMap::new));
     }
 
     @Override
-    public void removeLowerKey(int key, String login) {
+    synchronized public void removeLowerKey(int key, String login) {
         data.entrySet().removeIf(entry -> (entry.getKey() < key && entry.getValue().getOwner().equals(login)));
     }
 
@@ -191,10 +186,8 @@ public class DataStorage implements LocalDataCollection {
      * @return Возвращает HashMap с ключом в виде имени и значением - List со всеми элементами с данным именем
      */
     @Override
-    public Map<String, List<StudyGroup>> groupCountingByName() {
-        return data.values()
-                .stream()
-                .collect(Collectors.groupingBy(StudyGroup::getName));
+    synchronized public Map<String, List<StudyGroup>> groupCountingByName() {
+        return data.values().stream().collect(Collectors.groupingBy(StudyGroup::getName));
     }
 
     /**
@@ -204,11 +197,8 @@ public class DataStorage implements LocalDataCollection {
      * @return List, состоящий из всех элементов поле groupAdmin которых больше чем данный
      */
     @Override
-    public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin) {
-        return data.values()
-                .stream()
-                .filter(x -> x.getGroupAdmin().compareTo(groupAdmin) < 0)
-                .collect(Collectors.toList());
+    synchronized public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin) {
+        return data.values().stream().filter(x -> x.getGroupAdmin().compareTo(groupAdmin) < 0).collect(Collectors.toList());
     }
 
     /**
@@ -217,35 +207,31 @@ public class DataStorage implements LocalDataCollection {
      * @return List из элементов типа Semester
      */
     @Override
-    public List<Semester> printFieldAscendingSemesterEnum() {
-        return data.values()
-                .stream()
-                .map(StudyGroup::getSemesterEnum)
-                .sorted()
-                .collect(Collectors.toList());
+    synchronized public List<Semester> printFieldAscendingSemesterEnum() {
+        return data.values().stream().map(StudyGroup::getSemesterEnum).sorted().collect(Collectors.toList());
     }
 
     @Override
-    public boolean canSaveData() {
+    synchronized public boolean canSaveData() {
         return true;
     }
 
     @Override
-    public StudyGroup checkGroup(Integer id) {
+    synchronized public StudyGroup checkGroup(Integer id) {
         return data.get(id);
     }
 
     @Override
-    public void removeUserItems(String login) {
+    synchronized public void removeUserItems(String login) {
         data.entrySet().removeIf(entry -> entry.getValue().getOwner().equals(login));
     }
 
     @Override
-    public void removeUserItem(int key, String login) throws NotAccessException, NoSuchIdException {
-        if (data.get(key) == null){
+    synchronized public void removeUserItem(int key, String login) throws NotAccessException, NoSuchIdException {
+        if (data.get(key) == null) {
             throw new NoSuchIdException("Объекта не существует");
         }
-        if (!data.get(key).getOwner().equals(login)){
+        if (!data.get(key).getOwner().equals(login)) {
             throw new NotAccessException("Объект не принадлежит вам");
         }
         data.remove(key);
