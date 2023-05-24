@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS PERSONS(
     person_id SERIAL PRIMARY KEY,
     person_name TEXT NOT NULL,
     birthday TIMESTAMP with time zone NOT NULL,
-    eye_сolor COLOR,
-    hair_сolor COLOR,
+    eye_color COLOR,
+    hair_color COLOR,
     nationality COUNTRY
 );
 CREATE TABLE IF NOT EXISTS STUDY_GROUP (

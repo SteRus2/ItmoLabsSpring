@@ -4,7 +4,7 @@ public final class DatabaseCommands {
     public static final String getAll = "select * from study_group join persons on study_group.group_admin = persons.person_id";
     public static final String insertUser = "insert into USERS(login, password, salt) values(?, ?, ?);";
     public static final String getUser = "select * from USERS where login = ?;";
-    public static String insertPerson = "insert into PERSONS(person_name, birthday, eye_сolor, hair_сolor, nationality) values (?, ?, ?, ?, ?) returning person_id;";
+    public static String insertPerson = "insert into PERSONS(person_name, birthday, eye_color, hair_color, nationality) values (?, ?, ?, ?, ?) returning person_id;";
     public static String insertStudyGroup = "insert into STUDY_GROUP(name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin, owner_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?) returning id;";
     public static String checkUserObject = "select * from STUDY_GROUP where (owner_id = ?) and (id = ?);";
     public static String updateUserObject = "update STUDY_GROUP set (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum) = (?, ?, ?, ?, ?, ?, ?) where (owner_id = ?) and (id = ?); " +
@@ -30,8 +30,8 @@ public final class DatabaseCommands {
             person_id SERIAL PRIMARY KEY,
             person_name TEXT NOT NULL,
             birthday TIMESTAMP NOT NULL,
-            eye_сolor COLOR NOT NULL,
-            hair_сolor COLOR NOT NULL,
+            eye_color COLOR NOT NULL,
+            hair_color COLOR NOT NULL,
             nationality COUNTRY NOT NULL
     );*/
     /*CREATE TABLE IF NOT EXISTS USERS (
