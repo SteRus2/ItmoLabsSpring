@@ -26,6 +26,8 @@ public class ClientConnectionHandler {
     private static final ExecutorService requestsService;
     private static final ExecutorService processingService;
     private static final ExecutorService responsesService;
+    private final String LOGIN_UNIQUE_COMMAND = "login";
+    private final String REGISTER_UNIQUE_COMMAND = "register";
 
     static {
         requestsService = Executors.newCachedThreadPool();
@@ -81,7 +83,7 @@ public class ClientConnectionHandler {
         try {        // Обработка запроса
             var action = actionManager.getAction(request.getCommand());
             Response response;
-            if (request.getCommand().equals("login")) {
+            if (request.getCommand().equals(LOGIN_UNIQUE_COMMAND)) {
                 var localUserInfo = userInfoSerializer.parse(request.getBody());
                 var isCorrect = databaseManager.checkUser(localUserInfo);
                 if (isCorrect == AuthorizedState.OK) {
@@ -93,7 +95,7 @@ public class ClientConnectionHandler {
                             new Response("Пользователь с таким именем не найден", ResponseStatus.UNAUTHORIZED);
                     case INCORRECT_PASSWORD -> new Response("Неверный пароль", ResponseStatus.UNAUTHORIZED);
                 };
-            } else if (request.getCommand().equals("register")) {
+            } else if (request.getCommand().equals(REGISTER_UNIQUE_COMMAND)) {
                 var localUserInfo = userInfoSerializer.parse(request.getBody());
                 try {
                     databaseManager.registerUser(localUserInfo);
