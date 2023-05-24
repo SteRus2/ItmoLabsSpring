@@ -8,6 +8,7 @@ public class CheckGroupAction extends Action<Integer, StudyGroup>{
     public CheckGroupAction() {
         super("check");
     }
+    private boolean isMine;
 
     @Override
     public Response execute(LocalDataCollection dataCollection, Integer arguments) {
@@ -16,6 +17,10 @@ public class CheckGroupAction extends Action<Integer, StudyGroup>{
         var exist = dataCollection.checkGroup(arguments);
         if (exist == null){
             return new Response(getResponse().serialize(exist), ResponseStatus.OK);
+        }
+        isMine = getDatabaseManager().checkUserObject(arguments, getUserInfo().getLogin());
+        if (!isMine){
+            return new Response("Объект не принадлежит вам", ResponseStatus.UNAUTHORIZED);
         }
         return new Response(getResponse().serialize(exist), ResponseStatus.OK);
     }

@@ -106,7 +106,6 @@ public class DatabaseManager {
 
     public Integer insertItem(KeyGroupModel arguments, UserInfo userInfo) throws SQLException {
         try {
-
             PreparedStatement preparedStatement = null;
             try {
                 preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertPerson);
@@ -213,6 +212,62 @@ public class DatabaseManager {
             databaseLogger.warning("Регистрация пользователя не удалась: " + e.getMessage());
             throw new FailedToRegisterUserException("Пользователь с таким именем уже существует, выберите другое имя");
         }
+    }
+
+    public boolean checkUserObject(Integer arguments, String login) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.checkUserObject);
+        } catch (SQLException e) {
+            databaseLogger.severe("Невозможно найти объект пользователя, ошибка базы данных: " + e.getMessage());
+            return false;
+        }
+        try {
+            preparedStatement.setString(1, login);
+            preparedStatement.setInt(2, arguments);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()){
+                return false;
+            }
+        } catch (SQLException e) {
+            databaseLogger.severe("Ошибка базы данных: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateItem(StudyGroup group, int key, String login) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.updateUserObject);
+            preparedStatement.setString(1, group.getName());
+            preparedStatement.setLong(2, group.getCoordinates().getX());
+            if (group.getCoordinates().getY() != null){preparedStatement.setFloat(3, group.getCoordinates().getY());}
+            else {preparedStatement.setObject(3, null);}
+            preparedStatement.setTimestamp(4, new Timestamp(group.getCreationDate().getTime()));
+            if (group.getStudentsCount() != null){preparedStatement.setInt(5, group.getStudentsCount());}
+            else {preparedStatement.setObject(5, null);} ;
+            preparedStatement.setObject(6, group.getFormOfEducation(), Types.OTHER);
+            preparedStatement.setObject(7, group.getSemesterEnum(), Types.OTHER);
+            preparedStatement.setString(8, login);
+            preparedStatement.setInt(9, key);
+            Person localPerson = group.getPerson();
+            preparedStatement.setString(10, localPerson.getName());
+            preparedStatement.setTimestamp(11, Timestamp.from(localPerson.getBirthday().toInstant()));
+            preparedStatement.setObject(12, localPerson.getEyeColor(), Types.OTHER);
+            preparedStatement.setObject(13, localPerson.getHairColor(), Types.OTHER);
+            preparedStatement.setObject(14, localPerson.getNationality(), Types.OTHER);
+            preparedStatement.setInt(15, key);
+
+            preparedStatement.executeUpdate();
+
+            databaseLogger.info("Объект группы Обновлен");
+        }
+        catch (SQLException e) {
+            databaseLogger.severe("Ошибка базы данных: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
     /*CREATE TABLE IF NOT EXISTS USERS (
          login TEXT PRIMARY KEY,

@@ -8,6 +8,7 @@ public abstract class SecureControl {
     private final SecureRandom secureRandom = new SecureRandom();
     private final int SALT_CAPACITY = 10;
 
+
     public String getSalt(){
         var stringBuilder = new StringBuilder(SALT_CAPACITY);
         for (int i = 0; i < SALT_CAPACITY; i++){
