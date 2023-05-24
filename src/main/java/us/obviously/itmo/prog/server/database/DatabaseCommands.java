@@ -8,7 +8,7 @@ public final class DatabaseCommands {
     public static String insertStudyGroup = "insert into STUDY_GROUP(name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin, owner_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?) returning id;";
     public static String checkUserObject = "select * from STUDY_GROUP where (owner_id = ?) and (id = ?);";
     public static String updateUserObject = "update STUDY_GROUP set (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum) = (?, ?, ?, ?, ?, ?, ?) where (owner_id = ?) and (id = ?); " +
-            "update persons set person_name = ?, birthday = ?, eye_сolor = ?, hair_сolor = ?, nationality = ? where person_id = (select group_admin from study_group where id = ?);";
+            "update persons set person_name = ?, birthday = ?, eye_color = ?, hair_color = ?, nationality = ? where person_id = (select group_admin from study_group where id = ?);";
     public static String removeUserObjects = "delete from STUDY_GROUP where owner_id = ? RETURNING id";
     public static String removeGreaterUserObject = "delete from STUDY_GROUP where owner_id = ? and id > ? RETURNING id";
     public static String removeLowerUserObject = "delete from STUDY_GROUP where owner_id = ? and id < ? RETURNING id";
