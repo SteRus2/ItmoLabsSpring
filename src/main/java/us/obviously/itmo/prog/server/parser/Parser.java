@@ -1,10 +1,10 @@
 package us.obviously.itmo.prog.server.parser;
 
+import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.server.exceptions.FailedToDumpsEx;
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
-import us.obviously.itmo.prog.common.model.StudyGroup;
 
 import java.util.HashMap;
 

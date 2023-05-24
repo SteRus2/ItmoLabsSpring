@@ -7,8 +7,8 @@ import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 
 import java.util.HashMap;
 
-public class LoginCommand extends AbstractCommand{
-    public LoginCommand(Management manager){
+public class LoginCommand extends AbstractCommand {
+    public LoginCommand(Management manager) {
         super(manager, "login", "Войти в аккаунт");
         addParameter("login_name", "Имя аккаунта");
         addParameter("login_password", "Пароль от аккаунта");

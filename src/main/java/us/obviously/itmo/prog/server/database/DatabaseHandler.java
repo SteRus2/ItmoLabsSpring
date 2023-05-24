@@ -5,7 +5,6 @@ import us.obviously.itmo.prog.server.exceptions.CantFindFileException;
 import us.obviously.itmo.prog.server.exceptions.FailedToConnectToDatabaseException;
 import us.obviously.itmo.prog.server.exceptions.IgnoredException;
 import us.obviously.itmo.prog.server.exceptions.MissingPropertyException;
-import us.obviously.itmo.prog.server.net.Server;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,13 +35,13 @@ public class DatabaseHandler {
             throw new CantFindFileException("Файл конфигурации не найден");
         }
         initParameters();
-        if (url == null){
+        if (url == null) {
             throw new MissingPropertyException("url");
         }
-        if (user == null){
+        if (user == null) {
             throw new MissingPropertyException("user");
         }
-        if (password == null){
+        if (password == null) {
             throw new MissingPropertyException("password");
         }
         try {
@@ -52,17 +51,21 @@ public class DatabaseHandler {
         }
         databaseHandlerLogger.info("Соединение с базой данных установлено");
     }
+
     public Connection getConnection() {
         return connection;
     }
+
     public PreparedStatement getPreparedStatement(String sql) throws SQLException {
         return connection.prepareStatement(sql);
     }
-    private void initParameters(){
+
+    private void initParameters() {
         url = dataBaseInfo.getProperty("url");
         user = dataBaseInfo.getProperty("user");
         password = dataBaseInfo.getProperty("password");
     }
+
     public void closeConnection() throws IgnoredException {
         try {
             connection.close();

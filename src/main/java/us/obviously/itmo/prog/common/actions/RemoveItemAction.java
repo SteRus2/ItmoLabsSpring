@@ -25,6 +25,6 @@ public class RemoveItemAction extends Action<KeyModel, VoidModel> {
         } catch (SQLException e) {
             return new Response("Ошибка баз данных", ResponseStatus.NOT_FOUND);
         }
-        return new Response(this.getResponse().serialize(new VoidModel()) , ResponseStatus.OK);
+        return new Response(this.getResponse().serialize(new VoidModel()), ResponseStatus.OK);
     }
 }

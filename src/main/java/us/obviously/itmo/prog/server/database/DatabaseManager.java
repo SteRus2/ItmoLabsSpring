@@ -1,11 +1,11 @@
 package us.obviously.itmo.prog.server.database;
 
+import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
 import us.obviously.itmo.prog.common.model.*;
 import us.obviously.itmo.prog.server.database.security.MD2Secure;
 import us.obviously.itmo.prog.server.database.security.SecureControl;
 import us.obviously.itmo.prog.server.exceptions.*;
-import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.server.net.AuthorizedState;
 
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class DatabaseManager {
         PreparedStatement preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.getAll);
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()){
+        while (resultSet.next()) {
             var localPerson = new Person(
                     resultSet.getString("person_name"),
                     resultSet.getTimestamp("birthday").toLocalDateTime().atZone(ZoneId.systemDefault()),
@@ -137,11 +137,18 @@ public class DatabaseManager {
             }
             preparedStatement.setString(1, group.getName());
             preparedStatement.setLong(2, group.getCoordinates().getX());
-            if (group.getCoordinates().getY() != null){preparedStatement.setFloat(3, group.getCoordinates().getY());}
-            else {preparedStatement.setObject(3, null);}
+            if (group.getCoordinates().getY() != null) {
+                preparedStatement.setFloat(3, group.getCoordinates().getY());
+            } else {
+                preparedStatement.setObject(3, null);
+            }
             preparedStatement.setTimestamp(4, new Timestamp(group.getCreationDate().getTime()));
-            if (group.getStudentsCount() != null){preparedStatement.setInt(5, group.getStudentsCount());}
-            else {preparedStatement.setObject(5, null);} ;
+            if (group.getStudentsCount() != null) {
+                preparedStatement.setInt(5, group.getStudentsCount());
+            } else {
+                preparedStatement.setObject(5, null);
+            }
+            ;
             preparedStatement.setObject(6, group.getFormOfEducation(), Types.OTHER);
             preparedStatement.setObject(7, group.getSemesterEnum(), Types.OTHER);
             preparedStatement.setInt(8, personId);
@@ -157,7 +164,7 @@ public class DatabaseManager {
             //"insert into STUDY_GROUP(name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin) values (?, ?, ?, ?, ?, ?, ?, ?) returning id;
             //person_name, birthday, eye_color, hair_color, nationality
             return groupResultSet.getInt(1);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             databaseLogger.severe("ОШИБКА: " + e.getMessage());
             throw e;
         }
@@ -177,9 +184,9 @@ public class DatabaseManager {
             PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.getUser);
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 String salt = resultSet.getString("salt");
-                if (secureControl.getHashCode(PEPPER + localUserInfo.getPassword() + salt).equals(resultSet.getString("password"))){
+                if (secureControl.getHashCode(PEPPER + localUserInfo.getPassword() + salt).equals(resultSet.getString("password"))) {
                     databaseLogger.info("Пользователь: (" + localUserInfo.getLogin() + ") вошел в аккаунт");
                     return AuthorizedState.OK;
                 } else {
@@ -228,7 +235,7 @@ public class DatabaseManager {
             preparedStatement.setString(1, login);
             preparedStatement.setInt(2, arguments);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.next()){
+            if (!resultSet.next()) {
                 return false;
             }
         } catch (SQLException e) {
@@ -244,11 +251,18 @@ public class DatabaseManager {
             preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.updateUserObject);
             preparedStatement.setString(1, group.getName());
             preparedStatement.setLong(2, group.getCoordinates().getX());
-            if (group.getCoordinates().getY() != null){preparedStatement.setFloat(3, group.getCoordinates().getY());}
-            else {preparedStatement.setObject(3, null);}
+            if (group.getCoordinates().getY() != null) {
+                preparedStatement.setFloat(3, group.getCoordinates().getY());
+            } else {
+                preparedStatement.setObject(3, null);
+            }
             preparedStatement.setTimestamp(4, new Timestamp(group.getCreationDate().getTime()));
-            if (group.getStudentsCount() != null){preparedStatement.setInt(5, group.getStudentsCount());}
-            else {preparedStatement.setObject(5, null);} ;
+            if (group.getStudentsCount() != null) {
+                preparedStatement.setInt(5, group.getStudentsCount());
+            } else {
+                preparedStatement.setObject(5, null);
+            }
+            ;
             preparedStatement.setObject(6, group.getFormOfEducation(), Types.OTHER);
             preparedStatement.setObject(7, group.getSemesterEnum(), Types.OTHER);
             preparedStatement.setString(8, login);
@@ -264,8 +278,7 @@ public class DatabaseManager {
             preparedStatement.executeUpdate();
 
             databaseLogger.info("Объект группы Обновлен");
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             databaseLogger.severe("Ошибка базы данных: " + e.getMessage());
             return false;
         }
@@ -277,7 +290,7 @@ public class DatabaseManager {
             PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeUserObjects);
             preparedStatement.setString(1, login);
             preparedStatement.executeQuery();
-            databaseLogger.info("Все объекты пользователя ( "  + login + " ) удалены");
+            databaseLogger.info("Все объекты пользователя ( " + login + " ) удалены");
         } catch (SQLException e) {
             databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
             throw e;
@@ -290,8 +303,8 @@ public class DatabaseManager {
             preparedStatement.setString(1, login);
             preparedStatement.setInt(2, key);
             preparedStatement.executeQuery();
-            databaseLogger.info("Объекты пользователя ( "  + login + " ) удалены");
-        } catch (SQLException e){
+            databaseLogger.info("Объекты пользователя ( " + login + " ) удалены");
+        } catch (SQLException e) {
             databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
             throw e;
         }
@@ -303,9 +316,9 @@ public class DatabaseManager {
             preparedStatement.setString(1, login);
             preparedStatement.setInt(2, key);
             preparedStatement.executeQuery();
-            databaseLogger.info("Все объекты пользователя ( "  + login + " ) удалены");
-        } catch (SQLException e){
-            databaseLogger.info("Объекты пользователя ( "  + login + " ) удалены");
+            databaseLogger.info("Все объекты пользователя ( " + login + " ) удалены");
+        } catch (SQLException e) {
+            databaseLogger.info("Объекты пользователя ( " + login + " ) удалены");
             throw e;
         }
     }
@@ -316,8 +329,8 @@ public class DatabaseManager {
             preparedStatement.setString(1, login);
             preparedStatement.setInt(2, key);
             preparedStatement.executeQuery();
-            databaseLogger.info("Объект пользователя ( "  + login + " ) удален");
-        } catch (SQLException e){
+            databaseLogger.info("Объект пользователя ( " + login + " ) удален");
+        } catch (SQLException e) {
             databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
             throw e;
         }

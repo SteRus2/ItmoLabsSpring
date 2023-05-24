@@ -9,7 +9,6 @@ public class Messages {
      *
      * @param text Текст
      * @param args Аргументы для форматирования
-     *
      * @see ConsoleColor
      */
     static public void print(String text, Object... args) {
@@ -24,7 +23,6 @@ public class Messages {
      *
      * @param text Текст
      * @param args Аргументы для форматирования
-     *
      * @see Messages#print(String, Object...)
      */
     static public void printStatement(String text, Object... args) {

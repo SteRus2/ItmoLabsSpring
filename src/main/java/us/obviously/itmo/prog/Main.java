@@ -2,23 +2,6 @@ package us.obviously.itmo.prog;
 
 import us.obviously.itmo.prog.client.console.ConsoleColor;
 import us.obviously.itmo.prog.client.console.Messages;
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
-import us.obviously.itmo.prog.client.manager.Management;
-import us.obviously.itmo.prog.client.manager.Manager;
-import us.obviously.itmo.prog.common.data.DataCollection;
-import us.obviously.itmo.prog.common.exceptions.BadRequestException;
-import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
-import us.obviously.itmo.prog.common.model.StudyGroup;
-import us.obviously.itmo.prog.server.data.DataStorage;
-import us.obviously.itmo.prog.server.exceptions.CantFindFileException;
-import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
-import us.obviously.itmo.prog.server.exceptions.FileNotReadableException;
-import us.obviously.itmo.prog.server.exceptions.IncorrectValuesTypeException;
-import us.obviously.itmo.prog.server.reader.DataReader;
-import us.obviously.itmo.prog.server.reader.FileFormat;
-import us.obviously.itmo.prog.server.reader.FileFormatReader;
-
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {

@@ -34,7 +34,7 @@ public class InsertCommand extends AbstractCommand {
             StudyGroup studyGroup = studyGroupForm.build();
             try {
                 var newId = this.manager.getDataCollection().insertItem(studyGroup, studyGroup.getId());
-                if (newId.equals(-1)){
+                if (newId.equals(-1)) {
                     throw new UsedKeyException("Невозможно сохранить объект");
                 }
                 Messages.printStatement("~blНовый studyGroup сохранён под id %s~=", newId);

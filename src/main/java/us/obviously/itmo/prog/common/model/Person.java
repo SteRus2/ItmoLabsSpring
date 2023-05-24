@@ -17,9 +17,10 @@ public class Person implements Comparable<Person>, Serializable {
     private Color hairColor; //Поле может быть null
     private Country nationality; //Поле может быть null
 
-    public Person(){
+    public Person() {
 
     }
+
     public Person(String name, ZonedDateTime birthday, Color eyeColor, Color hairColor, Country nationality) {
         this.name = name;
         this.birthday = birthday;

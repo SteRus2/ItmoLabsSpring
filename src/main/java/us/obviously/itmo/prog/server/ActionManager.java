@@ -42,7 +42,8 @@ public class ActionManager {
         actionMap.put(updateItemAction.getName(), updateItemAction);
         actionMap.put(checkGroupAction.getName(), checkGroupAction);
     }
-    public Action getAction(String name){
+
+    public Action getAction(String name) {
         return actionMap.get(name.toLowerCase().trim());
     }
 }

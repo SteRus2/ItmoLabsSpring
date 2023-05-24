@@ -1,7 +1,7 @@
 package us.obviously.itmo.prog.common.validation;
 
-import us.obviously.itmo.prog.common.model.*;
 import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
+import us.obviously.itmo.prog.common.model.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +18,6 @@ public class StudyGroupValidation {
      *
      * @param studyGroups Список Групп
      * @throws IncorrectValueException Выбросит исключение, если список не прошёл валидацию
-     *
      * @see StudyGroupValidation#validate(StudyGroup)
      * @see StudyGroupValidation#validateIdUnique(List)
      */
@@ -67,7 +66,6 @@ public class StudyGroupValidation {
      *
      * @param value Проверяемое значение id
      * @throws IncorrectValueException Выбросит исключение, если значение невалидно
-     *
      * @see StudyGroupValidation#validateIdUnique(List)
      */
     public static void validateId(Integer value) throws IncorrectValueException {

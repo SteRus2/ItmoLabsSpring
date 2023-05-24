@@ -1,7 +1,6 @@
 package us.obviously.itmo.prog.common.actions;
 
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
-import us.obviously.itmo.prog.common.action_models.VoidModel;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.server.exceptions.UsedKeyException;
 
@@ -11,6 +10,7 @@ public class InsertItemAction extends Action<KeyGroupModel, Integer> {
     public InsertItemAction() {
         super("insert");
     }
+
     private Integer newId = -1;
 
 

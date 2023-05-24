@@ -19,6 +19,7 @@ import java.util.Scanner;
 @Deprecated
 public class FileFormatReader extends FileReader {
     private String baseString;
+
     /**
      * Конструктор, задающий путь до файла и формат
      *
@@ -33,7 +34,7 @@ public class FileFormatReader extends FileReader {
             case XML -> new XMLParser();
             case JSON -> new JsonParser();
         };
-        baseString = switch (ff){
+        baseString = switch (ff) {
             case XML -> "<%s></%s>".formatted(XMLParser.ROOT_NAME, XMLParser.ROOT_NAME);
             case JSON -> "{}";
         };
@@ -44,7 +45,7 @@ public class FileFormatReader extends FileReader {
      */
     @Override
     public HashMap<Integer, StudyGroup> getData() throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
-        if (!Files.isReadable(file.toPath())){
+        if (!Files.isReadable(file.toPath())) {
             throw new FileNotReadableException("Извините, файл не читаем");
         }
         try {
@@ -61,7 +62,7 @@ public class FileFormatReader extends FileReader {
             }
         }
         mainString = String.join("", strings);
-        if (mainString.trim().equals("")){
+        if (mainString.trim().equals("")) {
             mainString = baseString;
         }
         return parser.loads(mainString);
@@ -72,7 +73,7 @@ public class FileFormatReader extends FileReader {
      */
     @Override
     public void saveData(HashMap<Integer, StudyGroup> data) throws CantWriteDataException, FailedToDumpsEx, FileNotWritableException {
-        if (!Files.isWritable(file.toPath())){
+        if (!Files.isWritable(file.toPath())) {
             throw new FileNotWritableException("Извините, нет разрешения на запись");
         }
         mainString = parser.dumps(data);

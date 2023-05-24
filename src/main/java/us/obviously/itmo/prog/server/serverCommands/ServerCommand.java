@@ -13,7 +13,7 @@ public abstract class ServerCommand {
 
     public abstract void execute();
 
-    public ServerCommand(String name){
+    public ServerCommand(String name) {
         this.name = name;
     }
 
