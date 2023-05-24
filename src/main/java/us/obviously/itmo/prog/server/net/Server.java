@@ -9,11 +9,13 @@ import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.server.ActionManager;
 import us.obviously.itmo.prog.server.database.DatabaseManager;
-import us.obviously.itmo.prog.server.exceptions.*;
+import us.obviously.itmo.prog.server.exceptions.FailedToAcceptClientException;
+import us.obviously.itmo.prog.server.exceptions.FailedToCloseServerException;
+import us.obviously.itmo.prog.server.exceptions.FailedToStartServerException;
 import us.obviously.itmo.prog.server.serverCommands.ServerCommand;
 import us.obviously.itmo.prog.server.serverCommands.ServerCommandManager;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -25,8 +27,8 @@ import java.util.logging.Logger;
 
 public class Server implements ServerConnectionManager {
     public static Logger logger;
-    private final Scanner serverCommandReader;
     public final LocalDataCollection data;
+    private final Scanner serverCommandReader;
     private final Selector selector;
     private ServerSocketChannel server;
     private SocketAddress address;
@@ -156,12 +158,7 @@ public class Server implements ServerConnectionManager {
         var clientSocket = (ServerSocketChannel) selectionKey.channel();
         try {
             var client = clientSocket.accept();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    new ClientConnectionHandler(client, data, databaseManager).run();
-                }
-            }).start();
+            new ClientConnectionHandler(client, data, databaseManager).run();
             clientSocketMap.put(client, new ArrayList<>());
             logger.info("Новый клиент: " + client.getRemoteAddress());
         } catch (IOException e) {
