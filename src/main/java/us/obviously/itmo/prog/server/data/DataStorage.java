@@ -152,6 +152,11 @@ public class DataStorage implements LocalDataCollection {
                 .collect(Collectors.toMap(Function.identity(), data::get, (prev, next) -> next, HashMap::new));
     }
 
+    @Override
+    public void removeGreaterKey(int key, String login) {
+        data.entrySet().removeIf(entry -> (entry.getKey() > key && entry.getValue().getOwner().equals(login)));
+    }
+
     /**
      * Метод, позволяющий удалить из коллекции все элементы, ключ которых меньше заданного
      *
@@ -163,6 +168,11 @@ public class DataStorage implements LocalDataCollection {
                 .stream()
                 .filter(x -> x >= key)
                 .collect(Collectors.toMap(Function.identity(), data::get, (prev, next) -> next, HashMap::new));
+    }
+
+    @Override
+    public void removeLowerKey(int key, String login) {
+        data.entrySet().removeIf(entry -> (entry.getKey() < key && entry.getValue().getOwner().equals(login)));
     }
 
     /**
@@ -215,5 +225,20 @@ public class DataStorage implements LocalDataCollection {
         return data.get(id);
     }
 
+    @Override
+    public void removeUserItems(String login) {
+        data.entrySet().removeIf(entry -> entry.getValue().getOwner().equals(login));
+    }
 
+    @Override
+    public void removeUserItem(int key, String login) throws NotAccessException, NoSuchIdException {
+        if (data.get(key) == null){
+            throw new NoSuchIdException("Объекта не существует");
+        }
+        if (!data.get(key).getOwner().equals(login)){
+            throw new NotAccessException("Объект не принадлежит вам");
+        }
+        data.remove(key);
+
+    }
 }

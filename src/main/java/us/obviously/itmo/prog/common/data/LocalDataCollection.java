@@ -28,8 +28,12 @@ public interface LocalDataCollection extends DataCollection {
     void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException;
 
     void removeGreaterKey(int key);
+    void removeGreaterKey(int key, String login);
+
 
     void removeLowerKey(int key);
+    void removeLowerKey(int key, String login);
+
 
     Map<String, List<StudyGroup>> groupCountingByName();
 
@@ -40,4 +44,9 @@ public interface LocalDataCollection extends DataCollection {
     boolean canSaveData();
 
     StudyGroup checkGroup(Integer id);
+
+    void removeUserItems(String login);
+
+
+    void removeUserItem(int key, String login) throws NotAccessException, NoSuchIdException;
 }

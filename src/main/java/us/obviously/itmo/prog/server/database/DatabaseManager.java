@@ -98,8 +98,10 @@ public class DatabaseManager {
                     resultSet.getInt("students_count"),
                     FormOfEducation.valueOf(resultSet.getString("form_of_education")),
                     Semester.valueOf(resultSet.getString("semester_enum")),
-                    localPerson
+                    localPerson,
+                    resultSet.getString("owner_id")
             ));
+
         }
         return localData;
     }
@@ -268,6 +270,57 @@ public class DatabaseManager {
             return false;
         }
         return true;
+    }
+
+    public void removeAllUserObjects(String login) throws SQLException {
+        try {
+            PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeUserObjects);
+            preparedStatement.setString(1, login);
+            preparedStatement.executeQuery();
+            databaseLogger.info("Все объекты пользователя ( "  + login + " ) удалены");
+        } catch (SQLException e) {
+            databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public void removeGreaterUserObjects(int key, String login) throws SQLException {
+        try {
+            PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeGreaterUserObject);
+            preparedStatement.setString(1, login);
+            preparedStatement.setInt(2, key);
+            preparedStatement.executeQuery();
+            databaseLogger.info("Объекты пользователя ( "  + login + " ) удалены");
+        } catch (SQLException e){
+            databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public void removeLowerUserObjects(int key, String login) throws SQLException {
+        try {
+            PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeLowerUserObject);
+            preparedStatement.setString(1, login);
+            preparedStatement.setInt(2, key);
+            preparedStatement.executeQuery();
+            databaseLogger.info("Все объекты пользователя ( "  + login + " ) удалены");
+        } catch (SQLException e){
+            databaseLogger.info("Объекты пользователя ( "  + login + " ) удалены");
+            throw e;
+        }
+    }
+
+    public void removeUserObject(int key, String login) throws SQLException {
+        try {
+            PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeUserObject);
+            preparedStatement.setString(1, login);
+            preparedStatement.setInt(2, key);
+            preparedStatement.executeQuery();
+            databaseLogger.info("Объект пользователя ( "  + login + " ) удален");
+        } catch (SQLException e){
+            databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
+            throw e;
+        }
     }
     /*CREATE TABLE IF NOT EXISTS USERS (
          login TEXT PRIMARY KEY,

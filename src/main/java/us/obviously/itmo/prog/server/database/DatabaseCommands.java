@@ -9,7 +9,10 @@ public final class DatabaseCommands {
     public static String checkUserObject = "select * from STUDY_GROUP where (owner_id = ?) and (id = ?);";
     public static String updateUserObject = "update STUDY_GROUP set (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum) = (?, ?, ?, ?, ?, ?, ?) where (owner_id = ?) and (id = ?); " +
             "update persons set person_name = ?, birthday = ?, eye_сolor = ?, hair_сolor = ?, nationality = ? where person_id = (select group_admin from study_group where id = ?);";
-                                            ;
+    public static String removeUserObjects = "delete from STUDY_GROUP where owner_id = ? RETURNING id";
+    public static String removeGreaterUserObject = "delete from STUDY_GROUP where owner_id = ? and id > ? RETURNING id";
+    public static String removeLowerUserObject = "delete from STUDY_GROUP where owner_id = ? and id < ? RETURNING id";
+    public static String removeUserObject = "delete from STUDY_GROUP where owner_id = ? and id = ? RETURNING id";
 
     /*CREATE TABLE IF NOT EXISTS STUDY_GROUP (
         id SERIAL PRIMARY KEY,
