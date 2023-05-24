@@ -78,7 +78,7 @@ public class DataStorage implements LocalDataCollection {
     }
 
     @Override
-    public Integer insertItem(StudyGroup item, int key, String login) throws UsedKeyException {
+    synchronized public Integer insertItem(StudyGroup item, int key, String login) throws UsedKeyException {
         if (data.containsKey(key)) {
             throw new UsedKeyException("К сожалению, ключ уже используется");
         } else {
