@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS USERS (
 );
 CREATE TABLE IF NOT EXISTS PERSONS(
     person_id SERIAL PRIMARY KEY,
-    person_name TEXT NOT NULL,
+    person_name TEXT NOT NULL CHECK (length(person_name) > 0),
     birthday TIMESTAMP with time zone NOT NULL,
     eye_color COLOR,
     hair_color COLOR,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS PERSONS(
 );
 CREATE TABLE IF NOT EXISTS STUDY_GROUP (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL CHECK (length(name) > 0),
     coordinates_x NUMERIC NOT NULL,
     coordinates_y NUMERIC CHECK (coordinates_y > -373),
     creation_date TIMESTAMP NOT NULL,
