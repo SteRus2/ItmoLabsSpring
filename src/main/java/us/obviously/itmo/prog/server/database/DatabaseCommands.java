@@ -4,8 +4,7 @@ public final class DatabaseCommands {
     public static final String getAll = "select * from study_group join persons on study_group.group_admin = persons.person_id";
     public static final String insertUser = "insert into USERS(login, password, salt) values(?, ?, ?);";
     public static final String getUser = "select * from USERS where login = ?;";
-    public static String insertPerson = "insert into PERSONS(person_name, birthday, eye_color, hair_color, nationality) values (?, ?, ?, ?, ?) returning person_id;";
-    public static String insertStudyGroup = "insert into STUDY_GROUP(name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin, owner_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?) returning id;";
+    public static String insertStudyGroup = "with new_person as (insert into PERSONS (person_name, birthday, eye_color, hair_color, nationality) values (?, ?, ?, ?, ?) returning person_id ) insert into STUDY_GROUP (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin, owner_id) values (?, ?, ?, ?, ?, ?, ?, (SELECT person_id FROM new_person), ?) returning id;";
     public static String checkUserObject = "select * from STUDY_GROUP where (owner_id = ?) and (id = ?);";
     public static String updateUserObject = "update STUDY_GROUP set (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum) = (?, ?, ?, ?, ?, ?, ?) where (owner_id = ?) and (id = ?); " +
             "update persons set person_name = ?, birthday = ?, eye_color = ?, hair_color = ?, nationality = ? where person_id = (select group_admin from study_group where id = ?);";

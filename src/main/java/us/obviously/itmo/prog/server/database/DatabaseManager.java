@@ -17,11 +17,11 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class DatabaseManager {
-    private DatabaseHandler databaseHandler;
     private final Logger databaseLogger;
     private final String initSqlTables = "initTables.sql";
     private final String initSqlTypes = "initTypes.sql";
     private final String PEPPER = "}]<wzk}n";
+    private DatabaseHandler databaseHandler;
     private SecureControl secureControl;
 
     {
@@ -80,27 +80,8 @@ public class DatabaseManager {
         ResultSet resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
-            var localPerson = new Person(
-                    resultSet.getString("person_name"),
-                    resultSet.getTimestamp("birthday").toLocalDateTime().atZone(ZoneId.systemDefault()),
-                    (resultSet.getString("eye_color") == null) ? null : Color.valueOf(resultSet.getString("eye_color")),
-                    (resultSet.getString("hair_color") == null) ? null : Color.valueOf(resultSet.getString("hair_color")),
-                    (resultSet.getString("nationality") == null) ? null : Country.valueOf(resultSet.getString("nationality"))
-            );
-            localData.put(resultSet.getInt("id"), new StudyGroup(
-                    resultSet.getInt("id"),
-                    resultSet.getString("name"),
-                    new Coordinates(
-                            resultSet.getLong("coordinates_x"),
-                            (resultSet.getFloat("coordinates_y"))
-                    ),
-                    resultSet.getDate("creation_date"),
-                    resultSet.getInt("students_count"),
-                    FormOfEducation.valueOf(resultSet.getString("form_of_education")),
-                    Semester.valueOf(resultSet.getString("semester_enum")),
-                    localPerson,
-                    resultSet.getString("owner_id")
-            ));
+            var localPerson = new Person(resultSet.getString("person_name"), resultSet.getTimestamp("birthday").toLocalDateTime().atZone(ZoneId.systemDefault()), (resultSet.getString("eye_color") == null) ? null : Color.valueOf(resultSet.getString("eye_color")), (resultSet.getString("hair_color") == null) ? null : Color.valueOf(resultSet.getString("hair_color")), (resultSet.getString("nationality") == null) ? null : Country.valueOf(resultSet.getString("nationality")));
+            localData.put(resultSet.getInt("id"), new StudyGroup(resultSet.getInt("id"), resultSet.getString("name"), new Coordinates(resultSet.getLong("coordinates_x"), (resultSet.getFloat("coordinates_y"))), resultSet.getDate("creation_date"), resultSet.getInt("students_count"), FormOfEducation.valueOf(resultSet.getString("form_of_education")), Semester.valueOf(resultSet.getString("semester_enum")), localPerson, resultSet.getString("owner_id")));
 
         }
         return localData;
@@ -110,7 +91,7 @@ public class DatabaseManager {
         try {
             PreparedStatement preparedStatement = null;
             try {
-                preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertPerson);
+                preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertStudyGroup);
             } catch (SQLException e) {
                 databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
                 throw e;
@@ -122,37 +103,24 @@ public class DatabaseManager {
             preparedStatement.setObject(3, localPerson.getEyeColor(), Types.OTHER);
             preparedStatement.setObject(4, localPerson.getHairColor(), Types.OTHER);
             preparedStatement.setObject(5, localPerson.getNationality(), Types.OTHER);
-            ResultSet personResult = preparedStatement.executeQuery();
-            if (!personResult.next()) {
-                databaseLogger.warning("Ошибка при добавлении");
-                return -1;
-            }
-            var personId = personResult.getInt(1);
-
-            try {
-                preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertStudyGroup);
-            } catch (SQLException e) {
-                databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
-                throw e;
-            }
-            preparedStatement.setString(1, group.getName());
-            preparedStatement.setLong(2, group.getCoordinates().getX());
+            var GROUP_INDEX_OFFSET = 5;
+            preparedStatement.setString(GROUP_INDEX_OFFSET + 1, group.getName());
+            preparedStatement.setLong(GROUP_INDEX_OFFSET + 2, group.getCoordinates().getX());
             if (group.getCoordinates().getY() != null) {
-                preparedStatement.setFloat(3, group.getCoordinates().getY());
+                preparedStatement.setFloat(GROUP_INDEX_OFFSET + 3, group.getCoordinates().getY());
             } else {
-                preparedStatement.setObject(3, null);
+                preparedStatement.setObject(GROUP_INDEX_OFFSET + 3, null);
             }
-            preparedStatement.setTimestamp(4, new Timestamp(group.getCreationDate().getTime()));
+            preparedStatement.setTimestamp(GROUP_INDEX_OFFSET + 4, new Timestamp(group.getCreationDate().getTime()));
             if (group.getStudentsCount() != null) {
-                preparedStatement.setInt(5, group.getStudentsCount());
+                preparedStatement.setInt(GROUP_INDEX_OFFSET + 5, group.getStudentsCount());
             } else {
-                preparedStatement.setObject(5, null);
+                preparedStatement.setObject(GROUP_INDEX_OFFSET + 5, null);
             }
-            ;
-            preparedStatement.setObject(6, group.getFormOfEducation(), Types.OTHER);
-            preparedStatement.setObject(7, group.getSemesterEnum(), Types.OTHER);
-            preparedStatement.setInt(8, personId);
-            preparedStatement.setString(9, userInfo.getLogin());
+
+            preparedStatement.setObject(GROUP_INDEX_OFFSET + 6, group.getFormOfEducation(), Types.OTHER);
+            preparedStatement.setObject(GROUP_INDEX_OFFSET + 7, group.getSemesterEnum(), Types.OTHER);
+            preparedStatement.setString(GROUP_INDEX_OFFSET + 8, userInfo.getLogin());
 
             ResultSet groupResultSet = preparedStatement.executeQuery();
             if (!groupResultSet.next()) {
@@ -161,8 +129,6 @@ public class DatabaseManager {
             }
             databaseLogger.info("Объект группы добавлен");
 
-            //"insert into STUDY_GROUP(name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin) values (?, ?, ?, ?, ?, ?, ?, ?) returning id;
-            //person_name, birthday, eye_color, hair_color, nationality
             return groupResultSet.getInt(1);
         } catch (SQLException e) {
             databaseLogger.severe("ОШИБКА: " + e.getMessage());
@@ -262,7 +228,7 @@ public class DatabaseManager {
             } else {
                 preparedStatement.setObject(5, null);
             }
-            ;
+
             preparedStatement.setObject(6, group.getFormOfEducation(), Types.OTHER);
             preparedStatement.setObject(7, group.getSemesterEnum(), Types.OTHER);
             preparedStatement.setString(8, login);
