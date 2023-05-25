@@ -7,7 +7,6 @@ import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.forms.StudyGroupForm;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
-import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.exceptions.UsedKeyException;
 
@@ -47,8 +46,6 @@ public class InsertCommand extends AbstractCommand {
             Messages.printStatement("~blПрервано пользователем.~=");
         } catch (BadRequestException e) {
             Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
-        } catch (ServerErrorException e) {
-            Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }
     }
 }

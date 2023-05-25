@@ -33,7 +33,7 @@ public class Main {
         } catch (ServerErrorException e) {
             Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }*/
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

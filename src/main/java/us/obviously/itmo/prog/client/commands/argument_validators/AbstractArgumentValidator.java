@@ -3,7 +3,6 @@ package us.obviously.itmo.prog.client.commands.argument_validators;
 import us.obviously.itmo.prog.client.exceptions.InvalidArgumentException;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
-import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 
 /**
  * Проверка, что пользователь передал верное значение в качестве аргумента
@@ -12,7 +11,7 @@ import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
  * @param <U> Возвращаемый тип (реальный тип объекта)
  */
 abstract class AbstractArgumentValidator<T, U> {
-    Management manager;
+    final Management manager;
 
     AbstractArgumentValidator(Management manager) {
         this.manager = manager;
@@ -23,5 +22,5 @@ abstract class AbstractArgumentValidator<T, U> {
      * @return Желаемый объект
      * @throws InvalidArgumentException Выбросит исключение, если пользователь ввёл невалидное значение
      */
-    abstract public U validate(T value) throws InvalidArgumentException, BadRequestException, ServerErrorException;
+    abstract public U validate(T value) throws InvalidArgumentException, BadRequestException;
 }

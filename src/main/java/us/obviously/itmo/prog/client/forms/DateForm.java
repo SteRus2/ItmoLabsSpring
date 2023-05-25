@@ -18,7 +18,7 @@ public class DateForm extends Form<ZonedDateTime> {
     Integer day = null;
     Integer hours = null;
     Integer minutes = null;
-    Integer[] days = new Integer[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    final Integer[] days = new Integer[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     public DateForm(Management manager) {
         super(manager);

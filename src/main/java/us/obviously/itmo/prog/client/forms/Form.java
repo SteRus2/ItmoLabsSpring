@@ -9,7 +9,7 @@ import us.obviously.itmo.prog.client.manager.Management;
  */
 public abstract class Form<T> {
 
-    Management manager;
+    final Management manager;
 
     public Form(Management manager) {
         this.manager = manager;

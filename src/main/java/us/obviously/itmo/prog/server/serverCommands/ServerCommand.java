@@ -8,7 +8,7 @@ public abstract class ServerCommand {
         ConsoleColor.initColors();
     }
 
-    private String name;
+    private final String name;
     protected Server targetServer;
 
     public abstract void execute();

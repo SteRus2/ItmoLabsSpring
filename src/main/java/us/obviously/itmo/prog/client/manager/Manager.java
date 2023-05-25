@@ -3,12 +3,9 @@ package us.obviously.itmo.prog.client.manager;
 import us.obviously.itmo.prog.client.commands.*;
 import us.obviously.itmo.prog.client.console.ConsoleColors;
 import us.obviously.itmo.prog.client.console.Messages;
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.client.exceptions.MissedArgumentException;
 import us.obviously.itmo.prog.client.exceptions.RecurrentExecuteScripts;
 import us.obviously.itmo.prog.common.data.DataCollection;
-import us.obviously.itmo.prog.common.exceptions.BadRequestException;
-import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.server.exceptions.*;
 
 import java.io.File;
@@ -28,7 +25,7 @@ public class Manager<T> implements Management {
     private Scanner fileScanner;
     private Boolean active;
 
-    public Manager(DataCollection dataCollection, Scanner scanner) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
+    public Manager(DataCollection dataCollection, Scanner scanner) {
         this.dataCollection = dataCollection;
         this.scanner = scanner;
 
@@ -136,7 +133,7 @@ public class Manager<T> implements Management {
      * @inheritDoc
      */
     @Override
-    public boolean isIdExists(Integer id) throws BadRequestException, ServerErrorException {
+    public boolean isIdExists(Integer id) {
         //return dataCollection.getData().get(id) != null;
         return false;
     }

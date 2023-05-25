@@ -4,14 +4,14 @@ import java.security.SecureRandom;
 
 public abstract class SecureControl {
 
-    private final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789<>?:@{!$%^&*()_+£$";
     private final SecureRandom secureRandom = new SecureRandom();
-    private final int SALT_CAPACITY = 10;
 
 
     public String getSalt() {
+        int SALT_CAPACITY = 10;
         var stringBuilder = new StringBuilder(SALT_CAPACITY);
         for (int i = 0; i < SALT_CAPACITY; i++) {
+            String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789<>?:@{!$%^&*()_+£$";
             stringBuilder.append(LETTERS.charAt(secureRandom.nextInt(LETTERS.length())));
         }
         return stringBuilder.toString();

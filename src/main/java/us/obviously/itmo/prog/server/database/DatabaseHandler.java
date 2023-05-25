@@ -16,11 +16,11 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class DatabaseHandler {
-    private Connection connection;
+    private final Connection connection;
     String url;
     String user;
     String password;
-    private Properties dataBaseInfo = new Properties();
+    private final Properties dataBaseInfo = new Properties();
 
     private final Logger databaseHandlerLogger;
 

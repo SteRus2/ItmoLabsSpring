@@ -5,12 +5,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD2Secure extends SecureControl {
     private String hash;
-    private MessageDigest messageDigest;
 
     @Override
     public String getHashCode(String args) {
         try {
-            messageDigest = MessageDigest.getInstance("MD2");
+            MessageDigest messageDigest = MessageDigest.getInstance("MD2");
             byte[] inputBytes = args.getBytes();
             messageDigest.update(inputBytes);
             byte[] hashBytes = messageDigest.digest();
@@ -19,7 +18,7 @@ public class MD2Secure extends SecureControl {
                 sb.append(String.format("%02x", b));
             }
             return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException ignored) {
         }
         return hash;
     }

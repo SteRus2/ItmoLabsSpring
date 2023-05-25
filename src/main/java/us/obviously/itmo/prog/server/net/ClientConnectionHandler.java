@@ -1,6 +1,5 @@
 package us.obviously.itmo.prog.server.net;
 
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
@@ -26,8 +25,6 @@ public class ClientConnectionHandler {
     private static final ExecutorService requestsService;
     private static final ExecutorService processingService;
     private static final ExecutorService responsesService;
-    private final String LOGIN_UNIQUE_COMMAND = "login";
-    private final String REGISTER_UNIQUE_COMMAND = "register";
 
     static {
         requestsService = Executors.newCachedThreadPool();
@@ -37,11 +34,11 @@ public class ClientConnectionHandler {
 
     private final int DATA_SIZE = 15000;
     private final Serializer<UserInfo> userInfoSerializer = new Serializer<>();
-    private SocketChannel socketChannel;
+    private final SocketChannel socketChannel;
     private String remoteAddress;
-    private ActionManager actionManager;
-    private LocalDataCollection data;
-    private DatabaseManager databaseManager;
+    private final ActionManager actionManager;
+    private final LocalDataCollection data;
+    private final DatabaseManager databaseManager;
     private UserInfo authorizedUserInfo;
 
 
@@ -83,6 +80,8 @@ public class ClientConnectionHandler {
         try {        // Обработка запроса
             var action = actionManager.getAction(request.getCommand());
             Response response;
+            String REGISTER_UNIQUE_COMMAND = "register";
+            String LOGIN_UNIQUE_COMMAND = "login";
             if (request.getCommand().equals(LOGIN_UNIQUE_COMMAND)) {
                 var localUserInfo = userInfoSerializer.parse(request.getBody());
                 var isCorrect = databaseManager.checkUser(localUserInfo);
@@ -126,11 +125,6 @@ public class ClientConnectionHandler {
             });
         } catch (IOException e) {
             logger.info("Клиент отключен " + remoteAddress);
-            return;
-        } catch (NoSuchIdException | CantWriteDataException | CantParseDataException |
-                 FileNotWritableException | IncorrectValueException | IncorrectValuesTypeException |
-                 UsedKeyException e) {
-            throw new RuntimeException(e);
         } catch (ClassNotFoundException ignored) {
 
         }
@@ -155,7 +149,7 @@ public class ClientConnectionHandler {
             }
             try {
                 Thread.sleep(200);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
             socketChannel.write(ByteBuffer.wrap(buf));
         }

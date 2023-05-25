@@ -25,7 +25,6 @@ import java.util.List;
  * <br> Формат строки - json
  */
 public class JsonParser extends Parser {
-    private List<StudyGroup> dataList;
     private final ObjectMapper objectMapper;
 
     {
@@ -62,7 +61,7 @@ public class JsonParser extends Parser {
     @Override
     public String dumps(HashMap<Integer, StudyGroup> value) throws FailedToDumpsEx {
         Collection<StudyGroup> values = value.values();
-        dataList = new ArrayList<>(values);
+        List<StudyGroup> dataList = new ArrayList<>(values);
         String result;
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             objectMapper.writer().writeValue(byteArrayOutputStream, dataList);

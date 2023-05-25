@@ -18,7 +18,7 @@ import java.util.Scanner;
  */
 @Deprecated
 public class FileFormatReader extends FileReader {
-    private String baseString;
+    private final String baseString;
 
     /**
      * Конструктор, задающий путь до файла и формат

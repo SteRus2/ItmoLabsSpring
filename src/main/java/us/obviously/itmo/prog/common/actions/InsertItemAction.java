@@ -11,11 +11,10 @@ public class InsertItemAction extends Action<KeyGroupModel, Integer> {
         super("insert");
     }
 
-    private Integer newId = -1;
-
 
     @Override
     public Response execute(LocalDataCollection dataCollection, KeyGroupModel arguments) {
+        Integer newId = -1;
         try {
             newId = getDatabaseManager().insertItem(arguments, getUserInfo());
             dataCollection.insertItem(arguments.getStudyGroup(), newId, getUserInfo().getLogin());

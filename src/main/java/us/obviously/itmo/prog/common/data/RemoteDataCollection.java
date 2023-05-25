@@ -3,7 +3,6 @@ package us.obviously.itmo.prog.common.data;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
-import us.obviously.itmo.prog.server.exceptions.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,17 +13,17 @@ public interface RemoteDataCollection {
 
     HashMap<Integer, StudyGroup> getData();
 
-    void insertItem(StudyGroup item, int key) throws UsedKeyException;
+    void insertItem(StudyGroup item, int key);
 
-    void updateItem(StudyGroup item, int key) throws NoSuchIdException;
+    void updateItem(StudyGroup item, int key);
 
-    void removeItem(int key) throws NoSuchIdException;
+    void removeItem(int key);
 
     void clearData();
 
-    void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException;
+    void saveData();
 
-    void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException;
+    void replaceIfGreater(StudyGroup item, int key);
 
     void removeGreaterKey(int key);
 

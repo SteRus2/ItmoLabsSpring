@@ -4,14 +4,14 @@ public final class DatabaseCommands {
     public static final String getAll = "select * from study_group join persons on study_group.group_admin = persons.person_id";
     public static final String insertUser = "insert into USERS(login, password, salt) values(?, ?, ?);";
     public static final String getUser = "select * from USERS where login = ?;";
-    public static String insertStudyGroup = "with new_person as (insert into PERSONS (person_name, birthday, eye_color, hair_color, nationality) values (?, ?, ?, ?, ?) returning person_id ) insert into STUDY_GROUP (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin, owner_id) values (?, ?, ?, ?, ?, ?, ?, (SELECT person_id FROM new_person), ?) returning id;";
-    public static String checkUserObject = "select * from STUDY_GROUP where (owner_id = ?) and (id = ?);";
-    public static String updateUserObject = "update STUDY_GROUP set (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum) = (?, ?, ?, ?, ?, ?, ?) where (owner_id = ?) and (id = ?); " +
+    public static final String insertStudyGroup = "with new_person as (insert into PERSONS (person_name, birthday, eye_color, hair_color, nationality) values (?, ?, ?, ?, ?) returning person_id ) insert into STUDY_GROUP (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin, owner_id) values (?, ?, ?, ?, ?, ?, ?, (SELECT person_id FROM new_person), ?) returning id;";
+    public static final String checkUserObject = "select * from STUDY_GROUP where (owner_id = ?) and (id = ?);";
+    public static final String updateUserObject = "update STUDY_GROUP set (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum) = (?, ?, ?, ?, ?, ?, ?) where (owner_id = ?) and (id = ?); " +
             "update persons set person_name = ?, birthday = ?, eye_color = ?, hair_color = ?, nationality = ? where person_id = (select group_admin from study_group where id = ?);";
-    public static String removeUserObjects = "delete from STUDY_GROUP where owner_id = ? RETURNING id";
-    public static String removeGreaterUserObject = "delete from STUDY_GROUP where owner_id = ? and id > ? RETURNING id";
-    public static String removeLowerUserObject = "delete from STUDY_GROUP where owner_id = ? and id < ? RETURNING id";
-    public static String removeUserObject = "delete from STUDY_GROUP where owner_id = ? and id = ? RETURNING id";
+    public static final String removeUserObjects = "delete from STUDY_GROUP where owner_id = ? RETURNING id";
+    public static final String removeGreaterUserObject = "delete from STUDY_GROUP where owner_id = ? and id > ? RETURNING id";
+    public static final String removeLowerUserObject = "delete from STUDY_GROUP where owner_id = ? and id < ? RETURNING id";
+    public static final String removeUserObject = "delete from STUDY_GROUP where owner_id = ? and id = ? RETURNING id";
 
     /*CREATE TABLE IF NOT EXISTS STUDY_GROUP (
         id SERIAL PRIMARY KEY,

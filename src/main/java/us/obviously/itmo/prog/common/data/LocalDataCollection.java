@@ -25,7 +25,7 @@ public interface LocalDataCollection extends DataCollection {
 
     void clearData();
 
-    void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException;
+    void saveData();
 
     void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException;
 

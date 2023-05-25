@@ -3,8 +3,8 @@ package us.obviously.itmo.prog.common;
 import java.io.Serializable;
 
 public class UserInfo implements Serializable {
-    private String login;
-    private String password;
+    private final String login;
+    private final String password;
 
     public UserInfo(String login, String password) {
         this.login = login;

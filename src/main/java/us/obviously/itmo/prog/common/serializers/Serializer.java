@@ -10,7 +10,7 @@ public final class Serializer<T> {
             oos = new ObjectOutputStream(baos);
             oos.writeObject(object);
             oos.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
         return baos.toByteArray();
     }

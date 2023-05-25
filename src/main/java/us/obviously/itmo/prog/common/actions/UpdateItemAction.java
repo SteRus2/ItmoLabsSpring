@@ -10,12 +10,10 @@ public class UpdateItemAction extends Action<KeyGroupModel, VoidModel> {
         super("update");
     }
 
-    private boolean updated;
-
     @Override
     public Response execute(LocalDataCollection dataCollection, KeyGroupModel arguments) {
         try {
-            updated = getDatabaseManager().updateItem(arguments.getStudyGroup(), arguments.getKey(), getUserInfo().getLogin());
+            boolean updated = getDatabaseManager().updateItem(arguments.getStudyGroup(), arguments.getKey(), getUserInfo().getLogin());
             if (!updated) {
                 return new Response("Не удалось обновить объект, причина не известна", ResponseStatus.BAD_REQUEST);
             }

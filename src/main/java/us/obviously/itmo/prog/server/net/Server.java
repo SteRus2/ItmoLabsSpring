@@ -2,8 +2,6 @@ package us.obviously.itmo.prog.server.net;
 
 
 import us.obviously.itmo.prog.client.console.ConsoleColor;
-import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
-import us.obviously.itmo.prog.client.exceptions.FailedToSentRequestsException;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
@@ -26,23 +24,22 @@ import java.util.logging.Logger;
 
 
 public class Server implements ServerConnectionManager {
-    public static Logger logger;
+    public static final Logger logger;
     public final LocalDataCollection data;
     private final Scanner serverCommandReader;
     private final Selector selector;
-    private ServerSocketChannel server;
-    private SocketAddress address;
+    private final ServerSocketChannel server;
     private boolean isActive;
-    private Set<SelectionKey> selectionKeySet;
-    private ServerCommandManager serverCommandManager;
-    private ActionManager actionManager;
-    private Map<SocketChannel, ArrayList<Request>> clientSocketMap;
-    private DatabaseManager databaseManager;
+    private final ServerCommandManager serverCommandManager;
+    private final Map<SocketChannel, ArrayList<Request>> clientSocketMap;
+    private final DatabaseManager databaseManager;
 
-
-    {
+    static {
         logger = Logger.getLogger(Server.class.getName());
         logger.setLevel(Level.FINE);
+    }
+
+    {
         ConsoleColor.initColors();
         serverCommandReader = new Scanner(System.in);
         clientSocketMap = new HashMap<>();
@@ -58,14 +55,14 @@ public class Server implements ServerConnectionManager {
             server.register(selector, SelectionKey.OP_ACCEPT);
             activeServer();
             serverCommandManager = new ServerCommandManager(this);
-            actionManager = new ActionManager();
+            ActionManager actionManager = new ActionManager();
         } catch (ClosedChannelException e) {
             throw new FailedToStartServerException("Возникла ошибка при старте сервера, сетевой канал закрыт, попробуйте позже");
         } catch (IOException e) {
             throw new FailedToStartServerException("Возникла ошибка при старте сервера, пожалуйста, попробуйте позднее");
         }
         try {
-            address = new InetSocketAddress(port);
+            SocketAddress address = new InetSocketAddress(port);
             server.bind(address);
         } catch (IOException e) {
             throw new FailedToStartServerException("Данный порт занят");
@@ -91,7 +88,7 @@ public class Server implements ServerConnectionManager {
         while (isActive) {
             try {
                 selector.select();
-                selectionKeySet = selector.selectedKeys();
+                Set<SelectionKey> selectionKeySet = selector.selectedKeys();
                 for (var iter = selectionKeySet.iterator(); iter.hasNext(); ) {
                     SelectionKey key = iter.next();
                     iter.remove();
@@ -168,23 +165,23 @@ public class Server implements ServerConnectionManager {
 
 
     @Override
-    public ByteBuffer read() throws IOException {
+    public ByteBuffer read() {
 
         return ByteBuffer.allocate(1024);
     }
 
     @Override
-    public void write(ByteBuffer data) throws IOException {
+    public void write(ByteBuffer data) {
 
     }
 
     @Override
-    public void waitRequest() throws FailedToReadRemoteException, FailedToSentRequestsException {
+    public void waitRequest() {
 
     }
 
     @Override
-    public void giveResponse(Response response, SocketChannel socketChannel) throws IOException {
+    public void giveResponse(Response response, SocketChannel socketChannel) {
 
     }
 

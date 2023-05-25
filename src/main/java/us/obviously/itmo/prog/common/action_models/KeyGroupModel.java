@@ -5,8 +5,8 @@ import us.obviously.itmo.prog.common.model.StudyGroup;
 import java.io.Serializable;
 
 public class KeyGroupModel extends Model implements Serializable {
-    private int key;
-    private StudyGroup studyGroup;
+    private final int key;
+    private final StudyGroup studyGroup;
 
     public KeyGroupModel(StudyGroup studyGroup, int key) {
         this.studyGroup = studyGroup;

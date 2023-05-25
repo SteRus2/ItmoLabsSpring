@@ -52,26 +52,23 @@ public class PersonValidation {
      * Проверка валидности цвета глаз для Персоналии
      *
      * @param value Проверяемое значение цвета глаз
-     * @throws IncorrectValueException Выбросит исключение, если значение невалидно
      */
-    static public void validateEyeColor(Color value) throws IncorrectValueException {
+    static public void validateEyeColor(Color value) {
     }
 
     /**
      * Проверка валидности цвета волос для Персоналии
      *
      * @param value Проверяемое значение цвета волос
-     * @throws IncorrectValueException Выбросит исключение, если значение невалидно
      */
-    static public void validateHairColor(Color value) throws IncorrectValueException {
+    static public void validateHairColor(Color value) {
     }
 
     /**
      * Проверка валидности национальности для Персоналии
      *
      * @param value Проверяемое значение национальности
-     * @throws IncorrectValueException Выбросит исключение, если значение невалидно
      */
-    static public void validateNationality(Country value) throws IncorrectValueException {
+    static public void validateNationality(Country value) {
     }
 }

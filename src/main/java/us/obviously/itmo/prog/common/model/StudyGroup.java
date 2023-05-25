@@ -147,13 +147,13 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
      */
     @Override
     public int compareTo(StudyGroup o) {
-        if (!this.name.equals(((StudyGroup) o).name)) {
-            return this.name.compareToIgnoreCase(((StudyGroup) o).name);
+        if (!this.name.equals(o.name)) {
+            return this.name.compareToIgnoreCase(o.name);
         }
-        if (!this.studentsCount.equals(((StudyGroup) o).studentsCount)) {
-            return this.studentsCount.compareTo(((StudyGroup) o).studentsCount);
+        if (!this.studentsCount.equals(o.studentsCount)) {
+            return this.studentsCount.compareTo(o.studentsCount);
         }
-        return this.id.compareTo(((StudyGroup) o).id);
+        return this.id.compareTo(o.id);
     }
 
     @Override

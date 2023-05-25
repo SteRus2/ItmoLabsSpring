@@ -3,8 +3,6 @@ package us.obviously.itmo.prog.client.manager;
 import us.obviously.itmo.prog.client.commands.AbstractCommand;
 import us.obviously.itmo.prog.client.exceptions.RecurrentExecuteScripts;
 import us.obviously.itmo.prog.common.data.DataCollection;
-import us.obviously.itmo.prog.common.exceptions.BadRequestException;
-import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -45,7 +43,7 @@ public interface Management {
      * @param id Проверяемое id
      * @return <b>true</b> - элемент с данным id существует
      */
-    boolean isIdExists(Integer id) throws BadRequestException, ServerErrorException;
+    boolean isIdExists(Integer id);
 
     /**
      * @return Получить следующую введённую строку

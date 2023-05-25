@@ -17,12 +17,12 @@ public class ExitServerCommand extends ServerCommand {
             try {
                 targetServer.data.saveData();
             } catch (Exception e) {
-                targetServer.logger.severe("~reОшибка при сохранении коллекции: " + e.getMessage() + "~=");
+                Server.logger.severe("~reОшибка при сохранении коллекции: " + e.getMessage() + "~=");
             }
             targetServer.deactivateServer();
             System.exit(0);
         } catch (FailedToCloseServerException e) {
-            targetServer.logger.severe("~reОшибка при закрытии сервера: " + e.getMessage() + "~=");
+            Server.logger.severe("~reОшибка при закрытии сервера: " + e.getMessage() + "~=");
         }
     }
 }

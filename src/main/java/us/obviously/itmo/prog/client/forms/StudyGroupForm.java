@@ -18,10 +18,10 @@ import java.util.HashMap;
  */
 public class StudyGroupForm extends Form<StudyGroup> {
 
-    StudyGroup value;
-    HashMap<String, SelectChoice<FormOfEducation>> formsOfEducation;
-    HashMap<String, SelectChoice<Semester>> semesters;
-    StudyGroup.Builder builder;
+    final StudyGroup value;
+    final HashMap<String, SelectChoice<FormOfEducation>> formsOfEducation;
+    final HashMap<String, SelectChoice<Semester>> semesters;
+    final StudyGroup.Builder builder;
 
     public StudyGroupForm(Management manager, StudyGroup group) {
         super(manager);

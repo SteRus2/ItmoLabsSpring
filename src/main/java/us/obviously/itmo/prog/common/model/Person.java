@@ -61,11 +61,11 @@ public class Person implements Comparable<Person>, Serializable {
      */
     @Override
     public int compareTo(Person o) {
-        if (!this.name.equals(((Person) o).getName())) {
-            return this.name.compareToIgnoreCase(((Person) o).getName());
+        if (!this.name.equals(o.getName())) {
+            return this.name.compareToIgnoreCase(o.getName());
         }
-        if (!this.birthday.equals(((Person) o).getBirthday())) {
-            return this.birthday.compareTo(((Person) o).getBirthday());
+        if (!this.birthday.equals(o.getBirthday())) {
+            return this.birthday.compareTo(o.getBirthday());
         }
         return 0;
     }

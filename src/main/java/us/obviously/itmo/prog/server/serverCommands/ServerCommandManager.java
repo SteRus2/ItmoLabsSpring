@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ServerCommandManager {
-    private Server server;
-    private Map<String, ServerCommand> commands;
+    private final Server server;
+    private final Map<String, ServerCommand> commands;
 
     public ServerCommandManager(Server server) {
         this.server = server;

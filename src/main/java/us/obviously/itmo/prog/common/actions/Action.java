@@ -2,13 +2,11 @@ package us.obviously.itmo.prog.common.actions;
 
 import us.obviously.itmo.prog.client.Client;
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.serializers.Serializer;
 import us.obviously.itmo.prog.server.database.DatabaseManager;
-import us.obviously.itmo.prog.server.exceptions.*;
 
 import java.io.IOException;
 
@@ -40,7 +38,7 @@ public abstract class Action<T, D> {
             try {
                 client.connect(client.getPort());
                 client.request(new Request(this.name, body));
-            } catch (IOException ex) {
+            } catch (IOException ignored) {
             }
         }
     }
@@ -63,7 +61,7 @@ public abstract class Action<T, D> {
         }
     }
 
-    public Response run(LocalDataCollection dataCollection, byte[] arguments, UserInfo userInfo, DatabaseManager databaseManager) throws IncorrectValuesTypeException, IncorrectValueException, CantParseDataException, UsedKeyException, FileNotWritableException, IOException, CantWriteDataException, NoSuchIdException, ClassNotFoundException {
+    public Response run(LocalDataCollection dataCollection, byte[] arguments, UserInfo userInfo, DatabaseManager databaseManager) throws IOException, ClassNotFoundException {
         this.databaseManager = databaseManager;
         this.userInfo = userInfo;
         T args = this.request.parse(arguments);

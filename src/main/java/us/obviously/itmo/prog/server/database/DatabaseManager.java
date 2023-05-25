@@ -18,11 +18,9 @@ import java.util.logging.Logger;
 
 public class DatabaseManager {
     private final Logger databaseLogger;
-    private final String initSqlTables = "initTables.sql";
-    private final String initSqlTypes = "initTypes.sql";
     private final String PEPPER = "}]<wzk}n";
     private DatabaseHandler databaseHandler;
-    private SecureControl secureControl;
+    private final SecureControl secureControl;
 
     {
         secureControl = new MD2Secure();
@@ -50,7 +48,9 @@ public class DatabaseManager {
         String sqlTables = null;
         String sqlTypes = null;
         try {
+            String initSqlTables = "initTables.sql";
             sqlTables = new String(Files.readAllBytes(Paths.get(initSqlTables)));
+            String initSqlTypes = "initTypes.sql";
             sqlTypes = new String(Files.readAllBytes(Paths.get(initSqlTypes)));
         } catch (IOException e) {
             databaseLogger.severe("Ошибка во время чтения скриптов");
@@ -139,7 +139,7 @@ public class DatabaseManager {
     public void closeConnection() {
         try {
             databaseHandler.closeConnection();
-        } catch (IgnoredException e) {
+        } catch (IgnoredException ignored) {
 
         }
     }

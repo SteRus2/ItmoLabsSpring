@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ActionManager {
-    private Map<String, Action> actionMap;
+    private final Map<String, Action> actionMap;
 
     public ActionManager() {
         actionMap = new HashMap<>();

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.exceptions.CantParseDataException;
 import us.obviously.itmo.prog.server.exceptions.FailedToDumpsEx;
@@ -36,7 +35,7 @@ public class CommonXMLParser<T> extends CommonParser<T> {
      * {@inheritDoc}
      */
     @Override
-    public T loads(String value) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException {
+    public T loads(String value) throws IncorrectValuesTypeException, CantParseDataException {
         List<T> l1;
         try {
             l1 = xmlMapper.readValue(value, new TypeReference<>() {

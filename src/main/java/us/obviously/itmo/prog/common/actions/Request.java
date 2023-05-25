@@ -3,8 +3,8 @@ package us.obviously.itmo.prog.common.actions;
 import java.io.Serializable;
 
 public class Request implements Serializable {
-    private String command;
-    private byte[] body;
+    private final String command;
+    private final byte[] body;
     private String login;
     private String password;
 

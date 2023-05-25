@@ -4,9 +4,9 @@ package us.obviously.itmo.prog.client.commands;
  * Нумерованный параметр команды
  */
 public class Parameter {
-    String name;
-    String description;
-    Boolean required;
+    final String name;
+    final String description;
+    final Boolean required;
 
     public Parameter(String name, String description, Boolean required) {
         this.name = name;

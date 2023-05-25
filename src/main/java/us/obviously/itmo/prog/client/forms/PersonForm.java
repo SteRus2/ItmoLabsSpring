@@ -24,11 +24,11 @@ public class PersonForm extends Form<Person> {
     /**
      * Элементы меню выбора цветов
      */
-    HashMap<String, SelectChoice<Color>> colors;
+    final HashMap<String, SelectChoice<Color>> colors;
     /**
      * Элементы меню выбора национальностей
      */
-    HashMap<String, SelectChoice<Country>> nationalities;
+    final HashMap<String, SelectChoice<Country>> nationalities;
 
     public PersonForm(Management manager) {
         super(manager);

@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 public class CoordinatesForm extends Form<Coordinates> {
     private final Coordinates.Builder builder;
-    HashMap<String, SelectChoice<Color>> colors;
+    final HashMap<String, SelectChoice<Color>> colors;
 
     public CoordinatesForm(Management manager) {
         super(manager);

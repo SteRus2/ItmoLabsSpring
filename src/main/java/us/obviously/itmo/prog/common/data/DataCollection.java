@@ -2,7 +2,6 @@ package us.obviously.itmo.prog.common.data;
 
 import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
-import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
@@ -13,33 +12,33 @@ import java.util.List;
 import java.util.Map;
 
 public interface DataCollection {
-    DataInfo getInfo() throws BadRequestException, ServerErrorException;
+    DataInfo getInfo() throws BadRequestException;
 
-    HashMap<Integer, StudyGroup> getData() throws BadRequestException, ServerErrorException;
+    HashMap<Integer, StudyGroup> getData() throws BadRequestException;
 
-    Integer insertItem(StudyGroup item, int key) throws UsedKeyException, BadRequestException, ServerErrorException;
+    Integer insertItem(StudyGroup item, int key) throws UsedKeyException, BadRequestException;
 
-    void updateItem(StudyGroup item, int key) throws NoSuchIdException, BadRequestException, ServerErrorException;
+    void updateItem(StudyGroup item, int key) throws NoSuchIdException, BadRequestException;
 
-    void removeItem(int key) throws NoSuchIdException, BadRequestException, ServerErrorException;
+    void removeItem(int key) throws NoSuchIdException, BadRequestException;
 
-    void clearData() throws BadRequestException, ServerErrorException;
+    void clearData() throws BadRequestException;
 
-    void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException, BadRequestException, ServerErrorException;
+    void saveData() throws BadRequestException;
 
-    void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException, BadRequestException, ServerErrorException;
+    void replaceIfGreater(StudyGroup item, int key) throws NoSuchIdException, BadRequestException;
 
-    void removeGreaterKey(int key) throws BadRequestException, ServerErrorException;
+    void removeGreaterKey(int key) throws BadRequestException;
 
-    void removeLowerKey(int key) throws BadRequestException, ServerErrorException;
+    void removeLowerKey(int key) throws BadRequestException;
 
-    Map<String, List<StudyGroup>> groupCountingByName() throws BadRequestException, ServerErrorException;
+    Map<String, List<StudyGroup>> groupCountingByName() throws BadRequestException;
 
-    List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin) throws BadRequestException, ServerErrorException;
+    List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin) throws BadRequestException;
 
-    List<Semester> printFieldAscendingSemesterEnum() throws BadRequestException, ServerErrorException;
+    List<Semester> printFieldAscendingSemesterEnum() throws BadRequestException;
 
-    boolean canSaveData() throws BadRequestException, ServerErrorException;
+    boolean canSaveData() throws BadRequestException;
 
     default String loginUser(UserInfo userInfo) throws BadRequestException {
         return "";

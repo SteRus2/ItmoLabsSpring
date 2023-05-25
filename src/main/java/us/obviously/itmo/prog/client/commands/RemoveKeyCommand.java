@@ -5,7 +5,6 @@ import us.obviously.itmo.prog.client.console.ConsoleColors;
 import us.obviously.itmo.prog.client.console.Messages;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
-import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.server.exceptions.NoSuchIdException;
 
 import java.util.HashMap;
@@ -35,8 +34,6 @@ public class RemoveKeyCommand extends AbstractCommand {
             Messages.printStatement(ConsoleColors.RED + e.getMessage() + "~=");
         } catch (BadRequestException e) {
             Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
-        } catch (ServerErrorException e) {
-            Messages.printStatement("~Ошибка сервера: " + e.getMessage() + "~=");
         }
     }
 }

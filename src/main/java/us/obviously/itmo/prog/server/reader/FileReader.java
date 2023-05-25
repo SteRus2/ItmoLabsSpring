@@ -13,10 +13,10 @@ import java.util.Scanner;
  */
 @Deprecated
 public abstract class FileReader extends DataReader {
-    protected String filePath;
-    protected File file;
+    protected final String filePath;
+    protected final File file;
     protected Scanner scanner;
-    protected List<String> strings = new ArrayList<>();
+    protected final List<String> strings = new ArrayList<>();
     protected String mainString = "";
 
     /**

@@ -12,12 +12,12 @@ import java.util.List;
  * Команда для взаимодействия пользователя с программой
  */
 public abstract class AbstractCommand {
-    Management manager;
-    String name;
-    String description;
+    final Management manager;
+    final String name;
+    final String description;
 
-    HashMap<String, Parameter> parameters;
-    List<Parameter> indexParameters;
+    final HashMap<String, Parameter> parameters;
+    final List<Parameter> indexParameters;
 
     public AbstractCommand(Management manager, String name, String description) {
         this.manager = manager;

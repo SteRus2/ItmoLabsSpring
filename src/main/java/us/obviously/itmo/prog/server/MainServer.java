@@ -2,7 +2,6 @@ package us.obviously.itmo.prog.server;
 
 import us.obviously.itmo.prog.client.console.ConsoleColor;
 import us.obviously.itmo.prog.client.console.Messages;
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.data.DataStorage;
@@ -14,9 +13,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public class MainServer {
-    public static int port = 11253;
+    public static final int port = 11253;
     public static Server server;
-    private static HashMap<Integer, StudyGroup> initData;
     public static String propertiesSrc;
 
     static {
@@ -32,20 +30,12 @@ public class MainServer {
         try {
             DatabaseManager databaseManager = new DatabaseManager();
 
-            initData = databaseManager.getData();
+            HashMap<Integer, StudyGroup> initData = databaseManager.getData();
             //initData = new FileFormatReader("big-data.xml", FileFormat.XML).getData();
             LocalDataCollection dataCollection = new DataStorage(initData);
             server = new Server(dataCollection, port, databaseManager);
             server.run();
             databaseManager.closeConnection();
-        } catch (CantFindFileException e) {
-            Messages.printStatement("~reФайл не найден. Убедитесь в правильности пути и повторите попытку.~=");
-        } catch (IncorrectValueException | IncorrectValuesTypeException e) {
-            Messages.printStatement("~reНевалидные данные. " + e.getMessage() + "~=");
-        } catch (CantParseDataException e) {
-            Messages.printStatement("~reФайл нечитаем. " + e.getMessage() + "~=");
-        } catch (FileNotReadableException e) {
-            Messages.printStatement("~reНет разрешение на чтение файла. Воспользуйтесь командой ~grchmod~=");
         } catch (FailedToStartServerException e) {
             Messages.printStatement("~reСервер не запущен: " + e.getMessage() + "~=");
         } catch (SQLException e) {

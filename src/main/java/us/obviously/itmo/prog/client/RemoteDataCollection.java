@@ -304,7 +304,7 @@ public class RemoteDataCollection implements DataCollection {
             String answer = null;
             try {
                 answer = new Serializer<String>().parse(response.getBody());
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException ignored) {
             }
             return answer;
         } catch (FailedToReadRemoteException e) {

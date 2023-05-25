@@ -1,6 +1,5 @@
 package us.obviously.itmo.prog.server.data;
 
-import us.obviously.itmo.prog.client.exceptions.IncorrectValueException;
 import us.obviously.itmo.prog.common.data.DataInfo;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.model.Person;
@@ -27,12 +26,8 @@ public class DataStorage implements LocalDataCollection {
      * Конструктор, с помощью которого происходит инициализация коллекции, коллекцию получаем из dataReader
      *
      * @param initData Источник данных
-     * @throws IncorrectValueException      Выбросит исключение, если данные не пройдут валидацию
-     * @throws IncorrectValuesTypeException Выбросит исключение, если данные будут в неправильном формате
-     * @throws CantParseDataException       Выбросит исключение, если не сможет перевести дынные в нужный формат
-     * @throws CantFindFileException        Выбросит исключение, если не сможет найти путь до данных
      */
-    public DataStorage(HashMap<Integer, StudyGroup> initData) throws IncorrectValueException, IncorrectValuesTypeException, CantParseDataException, CantFindFileException, FileNotReadableException {
+    public DataStorage(HashMap<Integer, StudyGroup> initData) {
         this.data = initData;
         type = StudyGroup.class.getName();
         initDate = new Date();
@@ -129,7 +124,7 @@ public class DataStorage implements LocalDataCollection {
     }
 
     @Override
-    synchronized public void saveData() throws FailedToDumpsEx, CantWriteDataException, FileNotWritableException {
+    synchronized public void saveData() {
 
     }
 

@@ -22,7 +22,7 @@ public class RequestManager<T, D> {
             try {
                 client.connect(client.getPort());
                 client.request(new Request(commandName, body, client.getLogin(), client.getPassword()));
-            } catch (IOException ex) {
+            } catch (IOException ignored) {
             }
         }
     }

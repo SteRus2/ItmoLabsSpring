@@ -14,12 +14,8 @@ import java.util.ArrayList;
 
 public class Client implements ClientConnectionManager {
     private static final int DATA_SIZE = 15000;
-    private static InetAddress host;
     private static Socket connection;
-    private InputStream is;
-    private OutputStream os;
-    private InetSocketAddress address;
-    private int port;
+    private final int port;
     private boolean isActive;
     private String login = null;
     private String password = null;
@@ -39,9 +35,9 @@ public class Client implements ClientConnectionManager {
 
     @Override
     public void connect(int port) throws IOException {
-        host = InetAddress.getLocalHost();
+        InetAddress host = InetAddress.getLocalHost();
         connection = new Socket();
-        address = new InetSocketAddress(host, port);
+        InetSocketAddress address = new InetSocketAddress(host, port);
         connection.connect(address, 1000);
     }
 
@@ -53,14 +49,14 @@ public class Client implements ClientConnectionManager {
 
     @Override
     public void write(ByteBuffer data) throws IOException {
-        os = connection.getOutputStream();
+        OutputStream os = connection.getOutputStream();
         os.write(data.array());
     }
 
     @Override
     public ByteBuffer read() throws IOException {
         var bytes = new ArrayList<Byte>();
-        is = connection.getInputStream();
+        InputStream is = connection.getInputStream();
         BufferedInputStream bufferedInputStream = new BufferedInputStream(is, DATA_SIZE * 2);
         byte[] buf = new byte[DATA_SIZE + 1];
         int l = 0;

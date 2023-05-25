@@ -25,8 +25,7 @@ import java.util.List;
  * <br> Формат строки - XML
  */
 public class XMLParser extends Parser {
-    private List<StudyGroup> dataList;
-    public static String ROOT_NAME = "StudyGroups";
+    public static final String ROOT_NAME = "StudyGroups";
     private final XmlMapper xmlMapper;
 
     {
@@ -64,7 +63,7 @@ public class XMLParser extends Parser {
     @Override
     public String dumps(HashMap<Integer, StudyGroup> value) throws FailedToDumpsEx {
         Collection<StudyGroup> values = value.values();
-        dataList = new ArrayList<>(values);
+        List<StudyGroup> dataList = new ArrayList<>(values);
         String result;
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             xmlMapper.writer().withRootName("StudyGroups").writeValue(byteArrayOutputStream, dataList);

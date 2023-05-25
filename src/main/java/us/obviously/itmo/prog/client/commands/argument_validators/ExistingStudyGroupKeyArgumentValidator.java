@@ -3,7 +3,6 @@ package us.obviously.itmo.prog.client.commands.argument_validators;
 import us.obviously.itmo.prog.client.exceptions.InvalidArgumentException;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
-import us.obviously.itmo.prog.common.exceptions.ServerErrorException;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 
 /**
@@ -19,7 +18,7 @@ public class ExistingStudyGroupKeyArgumentValidator extends AbstractArgumentVali
      * @inheritDoc
      */
     @Override
-    public StudyGroup validate(String value) throws InvalidArgumentException, BadRequestException, ServerErrorException {
+    public StudyGroup validate(String value) throws InvalidArgumentException, BadRequestException {
         try {
             Integer valueInt = Integer.parseInt(value);
             var group = this.manager.getDataCollection().checkGroup(valueInt);
