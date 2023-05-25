@@ -29,6 +29,7 @@ public class InsertCommand extends AbstractCommand {
         var studyGroupForm = new StudyGroupForm(this.manager);
         //var key = args.get("key");
         try {
+            manager.getDataCollection().ping();
             studyGroupForm.create(String.valueOf(1));
             StudyGroup studyGroup = studyGroupForm.build();
             try {

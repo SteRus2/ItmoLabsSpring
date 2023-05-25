@@ -334,7 +334,16 @@ public class RemoteDataCollection implements DataCollection {
         }
     }
 
-
+    @Override
+    public void ping() throws BadRequestException {
+        var rm = new RequestManager<VoidModel, VoidModel>();
+        rm.send(client, new VoidModel(), "ping");
+        try {
+            rm.recieve(client);
+        } catch (FailedToReadRemoteException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
 }
 
 

@@ -25,6 +25,7 @@ public class ActionManager {
         var saveDataAction = new SaveDataAction();
         var updateItemAction = new UpdateItemAction();
         var checkGroupAction = new CheckGroupAction();
+        var pingAction = new PingAction();
 
         actionMap.put(canSaveDataAction.getName(), canSaveDataAction);
         actionMap.put(clearDataAction.getName(), clearDataAction);
@@ -41,6 +42,7 @@ public class ActionManager {
         actionMap.put(saveDataAction.getName(), saveDataAction);
         actionMap.put(updateItemAction.getName(), updateItemAction);
         actionMap.put(checkGroupAction.getName(), checkGroupAction);
+        actionMap.put(pingAction.getName(), pingAction);
     }
 
     public Action getAction(String name) {

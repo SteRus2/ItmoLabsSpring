@@ -51,4 +51,5 @@ public interface DataCollection {
     StudyGroup checkGroup(Integer id) throws BadRequestException;
 
 
+    default void ping() throws BadRequestException {};
 }
