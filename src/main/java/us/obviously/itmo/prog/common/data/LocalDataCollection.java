@@ -20,6 +20,8 @@ public interface LocalDataCollection extends DataCollection {
 
 
     void updateItem(StudyGroup item, int key) throws NoSuchIdException;
+    void updateItem(StudyGroup item, int key, String login) throws NoSuchIdException;
+
 
     void removeItem(int key) throws NoSuchIdException;
 

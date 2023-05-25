@@ -99,6 +99,16 @@ public class DataStorage implements LocalDataCollection {
         data.put(key, item);
     }
 
+    @Override
+    synchronized public void updateItem(StudyGroup item, int key, String login) throws NoSuchIdException {
+        if (!data.containsKey(key)) {
+            throw new NoSuchIdException("Объекта с таким id нет в коллекции");
+        }
+        item.setOwner(login);
+        item.setCreationDate(data.get(key).getCreationDate());
+        data.put(key, item);
+    }
+
     /**
      * Метод позволяющий убрать элемент из коллекции по заданному ключу
      *

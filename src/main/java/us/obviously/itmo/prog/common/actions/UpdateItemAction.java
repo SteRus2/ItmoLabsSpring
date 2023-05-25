@@ -17,7 +17,7 @@ public class UpdateItemAction extends Action<KeyGroupModel, VoidModel> {
             if (!updated) {
                 return new Response("Не удалось обновить объект, причина не известна", ResponseStatus.BAD_REQUEST);
             }
-            dataCollection.updateItem(arguments.getStudyGroup(), arguments.getKey());
+            dataCollection.updateItem(arguments.getStudyGroup(), arguments.getKey(), getUserInfo().getLogin());
         } catch (NoSuchIdException e) {
             return new Response("Элемента с таким id не существует", ResponseStatus.NOT_FOUND);
         }
