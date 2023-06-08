@@ -15,7 +15,7 @@ import java.util.UUID;
 public class JwtGenerator {
 
     static final String key = "sfS%#$fesf";
-    private static final int LIVE_TIME = 300;
+    private static final int LIVE_TIME = 600;
     private final KeyPairGenerator keyPairGenerator;
     private final KeyPair keyPair;
 

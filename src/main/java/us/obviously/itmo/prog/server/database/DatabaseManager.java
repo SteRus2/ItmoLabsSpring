@@ -102,7 +102,6 @@ public class DatabaseManager {
                     resultSet.getInt("owner_id"),
                     resultSet.getString("login"));
             localData.put(resultSet.getInt("id"), studyGroup);
-
         }
         return localData;
     }
@@ -232,7 +231,11 @@ public class DatabaseManager {
             preparedStatement.setString(3, salt);
             ResultSet result = preparedStatement.executeQuery();
             databaseLogger.info("Пользователь: (" + userModel.getUsername() + ") зарегистрирован");
-            int id = result.getInt(0);
+            if (!result.next()) {
+                databaseLogger.warning("Ошибка при добавлении");
+                throw new FailedToRegisterUserException("Пользователь с таким именем уже существует, выберите другое имя");
+            }
+            int id = result.getInt("id");
             return new UserInfoExplicit(id, userModel.getUsername(), userModel.getPassword());
         } catch (SQLException e) {
             databaseLogger.warning("Регистрация пользователя не удалась: " + e.getMessage());

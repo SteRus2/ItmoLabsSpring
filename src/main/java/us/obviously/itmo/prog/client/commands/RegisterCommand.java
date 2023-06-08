@@ -20,7 +20,7 @@ public class RegisterCommand extends AbstractCommand {
         var user = new UserModel(args.get("register_name"), args.get("register_password"));
         try {
             var answer = manager.getDataCollection().registerUser(user);
-            Messages.printStatement("~re" + answer + "~=");
+            Messages.printStatement("~grРегистрация прошла успешно! Добро пожаловать, ~ye" + answer.getLogin() + "~gr!~=");
         } catch (BadRequestException e) {
             Messages.printStatement("~reОшибка запроса: " + e.getMessage() + "~=");
         }

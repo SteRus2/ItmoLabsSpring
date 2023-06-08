@@ -35,7 +35,7 @@ public class UpdateCommand extends AbstractCommand {
             studyGroupForm.update(group);
             StudyGroup studyGroup = studyGroupForm.build();
             this.manager.getDataCollection().updateItem(studyGroup, Integer.parseInt(key));
-            Messages.printStatement("~blstudyGroup обновлён под id %s~=", studyGroup.getId());
+            Messages.printStatement("~blstudyGroup обновлён под id %s~=", args.get("key"));
         } catch (NoSuchIdException e) {
             Messages.printStatement("~reОшибка при сохранении: " + e.getMessage() + "~=");
         } catch (BadRequestException e) {

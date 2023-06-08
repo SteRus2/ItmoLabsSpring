@@ -97,7 +97,7 @@ public class ClientConnectionHandler {
                     if (Instant.now().isAfter(expiresAt)) {
                         response = new Response("Токен спёкся", ResponseStatus.UNAUTHORIZED);
                     } else {
-                        var id = token.getClaim("id").asInt();
+                        int id = Integer.parseInt(token.getClaim("id").asString());
                         var username = token.getClaim("username").asString();
                         response = action.run(data, request.getBody(), new UserInfoPublic(id, username), databaseManager);
                     }
@@ -108,7 +108,7 @@ public class ClientConnectionHandler {
             } catch (ActionDoesNotExistException e) {
                 response = new Response("Действие не сертифицировано", ResponseStatus.BAD_REQUEST);
             } catch (InvalidTokenException e) {
-                response = new Response("Невалидный токен", ResponseStatus.UNAUTHORIZED);
+                response = new Response("Невалидный токен. Переавторизиацрауйтесь", ResponseStatus.UNAUTHORIZED);
             }
 
             Response finalResponse = response;
