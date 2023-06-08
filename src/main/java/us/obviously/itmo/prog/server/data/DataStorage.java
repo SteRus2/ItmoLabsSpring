@@ -73,11 +73,11 @@ public class DataStorage implements LocalDataCollection {
     }
 
     @Override
-    synchronized public Integer insertItem(StudyGroup item, int key, String login) throws UsedKeyException {
+    synchronized public Integer insertItem(StudyGroup item, int key, int ownerId) throws UsedKeyException {
         if (data.containsKey(key)) {
             throw new UsedKeyException("К сожалению, ключ уже используется");
         } else {
-            item.setOwner(login);
+            item.setOwnerId(ownerId);
             data.put(key, item);
         }
         return 0;
@@ -100,11 +100,11 @@ public class DataStorage implements LocalDataCollection {
     }
 
     @Override
-    synchronized public void updateItem(StudyGroup item, int key, String login) throws NoSuchIdException {
+    synchronized public void updateItem(StudyGroup item, int key, int ownerId) throws NoSuchIdException {
         if (!data.containsKey(key)) {
             throw new NoSuchIdException("Объекта с таким id нет в коллекции");
         }
-        item.setOwner(login);
+        item.setOwnerId(ownerId);
         item.setCreationDate(data.get(key).getCreationDate());
         data.put(key, item);
     }
@@ -167,8 +167,8 @@ public class DataStorage implements LocalDataCollection {
     }
 
     @Override
-    synchronized public void removeGreaterKey(int key, String login) {
-        data.entrySet().removeIf(entry -> (entry.getKey() > key && entry.getValue().getOwner().equals(login)));
+    synchronized public void removeGreaterKey(int key, int ownerId) {
+        data.entrySet().removeIf(entry -> (entry.getKey() > key && entry.getValue().getOwnerId() == ownerId));
     }
 
     /**
@@ -182,8 +182,8 @@ public class DataStorage implements LocalDataCollection {
     }
 
     @Override
-    synchronized public void removeLowerKey(int key, String login) {
-        data.entrySet().removeIf(entry -> (entry.getKey() < key && entry.getValue().getOwner().equals(login)));
+    synchronized public void removeLowerKey(int key, int ownerId) {
+        data.entrySet().removeIf(entry -> (entry.getKey() < key && entry.getValue().getOwnerId() == ownerId));
     }
 
     /**
@@ -228,16 +228,16 @@ public class DataStorage implements LocalDataCollection {
     }
 
     @Override
-    synchronized public void removeUserItems(String login) {
-        data.entrySet().removeIf(entry -> entry.getValue().getOwner().equals(login));
+    synchronized public void removeUserItems(int ownerId) {
+        data.entrySet().removeIf(entry -> entry.getValue().getOwnerId() == ownerId);
     }
 
     @Override
-    synchronized public void removeUserItem(int key, String login) throws NotAccessException, NoSuchIdException {
+    synchronized public void removeUserItem(int key, int ownerId) throws NotAccessException, NoSuchIdException {
         if (data.get(key) == null) {
             throw new NoSuchIdException("Объекта не существует");
         }
-        if (!data.get(key).getOwner().equals(login)) {
+        if (!(data.get(key).getOwnerId() == ownerId)) {
             throw new NotAccessException("Объект не принадлежит вам");
         }
         data.remove(key);

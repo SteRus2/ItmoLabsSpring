@@ -16,8 +16,8 @@ public class RemoveItemAction extends Action<KeyModel, VoidModel> {
     @Override
     public Response execute(LocalDataCollection dataCollection, KeyModel arguments) {
         try {
-            getDatabaseManager().removeUserObject(arguments.getKey(), getUserInfo().getLogin());
-            dataCollection.removeUserItem(arguments.getKey(), getUserInfo().getLogin());
+            getDatabaseManager().removeUserObject(arguments.getKey(), getUserInfo().getId());
+            dataCollection.removeUserItem(arguments.getKey(), getUserInfo().getId());
         } catch (NoSuchIdException e) {
             return new Response("Элемента с таким id не существует", ResponseStatus.NOT_FOUND);
         } catch (NotAccessException e) {

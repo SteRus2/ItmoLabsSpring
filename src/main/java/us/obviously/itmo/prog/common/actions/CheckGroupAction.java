@@ -17,7 +17,7 @@ public class CheckGroupAction extends Action<Integer, StudyGroup> {
         if (exist == null) {
             return new Response(getResponse().serialize(exist), ResponseStatus.OK);
         }
-        boolean isMine = getDatabaseManager().checkUserObject(arguments, getUserInfo().getLogin());
+        boolean isMine = getDatabaseManager().checkUserObject(arguments, getUserInfo().getId());
         if (!isMine) {
             return new Response("Объект не принадлежит вам", ResponseStatus.UNAUTHORIZED);
         }

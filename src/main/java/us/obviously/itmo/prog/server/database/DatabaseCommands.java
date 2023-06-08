@@ -1,8 +1,25 @@
 package us.obviously.itmo.prog.server.database;
 
 public final class DatabaseCommands {
-    public static final String getAll = "select * from study_group join persons on study_group.group_admin = persons.person_id";
-    public static final String insertUser = "insert into USERS(login, password, salt) values(?, ?, ?);";
+    public static final String getAll = """
+select
+    study_group.id as id,
+    study_group.name as name,
+    study_group.coordinates_x as coordinates_x,
+    study_group.coordinates_y as coordinates_y,
+    study_group.creation_date as creation_date,
+    study_group.students_count as students_count,
+    study_group.form_of_education as form_of_education,
+    study_group.semester_enum as semester_enum,
+    study_group.owner_id as owner_id,
+    persons.person_name as person_name,
+    persons.birthday as birthday,
+    persons.eye_color as eye_color,
+    persons.hair_color as hair_color,
+    persons.nationality as nationality,
+    users.login as login
+from study_group join persons on study_group.group_admin = persons.person_id join users on study_group.owner_id = users.id""";
+    public static final String insertUser = "insert into USERS(login, password, salt) values(?, ?, ?) returning id;";
     public static final String getUser = "select * from USERS where login = ?;";
     public static final String insertStudyGroup = "with new_person as (insert into PERSONS (person_name, birthday, eye_color, hair_color, nationality) values (?, ?, ?, ?, ?) returning person_id ) insert into STUDY_GROUP (name, coordinates_x, coordinates_y, creation_date, students_count, form_of_education, semester_enum, group_admin, owner_id) values (?, ?, ?, ?, ?, ?, ?, (SELECT person_id FROM new_person), ?) returning id;";
     public static final String checkUserObject = "select * from STUDY_GROUP where (owner_id = ?) and (id = ?);";

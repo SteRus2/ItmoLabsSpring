@@ -21,7 +21,8 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     private FormOfEducation formOfEducation; // Поле не может быть null
     private Semester semesterEnum; // Поле не может быть null
     private Person groupAdmin; // Поле не может быть null
-    private String owner;
+    private int ownerId;
+    private String ownerUsername;
 
     public StudyGroup() {
     }
@@ -42,7 +43,7 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
         this.groupAdmin = groupAdmin;
     }
 
-    public StudyGroup(Integer id, String name, Coordinates coordinates, Date creationDate, Integer studentsCount, FormOfEducation formOfEducation, Semester semesterEnum, Person groupAdmin, String ownerId) {
+    public StudyGroup(Integer id, String name, Coordinates coordinates, Date creationDate, Integer studentsCount, FormOfEducation formOfEducation, Semester semesterEnum, Person groupAdmin, int ownerId, String ownerUsername) {
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;
@@ -51,7 +52,8 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
         this.formOfEducation = formOfEducation;
         this.semesterEnum = semesterEnum;
         this.groupAdmin = groupAdmin;
-        this.owner = ownerId;
+        this.ownerId = ownerId;
+        this.ownerUsername = ownerUsername;
     }
 
     public static StudyGroup.Builder newBuilder() {
@@ -169,12 +171,20 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
         return Objects.hash(id, name, coordinates, creationDate, studentsCount, formOfEducation, semesterEnum, groupAdmin);
     }
 
-    public String getOwner() {
-        return owner;
+    public int getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
     }
 
 

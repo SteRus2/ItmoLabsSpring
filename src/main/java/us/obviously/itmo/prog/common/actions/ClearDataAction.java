@@ -13,11 +13,11 @@ public class ClearDataAction extends Action<VoidModel, VoidModel> {
     @Override
     public Response execute(LocalDataCollection dataCollection, VoidModel arguments) {
         try {
-            getDatabaseManager().removeAllUserObjects(getUserInfo().getLogin());
+            getDatabaseManager().removeAllUserObjects(getUserInfo().getId());
         } catch (SQLException e) {
             return new Response("Ошибка во время удаления ваших объектов", ResponseStatus.SERVER_ERROR);
         }
-        dataCollection.removeUserItems(getUserInfo().getLogin());
+        dataCollection.removeUserItems(getUserInfo().getId());
         return new Response(this.getResponse().serialize(new VoidModel()), ResponseStatus.OK);
     }
 }

@@ -1,14 +1,13 @@
 package us.obviously.itmo.prog.server.net;
 
-import us.obviously.itmo.prog.common.UserInfo;
+import us.obviously.itmo.prog.common.UserInfoExplicit;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.actions.ResponseStatus;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
-import us.obviously.itmo.prog.common.serializers.Serializer;
 import us.obviously.itmo.prog.server.ActionManager;
 import us.obviously.itmo.prog.server.database.DatabaseManager;
-import us.obviously.itmo.prog.server.exceptions.*;
+import us.obviously.itmo.prog.server.exceptions.ActionDoesNotExistException;
 
 import java.io.*;
 import java.net.SocketException;
@@ -33,13 +32,12 @@ public class ClientConnectionHandler {
     }
 
     private final int DATA_SIZE = 15000;
-    private final Serializer<UserInfo> userInfoSerializer = new Serializer<>();
     private final SocketChannel socketChannel;
-    private String remoteAddress;
     private final ActionManager actionManager;
     private final LocalDataCollection data;
     private final DatabaseManager databaseManager;
-    private UserInfo authorizedUserInfo;
+    private String remoteAddress;
+    private UserInfoExplicit authorizedUserInfo; // TODO: использовать
 
 
     public ClientConnectionHandler(SocketChannel socketChannel, LocalDataCollection data, DatabaseManager databaseManager) {
@@ -63,9 +61,7 @@ public class ClientConnectionHandler {
                     Request request = readRequest(socketChannel);
                     logger.info("запрос от клиента ( " + socketChannel.getRemoteAddress() + " ), Запрос: " + request.toString());
 
-                    processingService.submit(() -> {
-                        processRequest(request);
-                    });
+                    processingService.submit(() -> processRequest(request));
                 } catch (IOException e) {
                     logger.info("Клиент отключен " + remoteAddress);
                     return;
@@ -78,42 +74,30 @@ public class ClientConnectionHandler {
     public void processRequest(Request request) {
 
         try {        // Обработка запроса
-            var action = actionManager.getAction(request.getCommand());
             Response response;
-            String REGISTER_UNIQUE_COMMAND = "register";
-            String LOGIN_UNIQUE_COMMAND = "login";
-            if (request.getCommand().equals(LOGIN_UNIQUE_COMMAND)) {
-                var localUserInfo = userInfoSerializer.parse(request.getBody());
-                var isCorrect = databaseManager.checkUser(localUserInfo);
-                if (isCorrect == AuthorizedState.OK) {
-                    authorizedUserInfo = localUserInfo;
+            try {
+                var action = actionManager.getAction(request.getCommand());
+                String REGISTER_UNIQUE_COMMAND = "register";
+                String LOGIN_UNIQUE_COMMAND = "login";
+                if (request.getCommand().equals(LOGIN_UNIQUE_COMMAND)) {
+                    response = action.run(data, request.getBody(), request.getUserInfo(), databaseManager);
+                } else if (request.getCommand().equals(REGISTER_UNIQUE_COMMAND)) {
+                    response = action.run(data, request.getBody(), request.getUserInfo(), databaseManager);
+                } else if (request.getPassword() == null || request.getLogin() == null) {
+                    response = new Response("Пользователь не авторизован", ResponseStatus.UNAUTHORIZED);
                 }
-                response = switch (isCorrect) {
-                    case OK -> new Response("Вы успешно вошли в аккаунт", ResponseStatus.OK);
-                    case NOT_FOUND_LOGIN ->
-                            new Response("Пользователь с таким именем не найден", ResponseStatus.UNAUTHORIZED);
-                    case INCORRECT_PASSWORD -> new Response("Неверный пароль", ResponseStatus.UNAUTHORIZED);
-                };
-            } else if (request.getCommand().equals(REGISTER_UNIQUE_COMMAND)) {
-                var localUserInfo = userInfoSerializer.parse(request.getBody());
-                try {
-                    databaseManager.registerUser(localUserInfo);
-                    response = new Response("Регистрация прошла успешно", ResponseStatus.OK);
-                } catch (FailedToRegisterUserException e) {
-                    response = new Response("Ошибка во время регистрации пользователя: " + e.getMessage(), ResponseStatus.UNAUTHORIZED);
+                // TODO: Сейчас мы полностью доверяем логину паролю пользователя
+                else if (action == null) {
+                    response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
+                } else {
+                    response = action.run(data, request.getBody(), request.getUserInfo(), databaseManager);
                 }
-            } else if (request.getPassword() == null || request.getLogin() == null || authorizedUserInfo == null) {
-                response = new Response("Пользователь не авторизован", ResponseStatus.UNAUTHORIZED);
-            } else if (!(authorizedUserInfo.getPassword().equals(request.getPassword()) && authorizedUserInfo.getLogin().equals(request.getLogin()))) {
-                response = new Response("Пользователь не авторизован", ResponseStatus.UNAUTHORIZED);
-            } else if (action == null) {
-                response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
-            } else {
-                response = action.run(data, request.getBody(), new UserInfo(request.getLogin(), request.getPassword()), databaseManager);
-            }
 
-            //Отправка ответов клиенту
-            logger.info("Ответ клиенту ( " + socketChannel.getRemoteAddress() + " ), ответ " + response.toString());
+                //Отправка ответов клиенту
+                logger.info("Ответ клиенту ( " + socketChannel.getRemoteAddress() + " ), ответ " + response.toString());
+            } catch (ActionDoesNotExistException e) {
+                response = new Response("Действие не сертифицировано", ResponseStatus.BAD_REQUEST);
+            }
 
             Response finalResponse = response;
             responsesService.submit(() -> {

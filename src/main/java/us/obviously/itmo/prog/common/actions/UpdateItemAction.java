@@ -13,11 +13,11 @@ public class UpdateItemAction extends Action<KeyGroupModel, VoidModel> {
     @Override
     public Response execute(LocalDataCollection dataCollection, KeyGroupModel arguments) {
         try {
-            boolean updated = getDatabaseManager().updateItem(arguments.getStudyGroup(), arguments.getKey(), getUserInfo().getLogin());
+            boolean updated = getDatabaseManager().updateItem(arguments.getStudyGroup(), arguments.getKey(), getUserInfo().getId());
             if (!updated) {
                 return new Response("Не удалось обновить объект, причина не известна", ResponseStatus.BAD_REQUEST);
             }
-            dataCollection.updateItem(arguments.getStudyGroup(), arguments.getKey(), getUserInfo().getLogin());
+            dataCollection.updateItem(arguments.getStudyGroup(), arguments.getKey(), getUserInfo().getId());
         } catch (NoSuchIdException e) {
             return new Response("Элемента с таким id не существует", ResponseStatus.NOT_FOUND);
         }

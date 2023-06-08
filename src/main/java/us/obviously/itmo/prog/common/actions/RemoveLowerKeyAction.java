@@ -14,11 +14,11 @@ public class RemoveLowerKeyAction extends Action<KeyModel, VoidModel> {
     @Override
     public Response execute(LocalDataCollection dataCollection, KeyModel arguments) {
         try {
-            getDatabaseManager().removeLowerUserObjects(arguments.getKey(), getUserInfo().getLogin());
+            getDatabaseManager().removeLowerUserObjects(arguments.getKey(), getUserInfo().getId());
         } catch (SQLException e) {
             return new Response("Ошибка во время удаления ваших объектов", ResponseStatus.SERVER_ERROR);
         }
-        dataCollection.removeLowerKey(arguments.getKey(), getUserInfo().getLogin());
+        dataCollection.removeLowerKey(arguments.getKey(), getUserInfo().getId());
         return new Response(this.getResponse().serialize(new VoidModel()), ResponseStatus.OK);
     }
 }

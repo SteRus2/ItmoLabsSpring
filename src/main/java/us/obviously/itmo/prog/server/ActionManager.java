@@ -1,12 +1,13 @@
 package us.obviously.itmo.prog.server;
 
 import us.obviously.itmo.prog.common.actions.*;
+import us.obviously.itmo.prog.server.exceptions.ActionDoesNotExistException;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ActionManager {
-    private final Map<String, Action> actionMap;
+    private final Map<String, Action<?, ?>> actionMap;
 
     public ActionManager() {
         actionMap = new HashMap<>();
@@ -26,6 +27,8 @@ public class ActionManager {
         var updateItemAction = new UpdateItemAction();
         var checkGroupAction = new CheckGroupAction();
         var pingAction = new PingAction();
+        var loginAction = new LoginAction();
+        var registerAction = new RegisterAction();
 
         actionMap.put(canSaveDataAction.getName(), canSaveDataAction);
         actionMap.put(clearDataAction.getName(), clearDataAction);
@@ -43,9 +46,16 @@ public class ActionManager {
         actionMap.put(updateItemAction.getName(), updateItemAction);
         actionMap.put(checkGroupAction.getName(), checkGroupAction);
         actionMap.put(pingAction.getName(), pingAction);
+        actionMap.put(loginAction.getName(), loginAction);
+        actionMap.put(registerAction.getName(), registerAction);
     }
 
-    public Action getAction(String name) {
-        return actionMap.get(name.toLowerCase().trim());
+    public Action<?, ?> getAction(String name) throws ActionDoesNotExistException {
+        var action = actionMap.get(name.toLowerCase().trim());
+        if (action == null) {
+            throw new ActionDoesNotExistException("Действие не сертифицировано");
+        }
+        return action;
+
     }
 }

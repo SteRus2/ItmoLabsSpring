@@ -17,6 +17,7 @@ public class Client implements ClientConnectionManager {
     private static Socket connection;
     private final int port;
     private boolean isActive;
+    private int id = 0;
     private String login = null;
     private String password = null;
 
@@ -59,10 +60,8 @@ public class Client implements ClientConnectionManager {
         InputStream is = connection.getInputStream();
         BufferedInputStream bufferedInputStream = new BufferedInputStream(is, DATA_SIZE * 2);
         byte[] buf = new byte[DATA_SIZE + 1];
-        int l = 0;
         do {
             int check = bufferedInputStream.read(buf);
-            //System.out.println("read: " + l++);
             if (check == -1) {
                 throw new IOException("Ошибка при чтении данных");
             }
@@ -133,6 +132,10 @@ public class Client implements ClientConnectionManager {
         return port;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getLogin() {
         return login;
     }
@@ -141,6 +144,9 @@ public class Client implements ClientConnectionManager {
         return password;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
     public void setLogin(String login) {
         this.login = login;
     }

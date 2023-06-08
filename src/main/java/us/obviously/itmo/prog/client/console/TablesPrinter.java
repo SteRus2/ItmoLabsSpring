@@ -24,11 +24,11 @@ public class TablesPrinter {
             StringBuilder builder1 = new StringBuilder();
             builder1.append("| ");
             var coordinates = "{ %d; %f }".formatted(group.getCoordinates().getX(), group.getCoordinates().getY());
-            var space1 = width - 4 - coordinates.length() + 14;
+            var space1 = width - 4 - coordinates.length() + 14 + 5;
             var title = (
                     "~bl%s~=" + " "
-                            + ConsoleColors.YELLOW + "%s -- %s ~=")
-                    .formatted(group.getName(), key, group.getOwner());
+                            + ConsoleColors.YELLOW + "%s ~=--~cy %s (id: %d) ~=")
+                    .formatted(group.getName(), key, group.getOwnerUsername(), group.getOwnerId());
             var left = ("%-" + space1 + "s").formatted(title);
             builder1.append(left).append(coordinates);
             builder1.append(" |%n".formatted());

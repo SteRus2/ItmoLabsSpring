@@ -1,6 +1,8 @@
 package us.obviously.itmo.prog.common.data;
 
 import us.obviously.itmo.prog.common.UserInfo;
+import us.obviously.itmo.prog.common.UserInfoExplicit;
+import us.obviously.itmo.prog.common.action_models.UserModel;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
@@ -40,16 +42,16 @@ public interface DataCollection {
 
     boolean canSaveData() throws BadRequestException;
 
-    default String loginUser(UserInfo userInfo) throws BadRequestException {
-        return "";
+    default UserInfo loginUser(UserModel userModel) throws BadRequestException {
+        return new UserInfoExplicit(0, "", "");
     }
 
-    default String registerUser(UserInfo userInfo) throws BadRequestException {
-        return "";
+    default UserInfo registerUser(UserModel userModel) throws BadRequestException {
+        return new UserInfoExplicit(0, "", "");
     }
 
     StudyGroup checkGroup(Integer id) throws BadRequestException;
 
 
-    default void ping() throws BadRequestException {};
+    default void ping() throws BadRequestException {}
 }

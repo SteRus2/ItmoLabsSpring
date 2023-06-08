@@ -16,11 +16,11 @@ public interface LocalDataCollection extends DataCollection {
 
     Integer insertItem(StudyGroup item, int key) throws UsedKeyException;
 
-    Integer insertItem(StudyGroup item, int key, String login) throws UsedKeyException;
+    Integer insertItem(StudyGroup item, int key, int ownerId) throws UsedKeyException;
 
 
     void updateItem(StudyGroup item, int key) throws NoSuchIdException;
-    void updateItem(StudyGroup item, int key, String login) throws NoSuchIdException;
+    void updateItem(StudyGroup item, int key, int ownerId) throws NoSuchIdException;
 
 
     void removeItem(int key) throws NoSuchIdException;
@@ -33,12 +33,12 @@ public interface LocalDataCollection extends DataCollection {
 
     void removeGreaterKey(int key);
 
-    void removeGreaterKey(int key, String login);
+    void removeGreaterKey(int key, int ownerId);
 
 
     void removeLowerKey(int key);
 
-    void removeLowerKey(int key, String login);
+    void removeLowerKey(int key, int ownerId);
 
 
     Map<String, List<StudyGroup>> groupCountingByName();
@@ -51,8 +51,8 @@ public interface LocalDataCollection extends DataCollection {
 
     StudyGroup checkGroup(Integer id);
 
-    void removeUserItems(String login);
+    void removeUserItems(int ownerId);
 
 
-    void removeUserItem(int key, String login) throws NotAccessException, NoSuchIdException;
+    void removeUserItem(int key, int ownerId) throws NotAccessException, NoSuchIdException;
 }

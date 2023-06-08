@@ -1,7 +1,9 @@
 package us.obviously.itmo.prog.server.database;
 
 import us.obviously.itmo.prog.common.UserInfo;
+import us.obviously.itmo.prog.common.UserInfoExplicit;
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
+import us.obviously.itmo.prog.common.action_models.UserModel;
 import us.obviously.itmo.prog.common.model.*;
 import us.obviously.itmo.prog.server.database.security.MD2Secure;
 import us.obviously.itmo.prog.server.database.security.SecureControl;
@@ -19,8 +21,8 @@ import java.util.logging.Logger;
 public class DatabaseManager {
     private final Logger databaseLogger;
     private final String PEPPER = "}]<wzk}n";
-    private DatabaseHandler databaseHandler;
     private final SecureControl secureControl;
+    private DatabaseHandler databaseHandler;
 
     {
         secureControl = new MD2Secure();
@@ -79,9 +81,27 @@ public class DatabaseManager {
         PreparedStatement preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.getAll);
         ResultSet resultSet = preparedStatement.executeQuery();
 
+//        System.out.println(resultSet.getString("person_name"));
+
         while (resultSet.next()) {
-            var localPerson = new Person(resultSet.getString("person_name"), resultSet.getTimestamp("birthday").toLocalDateTime().atZone(ZoneId.systemDefault()), (resultSet.getString("eye_color") == null) ? null : Color.valueOf(resultSet.getString("eye_color")), (resultSet.getString("hair_color") == null) ? null : Color.valueOf(resultSet.getString("hair_color")), (resultSet.getString("nationality") == null) ? null : Country.valueOf(resultSet.getString("nationality")));
-            localData.put(resultSet.getInt("id"), new StudyGroup(resultSet.getInt("id"), resultSet.getString("name"), new Coordinates(resultSet.getLong("coordinates_x"), (resultSet.getFloat("coordinates_y"))), resultSet.getDate("creation_date"), resultSet.getInt("students_count"), FormOfEducation.valueOf(resultSet.getString("form_of_education")), Semester.valueOf(resultSet.getString("semester_enum")), localPerson, resultSet.getString("owner_id")));
+            var localPerson = new Person(
+                    resultSet.getString("person_name"),
+                    resultSet.getTimestamp("birthday").toLocalDateTime().atZone(ZoneId.systemDefault()),
+                    (resultSet.getString("eye_color") == null) ? null : Color.valueOf(resultSet.getString("eye_color")),
+                    (resultSet.getString("hair_color") == null) ? null : Color.valueOf(resultSet.getString("hair_color")),
+                    (resultSet.getString("nationality") == null) ? null : Country.valueOf(resultSet.getString("nationality")));
+            var studyGroup = new StudyGroup(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    new Coordinates(resultSet.getLong("coordinates_x"), (resultSet.getFloat("coordinates_y"))),
+                    resultSet.getDate("creation_date"),
+                    resultSet.getInt("students_count"),
+                    FormOfEducation.valueOf(resultSet.getString("form_of_education")),
+                    Semester.valueOf(resultSet.getString("semester_enum")),
+                    localPerson,
+                    resultSet.getInt("owner_id"),
+                    resultSet.getString("login"));
+            localData.put(resultSet.getInt("id"), studyGroup);
 
         }
         return localData;
@@ -89,7 +109,7 @@ public class DatabaseManager {
 
     public Integer insertItem(KeyGroupModel arguments, UserInfo userInfo) throws SQLException {
         try {
-            PreparedStatement preparedStatement = null;
+            PreparedStatement preparedStatement;
             try {
                 preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertStudyGroup);
             } catch (SQLException e) {
@@ -120,7 +140,7 @@ public class DatabaseManager {
 
             preparedStatement.setObject(GROUP_INDEX_OFFSET + 6, group.getFormOfEducation(), Types.OTHER);
             preparedStatement.setObject(GROUP_INDEX_OFFSET + 7, group.getSemesterEnum(), Types.OTHER);
-            preparedStatement.setString(GROUP_INDEX_OFFSET + 8, userInfo.getLogin());
+            preparedStatement.setInt(GROUP_INDEX_OFFSET + 8, userInfo.getId());
 
             ResultSet groupResultSet = preparedStatement.executeQuery();
             if (!groupResultSet.next()) {
@@ -144,16 +164,45 @@ public class DatabaseManager {
         }
     }
 
-    public AuthorizedState checkUser(UserInfo localUserInfo) {
-        String login = localUserInfo.getLogin();
+    public UserInfo signIn(UserModel userModel) throws UserDoesNotExistException, WrongPasswordException {
+        String username = userModel.getUsername();
         try {
             PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.getUser);
-            preparedStatement.setString(1, login);
+            preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String salt = resultSet.getString("salt");
-                if (secureControl.getHashCode(PEPPER + localUserInfo.getPassword() + salt).equals(resultSet.getString("password"))) {
-                    databaseLogger.info("Пользователь: (" + localUserInfo.getLogin() + ") вошел в аккаунт");
+                int id = resultSet.getInt("id");
+                if (secureControl.getHashCode(PEPPER + userModel.getPassword() + salt).equals(resultSet.getString("password"))) {
+                    databaseLogger.info("Пользователь: (" + userModel.getUsername() + ") вошел в аккаунт");
+                    return new UserInfoExplicit(id, userModel.getUsername(), userModel.getPassword());
+                } else {
+                    throw new WrongPasswordException("Пароль неверный");
+                }
+            } else {
+                throw new UserDoesNotExistException("Пользователь не найден");
+            }
+
+        } catch (SQLException e) {
+            throw new UserDoesNotExistException("Ошибка запроса");
+        }
+    }
+
+    /**
+     * @param userModel логин, пароль
+     * @return Статус успешности авторизации
+     * @deprecated
+     */
+    public AuthorizedState checkUser(UserModel userModel) {
+        String username = userModel.getUsername();
+        try {
+            PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.getUser);
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String salt = resultSet.getString("salt");
+                if (secureControl.getHashCode(PEPPER + userModel.getPassword() + salt).equals(resultSet.getString("password"))) {
+                    databaseLogger.info("Пользователь: (" + userModel.getUsername() + ") вошел в аккаунт");
                     return AuthorizedState.OK;
                 } else {
                     return AuthorizedState.INCORRECT_PASSWORD;
@@ -167,8 +216,8 @@ public class DatabaseManager {
         }
     }
 
-    public void registerUser(UserInfo localUserInfo) throws FailedToRegisterUserException {
-        PreparedStatement preparedStatement = null;
+    public UserInfo registerUser(UserModel userModel) throws FailedToRegisterUserException {
+        PreparedStatement preparedStatement;
         try {
             preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.insertUser);
         } catch (SQLException e) {
@@ -178,19 +227,21 @@ public class DatabaseManager {
 
         try {
             String salt = secureControl.getSalt();
-            preparedStatement.setString(1, localUserInfo.getLogin());
-            preparedStatement.setString(2, secureControl.getHashCode(PEPPER + localUserInfo.getPassword() + salt));
+            preparedStatement.setString(1, userModel.getUsername());
+            preparedStatement.setString(2, secureControl.getHashCode(PEPPER + userModel.getPassword() + salt));
             preparedStatement.setString(3, salt);
-            preparedStatement.execute();
-            databaseLogger.info("Пользователь: (" + localUserInfo.getLogin() + ") зарегистрирован");
+            ResultSet result = preparedStatement.executeQuery();
+            databaseLogger.info("Пользователь: (" + userModel.getUsername() + ") зарегистрирован");
+            int id = result.getInt(0);
+            return new UserInfoExplicit(id, userModel.getUsername(), userModel.getPassword());
         } catch (SQLException e) {
             databaseLogger.warning("Регистрация пользователя не удалась: " + e.getMessage());
             throw new FailedToRegisterUserException("Пользователь с таким именем уже существует, выберите другое имя");
         }
     }
 
-    public boolean checkUserObject(Integer arguments, String login) {
-        PreparedStatement preparedStatement = null;
+    public boolean checkUserObject(int key, int userId) {
+        PreparedStatement preparedStatement;
         try {
             preparedStatement = databaseHandler.getPreparedStatement(DatabaseCommands.checkUserObject);
         } catch (SQLException e) {
@@ -198,8 +249,8 @@ public class DatabaseManager {
             return false;
         }
         try {
-            preparedStatement.setString(1, login);
-            preparedStatement.setInt(2, arguments);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, key);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
                 return false;
@@ -211,8 +262,8 @@ public class DatabaseManager {
         return true;
     }
 
-    public boolean updateItem(StudyGroup group, int key, String login) {
-        PreparedStatement preparedStatement = null;
+    public boolean updateItem(StudyGroup group, int key, int userId) {
+        PreparedStatement preparedStatement;
         try {
             preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.updateUserObject);
             preparedStatement.setString(1, group.getName());
@@ -231,7 +282,7 @@ public class DatabaseManager {
 
             preparedStatement.setObject(6, group.getFormOfEducation(), Types.OTHER);
             preparedStatement.setObject(7, group.getSemesterEnum(), Types.OTHER);
-            preparedStatement.setString(8, login);
+            preparedStatement.setInt(8, userId);
             preparedStatement.setInt(9, key);
             Person localPerson = group.getPerson();
             preparedStatement.setString(10, localPerson.getName());
@@ -251,59 +302,54 @@ public class DatabaseManager {
         return true;
     }
 
-    public void removeAllUserObjects(String login) throws SQLException {
+    public void removeAllUserObjects(int userId) throws SQLException {
         try {
             PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeUserObjects);
-            preparedStatement.setString(1, login);
+            preparedStatement.setInt(1, userId);
             preparedStatement.executeQuery();
-            databaseLogger.info("Все объекты пользователя ( " + login + " ) удалены");
+            databaseLogger.info("Все объекты пользователя ( " + userId + " ) удалены");
         } catch (SQLException e) {
             databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
             throw e;
         }
     }
 
-    public void removeGreaterUserObjects(int key, String login) throws SQLException {
+    public void removeGreaterUserObjects(int key, int userId) throws SQLException {
         try {
             PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeGreaterUserObject);
-            preparedStatement.setString(1, login);
+            preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, key);
             preparedStatement.executeQuery();
-            databaseLogger.info("Объекты пользователя ( " + login + " ) удалены");
+            databaseLogger.info("Объекты пользователя ( " + userId + " ) удалены");
         } catch (SQLException e) {
             databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
             throw e;
         }
     }
 
-    public void removeLowerUserObjects(int key, String login) throws SQLException {
+    public void removeLowerUserObjects(int key, int userId) throws SQLException {
         try {
             PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeLowerUserObject);
-            preparedStatement.setString(1, login);
+            preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, key);
             preparedStatement.executeQuery();
-            databaseLogger.info("Все объекты пользователя ( " + login + " ) удалены");
+            databaseLogger.info("Все объекты пользователя ( " + userId + " ) удалены");
         } catch (SQLException e) {
-            databaseLogger.info("Объекты пользователя ( " + login + " ) удалены");
+            databaseLogger.info("Объекты пользователя ( " + userId + " ) удалены");
             throw e;
         }
     }
 
-    public void removeUserObject(int key, String login) throws SQLException {
+    public void removeUserObject(int key, int userId) throws SQLException {
         try {
             PreparedStatement preparedStatement = getDatabaseHandler().getPreparedStatement(DatabaseCommands.removeUserObject);
-            preparedStatement.setString(1, login);
+            preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, key);
             preparedStatement.executeQuery();
-            databaseLogger.info("Объект пользователя ( " + login + " ) удален");
+            databaseLogger.info("Объект пользователя ( " + userId + " ) удален");
         } catch (SQLException e) {
             databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
             throw e;
         }
     }
-    /*CREATE TABLE IF NOT EXISTS USERS (
-         login TEXT PRIMARY KEY,
-         password TEXT NOT NULL,
-         salt TEXT NOT NULL
-    );*/
 }
