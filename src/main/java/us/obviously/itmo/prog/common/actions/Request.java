@@ -9,29 +9,49 @@ import java.util.Arrays;
 public class Request implements Serializable {
     private final String command;
     private final byte[] body;
+
+    private final String authToken;
+
+    /**
+     * @deprecated
+     */
     private UserInfoExplicit userInfo;
 
     public Request(String command, byte[] body) {
         this.command = command;
         this.body = body;
+        this.authToken = null;
     }
 
-    public Request(String command, byte[] body, UserInfoExplicit userInfo) {
+    public Request(String command, byte[] body, String authToken) {
         this.command = command;
         this.body = body;
-        this.userInfo = userInfo;
+        this.authToken = authToken;
     }
 
+    /**
+     * @deprecated
+     */
     public UserInfo getUserInfo() {
-        return userInfo;
+        return null;
     }
 
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    /**
+     * @deprecated
+     */
     public String getLogin() {
-        return userInfo.getLogin();
+        return null;
     }
 
+    /**
+     * @deprecated
+     */
     public String getPassword() {
-        return userInfo.getPassword();
+        return null;
     }
 
     public String getCommand() {
@@ -47,7 +67,6 @@ public class Request implements Serializable {
         return "Request{" +
                 "command='" + command + '\'' +
                 ", body=" + Arrays.toString(body) +
-                ", login='" + userInfo.getLogin() + '\'' +
                 '}';
     }
 }

@@ -7,8 +7,10 @@ import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.serializers.Serializer;
 import us.obviously.itmo.prog.server.database.DatabaseManager;
+import us.obviously.itmo.prog.server.net.JwtGenerator;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public abstract class Action<T, D> {
     private final Serializer<T> request;
@@ -16,6 +18,15 @@ public abstract class Action<T, D> {
     private final String name;
     private DatabaseManager databaseManager;
     private UserInfo userInfo;
+    static final JwtGenerator jwtGenerator;
+
+    static {
+        try {
+            jwtGenerator = new JwtGenerator();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public Action(String name/*, Serializer<T> request, Serializer<D> response*/) {
         this.name = name;
@@ -33,11 +44,11 @@ public abstract class Action<T, D> {
         body = this.request.serialize(arguments);
         //System.out.println(Arrays.toString(body));
         try {
-            client.request(new Request(this.name, body));
+            client.request(new Request(this.name, body, client.getAuthToken()));
         } catch (IOException e) {
             try {
                 client.connect(client.getPort());
-                client.request(new Request(this.name, body));
+                client.request(new Request(this.name, body, client.getAuthToken()));
             } catch (IOException ignored) {
             }
         }

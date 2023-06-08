@@ -1,7 +1,6 @@
 package us.obviously.itmo.prog.client;
 
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
-import us.obviously.itmo.prog.common.UserInfoExplicit;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.exceptions.BadRequestException;
@@ -16,7 +15,7 @@ public class RequestManager<T, D> {
     public void send(Client client, T arguments, String commandName) {
         byte[] body;
         body = this.requestSer.serialize(arguments);
-        Request request = new Request(commandName, body, new UserInfoExplicit(client.getId(), client.getLogin(), client.getPassword()));
+        Request request = new Request(commandName, body, client.getAuthToken());
         try {
             client.request(request);
         } catch (IOException e) {

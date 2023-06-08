@@ -5,7 +5,10 @@ import us.obviously.itmo.prog.common.action_models.UserModel;
 import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.server.exceptions.FailedToRegisterUserException;
 
-public class RegisterAction extends Action<UserModel, UserInfo> {
+import java.util.HashMap;
+import java.util.Map;
+
+public class RegisterAction extends Action<UserModel, String> {
     public RegisterAction() {
         super("register");
     }
@@ -14,9 +17,20 @@ public class RegisterAction extends Action<UserModel, UserInfo> {
     public Response execute(LocalDataCollection dataCollection, UserModel arguments) {
         try {
             UserInfo result = getDatabaseManager().registerUser(arguments);
-            return new Response(this.getResponse().serialize(result), ResponseStatus.OK);
+
+            Map<String, String> claims = new HashMap<>();
+
+            claims.put("username", result.getLogin());
+            claims.put("id", String.valueOf(result.getId()));
+            claims.put("aud", "*");
+
+            var token = jwtGenerator.generateJwt(claims);
+
+            return new Response(this.getResponse().serialize(token), ResponseStatus.OK);
         } catch (FailedToRegisterUserException e) {
             return new Response("Ошибка во время регистрации пользователя: " + e.getMessage(), ResponseStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new Response("Ошибка во время создания токена: " + e.getMessage(), ResponseStatus.UNAUTHORIZED);
         }
     }
 }

@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.server.net;
 
 import us.obviously.itmo.prog.common.UserInfoExplicit;
+import us.obviously.itmo.prog.common.UserInfoPublic;
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.actions.ResponseStatus;
@@ -8,11 +9,13 @@ import us.obviously.itmo.prog.common.data.LocalDataCollection;
 import us.obviously.itmo.prog.server.ActionManager;
 import us.obviously.itmo.prog.server.database.DatabaseManager;
 import us.obviously.itmo.prog.server.exceptions.ActionDoesNotExistException;
+import us.obviously.itmo.prog.server.exceptions.InvalidTokenException;
 
 import java.io.*;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -80,23 +83,32 @@ public class ClientConnectionHandler {
                 String REGISTER_UNIQUE_COMMAND = "register";
                 String LOGIN_UNIQUE_COMMAND = "login";
                 if (request.getCommand().equals(LOGIN_UNIQUE_COMMAND)) {
-                    response = action.run(data, request.getBody(), request.getUserInfo(), databaseManager);
+                    response = action.run(data, request.getBody(), null, databaseManager);
                 } else if (request.getCommand().equals(REGISTER_UNIQUE_COMMAND)) {
-                    response = action.run(data, request.getBody(), request.getUserInfo(), databaseManager);
-                } else if (request.getPassword() == null || request.getLogin() == null) {
-                    response = new Response("Пользователь не авторизован", ResponseStatus.UNAUTHORIZED);
-                }
-                // TODO: Сейчас мы полностью доверяем логину паролю пользователя
-                else if (action == null) {
-                    response = new Response("Действие не найдено", ResponseStatus.NOT_FOUND);
+                    response = action.run(data, request.getBody(), null, databaseManager);
+                } else if (request.getPassword() != null || request.getLogin() != null) {
+                    response = new Response("API обновился, используйте токен вместо логина и пароля", ResponseStatus.UNAUTHORIZED);
+                } else if (request.getAuthToken() == null) {
+                    response = new Response("Не передан токен", ResponseStatus.UNAUTHORIZED);
                 } else {
-                    response = action.run(data, request.getBody(), request.getUserInfo(), databaseManager);
+                    var jwtValidator = new JwtValidator();
+                    var token = jwtValidator.validate(request.getAuthToken());
+                    var expiresAt = token.getExpiresAtAsInstant();
+                    if (Instant.now().isAfter(expiresAt)) {
+                        response = new Response("Токен спёкся", ResponseStatus.UNAUTHORIZED);
+                    } else {
+                        var id = token.getClaim("id").asInt();
+                        var username = token.getClaim("username").asString();
+                        response = action.run(data, request.getBody(), new UserInfoPublic(id, username), databaseManager);
+                    }
                 }
 
                 //Отправка ответов клиенту
                 logger.info("Ответ клиенту ( " + socketChannel.getRemoteAddress() + " ), ответ " + response.toString());
             } catch (ActionDoesNotExistException e) {
                 response = new Response("Действие не сертифицировано", ResponseStatus.BAD_REQUEST);
+            } catch (InvalidTokenException e) {
+                response = new Response("Невалидный токен", ResponseStatus.UNAUTHORIZED);
             }
 
             Response finalResponse = response;

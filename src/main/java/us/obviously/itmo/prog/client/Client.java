@@ -20,6 +20,7 @@ public class Client implements ClientConnectionManager {
     private int id = 0;
     private String login = null;
     private String password = null;
+    private String authToken = null;
 
     public Client(int port) throws FailedToConnectToServerException {
         this.port = port;
@@ -136,19 +137,28 @@ public class Client implements ClientConnectionManager {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
     public String getLogin() {
         return login;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {

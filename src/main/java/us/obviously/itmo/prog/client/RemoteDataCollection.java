@@ -3,6 +3,7 @@ package us.obviously.itmo.prog.client;
 
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.common.UserInfo;
+import us.obviously.itmo.prog.common.UserInfoPublic;
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
 import us.obviously.itmo.prog.common.action_models.KeyModel;
 import us.obviously.itmo.prog.common.action_models.UserModel;
@@ -13,7 +14,9 @@ import us.obviously.itmo.prog.common.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
-
+import us.obviously.itmo.prog.server.exceptions.InvalidTokenException;
+import us.obviously.itmo.prog.server.net.JwtValidator;
+//import static us.obviously.itmo.prog.server.net.Server.logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -291,28 +294,44 @@ public class RemoteDataCollection implements DataCollection {
 
     @Override
     public UserInfo loginUser(UserModel user) throws BadRequestException {
-        var rm = new RequestManager<UserModel, UserInfo>();
+        var rm = new RequestManager<UserModel, String>();
         rm.send(client, user, "login");
         try {
-            UserInfo result = rm.recieve(client);
-            client.setId(result.getId());
-            client.setLogin(result.getLogin());
+            var token = rm.recieve(client);
+            var userInfo = parseToken(token);
+            client.setId(userInfo.getId());
+            client.setLogin(userInfo.getLogin());
             client.setPassword(user.getPassword());
-            return result;
-        } catch (FailedToReadRemoteException e) {
+            client.setAuthToken(token);
+            return userInfo;
+        } catch (FailedToReadRemoteException | InvalidTokenException e) {
             throw new BadRequestException(e.getMessage());
         }
     }
 
     @Override
     public UserInfo registerUser(UserModel user) throws BadRequestException {
-        var rm = new RequestManager<UserModel, UserInfo>();
+        var rm = new RequestManager<UserModel, String>();
         rm.send(client, user, "register");
         try {
-            return rm.recieve(client);
-        } catch (FailedToReadRemoteException e) {
+            var token = rm.recieve(client);
+            var userInfo = parseToken(token);
+            client.setId(userInfo.getId());
+            client.setLogin(userInfo.getLogin());
+            client.setPassword(user.getPassword());
+            client.setAuthToken(token);
+            return userInfo;
+        } catch (FailedToReadRemoteException | InvalidTokenException e) {
             throw new BadRequestException(e.getMessage());
         }
+    }
+
+    private UserInfo parseToken(String result) throws InvalidTokenException {
+        var validator = new JwtValidator();
+        var token = validator.validate(result);
+        int id = Integer.parseInt(token.getClaim("id").asString());
+        String username = token.getClaim("username").asString();
+        return new UserInfoPublic(id, username);
     }
 
     @Override
