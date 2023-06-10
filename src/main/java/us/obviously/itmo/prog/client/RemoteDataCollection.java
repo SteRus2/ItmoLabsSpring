@@ -2,6 +2,7 @@ package us.obviously.itmo.prog.client;
 
 
 import us.obviously.itmo.prog.client.exceptions.FailedToReadRemoteException;
+import us.obviously.itmo.prog.client.exceptions.JwtTokenExpiredException;
 import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.UserInfoPublic;
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
@@ -15,8 +16,7 @@ import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.server.exceptions.InvalidTokenException;
-import us.obviously.itmo.prog.server.net.JwtValidator;
-//import static us.obviously.itmo.prog.server.net.Server.logger;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -304,7 +304,7 @@ public class RemoteDataCollection implements DataCollection {
             client.setPassword(user.getPassword());
             client.setAuthToken(token);
             return userInfo;
-        } catch (FailedToReadRemoteException | InvalidTokenException e) {
+        } catch (FailedToReadRemoteException | InvalidTokenException | JwtTokenExpiredException e) {
             throw new BadRequestException(e.getMessage());
         }
     }
@@ -321,13 +321,13 @@ public class RemoteDataCollection implements DataCollection {
             client.setPassword(user.getPassword());
             client.setAuthToken(token);
             return userInfo;
-        } catch (FailedToReadRemoteException | InvalidTokenException e) {
+        } catch (FailedToReadRemoteException | InvalidTokenException | JwtTokenExpiredException e) {
             throw new BadRequestException(e.getMessage());
         }
     }
 
-    private UserInfo parseToken(String result) throws InvalidTokenException {
-        var validator = new JwtValidator();
+    private UserInfo parseToken(String result) throws InvalidTokenException, JwtTokenExpiredException {
+        var validator = new JwtClientValidator();
         var token = validator.validate(result);
         int id = Integer.parseInt(token.getClaim("id").asString());
         String username = token.getClaim("username").asString();
