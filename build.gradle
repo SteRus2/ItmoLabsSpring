@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'org.openjfx.javafxplugin' version '0.0.14'
 }
 
 group 'me.sterus'
@@ -29,10 +28,6 @@ jar {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
-}
-
-javafx {
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 task fatJarServer(type: Jar) {
