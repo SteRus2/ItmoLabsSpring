@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.openjfx.javafxplugin' version '0.0.14'
 }
 
 group 'me.sterus'
@@ -30,6 +31,10 @@ jar {
     }
 }
 
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
 task fatJarServer(type: Jar) {
     manifest {
         attributes 'Main-Class': 'us.obviously.itmo.prog.server.MainServer'
@@ -42,7 +47,7 @@ task fatJarServer(type: Jar) {
 
 task fatJarClient(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'us.obviously.itmo.prog.client.MainClient'
+        attributes 'Main-Class': 'us.obviously.itmo.prog.client.MainClientGui'
     }
     baseName = 'lab6-client'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

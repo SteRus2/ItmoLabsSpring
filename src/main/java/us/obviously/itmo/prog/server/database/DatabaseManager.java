@@ -349,7 +349,6 @@ public class DatabaseManager {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, key);
             preparedStatement.executeQuery();
-            databaseLogger.info("Объект пользователя ( " + userId + " ) удален");
         } catch (SQLException e) {
             databaseLogger.severe("Ошибка баз данных: " + e.getMessage());
             throw e;
