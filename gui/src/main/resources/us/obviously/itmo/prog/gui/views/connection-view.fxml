@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<VBox prefHeight="400.0" prefWidth="300.0" alignment="CENTER"
+      spacing="24.0" style="-fx-background-color: #efefef;" xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="us.obviously.itmo.prog.gui.controllers.ConnectionController">
+    <Text text="Spring Labs" style="-fx-font-weight: bold">
+        <font>
+            <Font size="44.0"/>
+        </font>
+    </Text>
+    <Text fx:id="message" text="Loading...">
+        <font>
+            <Font size="14.0"  />
+        </font>
+    </Text>
+    <Button fx:id="repeatButton" onAction="#repeat">
+        Повторить попытку
+    </Button>
+    <Button fx:id="signInButton" onAction="#signIn">
+        Войти
+    </Button>
+    <Button fx:id="signUpButton" onAction="#signUp">
+        Регистрация
+    </Button>
+</VBox>

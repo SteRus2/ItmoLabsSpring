@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'Raleway';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../fonts/Raleway/static/Raleway-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Raleway';
+    font-weight: medium;
+    font-style: normal;
+    src: url('../fonts/Raleway/static/Raleway-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Raleway';
+    font-weight: 500;
+    font-style: normal;
+    src: url('../fonts/Raleway/static/Raleway-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Raleway';
+    font-weight: bold;
+    font-style: normal;
+    src: url('../fonts/Raleway/static/Raleway-Bold.ttf');
+}
+
+* {
+    -fx-font-family: 'Raleway';
+}
+
+Text {
+    -fx-text-fill: #333;
+}
+
+Button {
+    -fx-padding: 10px 24px;
+    -fx-font-size: 12px;
+    -jfx-button-type: raised;
+    -fx-background-color: #dadada;
+    -fx-text-fill: #000;
+    -fx-font-weight: medium;
+    -fx-cursor: hand;
+    -fx-transition: 0.1s;
+}
+
+Button:hover{
+    -fx-background-color: #cacaca;
+}
+
+VBox {
+    padding: 20px;
+}
+
+TextField, PasswordField {
+    -fx-background-color: transparent;
+    -fx-padding: 10px 12px;
+    -fx-max-width: 260px;
+    -fx-font-size: 13px;
+    -fx-border-color: #dadada;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+    -fx-font-weight: bold;
+}

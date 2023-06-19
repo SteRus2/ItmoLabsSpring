@@ -40,8 +40,3 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-
-
-*.log
-
-database.cfg
