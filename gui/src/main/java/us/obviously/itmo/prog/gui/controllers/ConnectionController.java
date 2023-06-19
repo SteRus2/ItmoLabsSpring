@@ -51,15 +51,16 @@ public class ConnectionController implements Initializable {
     public void load() {
 
         // int port = Integer.parseInt(this.port.getText())
+        this.repeatButton.setManaged(false);
+        this.repeatButton.setVisible(false);
+        this.signUpButton.setManaged(false);
+        this.signInButton.setManaged(false);
+        this.message.setManaged(true);
         executorService.submit(this::createConnection);
     }
 
     private void createConnection() {
         message.setText("Loading...");
-        this.repeatButton.setManaged(false);
-        this.signUpButton.setManaged(false);
-        this.signInButton.setManaged(false);
-        this.message.setManaged(true);
         try {
             Main.client = new Client(MainClient.port);
             Main.dataCollection = new RemoteDataCollection(Main.client);
@@ -67,16 +68,19 @@ public class ConnectionController implements Initializable {
             Main.manager = new Manager<StudyGroup>(Main.dataCollection, scanner);
             Main.client.run();
             this.message.setManaged(false);
+            this.message.setVisible(false);
             this.signUpButton.setManaged(true);
             this.signInButton.setManaged(true);
         } catch (FailedToConnectToServerException e) {
             message.setText(e.getMessage());
+            this.repeatButton.setManaged(true);
+            this.repeatButton.setVisible(true);
         }
     }
 
     private void showSignUpStage(Stage stage) {
         try {
-            ViewsManager.showSignInView(stage);
+            ViewsManager.showSignUpView(stage);
         } catch (IOException e) {
             message.setText("Ошибка загрузки страницы");
         }
@@ -84,7 +88,7 @@ public class ConnectionController implements Initializable {
 
     private void showSignInStage(Stage stage) {
         try {
-            ViewsManager.showSignUpView(stage);
+            ViewsManager.showSignInView(stage);
         } catch (IOException e) {
             message.setText("Ошибка загрузки страницы");
         }
