@@ -1,13 +1,13 @@
 package us.obviously.itmo.prog;
 
-import us.obviously.itmo.prog.console.ConsoleColor;
-import us.obviously.itmo.prog.console.Messages;
-import us.obviously.itmo.prog.server.data.LocalDataCollection;
-import us.obviously.itmo.prog.model.StudyGroup;
-import us.obviously.itmo.prog.server.data.DataStorage;
-import us.obviously.itmo.prog.server.database.DatabaseManager;
-import us.obviously.itmo.prog.server.exceptions.*;
-import us.obviously.itmo.prog.server.net.Server;
+import us.obviously.itmo.prog.common.console.ConsoleColor;
+import us.obviously.itmo.prog.common.console.Messages;
+import us.obviously.itmo.prog.common.server.data.LocalDataCollection;
+import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.common.server.data.DataStorage;
+import us.obviously.itmo.prog.common.server.database.DatabaseManager;
+import us.obviously.itmo.prog.common.server.exceptions.*;
+import us.obviously.itmo.prog.common.server.net.Server;
 
 import java.sql.SQLException;
 import java.util.HashMap;
