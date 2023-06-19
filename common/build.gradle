@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'us.obviously.itmo.prog'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'org.postgresql:postgresql:42.5.4'
+    implementation 'com.auth0:java-jwt:4.4.0'
+    implementation 'com.auth0:jwks-rsa:0.22.0'
+}
+
+test {
+    useJUnitPlatform()
+}

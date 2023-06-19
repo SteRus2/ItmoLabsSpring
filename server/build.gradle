@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'us.obviously.itmo.prog'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':common')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task fatJarServer(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'us.obviously.itmo.prog.MainServer'
+    }
+    baseName = 'labs-spring-server'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

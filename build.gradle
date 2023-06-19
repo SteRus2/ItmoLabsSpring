@@ -32,9 +32,9 @@ jar {
 
 task fatJarServer(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'us.obviously.itmo.prog.server.MainServer'
+        attributes 'Main-Class': 'us.obviously.itmo.prog.MainServer'
     }
-    baseName = 'lab6-server'
+    baseName = 'lab-spring-server'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
@@ -42,9 +42,19 @@ task fatJarServer(type: Jar) {
 
 task fatJarClient(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'us.obviously.itmo.prog.client.MainClientGui'
+        attributes 'Main-Class': 'us.obviously.itmo.prog.MainClient'
     }
-    baseName = 'lab6-client'
+    baseName = 'lab-spring-client'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task fatJarClientGui(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'us.obviously.itmo.prog.MainClientGui'
+    }
+    baseName = 'lab-spring-client'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
