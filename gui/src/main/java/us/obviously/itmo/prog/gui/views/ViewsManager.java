@@ -1,9 +1,11 @@
 package us.obviously.itmo.prog.gui.views;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import us.obviously.itmo.prog.gui.Main;
 
 import java.io.IOException;
@@ -30,6 +32,13 @@ public class ViewsManager {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(path));
         Scene scene = new Scene(fxmlLoader.load());
         if (stage.isShowing()) stage.close();
+
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.exit(1);
+            }
+        });
 
         scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource(stylesPath)).toExternalForm());
 
