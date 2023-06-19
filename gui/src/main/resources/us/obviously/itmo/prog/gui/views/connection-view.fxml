@@ -13,7 +13,7 @@
             <Font size="44.0"/>
         </font>
     </Text>
-    <Text fx:id="message" text="Loading...">
+    <Text fx:id="message" text="Loading..." wrappingWidth="200" textAlignment="CENTER">
         <font>
             <Font size="14.0"  />
         </font>
