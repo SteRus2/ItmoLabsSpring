@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'me.sterus'
+group 'us.obviously.itmo.prog'
 version '1.0-SNAPSHOT'
 
 repositories {
