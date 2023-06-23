@@ -1,5 +1,7 @@
 package us.obviously.itmo.prog.gui.tools.controllers;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 import us.obviously.itmo.prog.common.server.data.DataInfo;
 import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
@@ -9,8 +11,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class InfoController extends BaseController {
+    @FXML
     public Text typeText;
+    @FXML
     public Text dateText;
+    @FXML
     public Text countText;
     private DataInfo info;
 

@@ -32,6 +32,7 @@ public abstract class BaseController implements Initializable {
 
     public void showInfoText(String message) {
         errorText.setManaged(false);
+        errorText.setVisible(false);
         infoText.setManaged(true);
         infoText.setVisible(true);
         infoText.setText(message);
@@ -43,6 +44,7 @@ public abstract class BaseController implements Initializable {
 
     public void showErrorText(String message) {
         infoText.setManaged(false);
+        infoText.setVisible(false);
         errorText.setManaged(true);
         errorText.setVisible(true);
         errorText.setText(message);

@@ -39,7 +39,7 @@ public class SidebarController implements Initializable {
         commands.add(new AbstractTool("Удалить", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
-                ViewsManager.showDeleteToolView(stage);
+                ViewsManager.showRemoveToolView(stage);
             } catch (IOException e) {
                 // error
             }

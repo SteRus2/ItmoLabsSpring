@@ -32,8 +32,8 @@ public class ViewsManager {
         showView(stage, "Adding", "views/tools/add-view.fxml", "styles/fonts.css", "assets/icon.png");
     }
 
-    public static void showDeleteToolView(Stage stage) throws IOException {
-        showView(stage, "Delete", "views/tools/delete-view.fxml", "styles/fonts.css", "assets/icon.png");
+    public static void showRemoveToolView(Stage stage) throws IOException {
+        showView(stage, "Remove Item", "views/tools/remove-view.fxml", "styles/fonts.css", "assets/icon.png");
     }
 
     public static void showReplaceToolView(Stage stage) throws IOException {
