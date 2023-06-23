@@ -25,10 +25,47 @@ public class ViewsManager {
     }
 
     public static void showTableView(Stage stage) throws IOException {
+        showView(stage, "Table", "views/table-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showAddToolView(Stage stage) throws IOException {
+        showView(stage, "Adding", "views/tools/add-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showDeleteToolView(Stage stage) throws IOException {
+        showView(stage, "Delete", "views/tools/delete-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showReplaceToolView(Stage stage) throws IOException {
+        showView(stage, "Replace", "views/tools/replace-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showClearToolView(Stage stage) throws IOException {
+        showView(stage, "Clear", "views/tools/clear-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showExecuteScriptToolView(Stage stage) throws IOException {
+        showView(stage, "Execute script", "views/tools/execute-script-view.fxml", "styles/fonts.css", "assets/icon.png");
         showView(stage, "Table", "views/main-view.fxml", "styles/fonts.css", "assets/icon.png");
     }
 
-    public static void showView(Stage stage, String title, String path, String stylesPath, String iconPath) throws IOException {
+    public static void showGroupByNameToolView(Stage stage) throws IOException {
+        showView(stage, "Group by name", "views/tools/group-by-name-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showInfoToolView(Stage stage) throws IOException {
+        showView(stage, "Service information", "views/tools/info-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showFilterByGroupAdminToolView(Stage stage) throws IOException {
+        showView(stage, "Filter by group admin", "views/tools/filter-by-group-admin-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showSemesterValuesToolView(Stage stage) throws IOException {
+        showView(stage, "Semester values", "views/tools/semester-values-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    private static void showView(Stage stage, String title, String path, String stylesPath, String iconPath) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(path));
         Scene scene = new Scene(fxmlLoader.load());
         if (stage.isShowing()) stage.close();

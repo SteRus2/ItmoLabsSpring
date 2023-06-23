@@ -11,4 +11,5 @@ module us.obviously.itmo.prog.gui {
     opens us.obviously.itmo.prog.gui to javafx.fxml;
     opens us.obviously.itmo.prog.gui.controllers to javafx.fxml;
     exports us.obviously.itmo.prog.gui;
+    opens us.obviously.itmo.prog.gui.tools.controllers to javafx.fxml;
 }
