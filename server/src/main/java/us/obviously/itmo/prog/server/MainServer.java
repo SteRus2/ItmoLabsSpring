@@ -1,4 +1,4 @@
-package us.obviously.itmo.prog;
+package us.obviously.itmo.prog.server;
 
 import us.obviously.itmo.prog.common.console.ConsoleColor;
 import us.obviously.itmo.prog.common.console.Messages;
