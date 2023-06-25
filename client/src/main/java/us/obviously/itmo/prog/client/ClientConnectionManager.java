@@ -9,7 +9,9 @@ import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteExcepti
 import java.io.IOException;
 
 public interface ClientConnectionManager extends ConnectionManager {
-    Response waitResponse() throws FailedToReadRemoteException;
+//    Response waitResponse() throws FailedToReadRemoteException;
+
+    Response waitResponse(Integer requestId, RequestManager<?, ?> manager) throws FailedToReadRemoteException;
 
     void request(Request request) throws IOException;
 

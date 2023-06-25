@@ -22,7 +22,7 @@ test {
 
 task fatJarServer(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'us.obviously.itmo.prog.MainServer'
+        attributes 'Main-Class': 'us.obviously.itmo.prog.server.MainServer'
     }
     baseName = 'labs-spring-server'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

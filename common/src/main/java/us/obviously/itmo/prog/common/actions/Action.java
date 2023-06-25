@@ -32,11 +32,13 @@ public abstract class Action<T, D> {
         this.response = new Serializer<>();
     }
 
-    public Response run(LocalDataCollection dataCollection, byte[] arguments, UserInfo userInfo, DatabaseManager databaseManager) throws IOException, ClassNotFoundException {
+    public Response run(LocalDataCollection dataCollection, int requestId, byte[] arguments, UserInfo userInfo, DatabaseManager databaseManager) throws IOException, ClassNotFoundException {
         this.databaseManager = databaseManager;
         this.userInfo = userInfo;
         T args = this.request.parse(arguments);
-        return this.execute(dataCollection, args);
+        var response = this.execute(dataCollection, args);
+        response.setRequestId(requestId);
+        return response;
     }
 
     abstract public Response execute(LocalDataCollection dataCollection, T arguments);

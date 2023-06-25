@@ -6,11 +6,11 @@ import us.obviously.itmo.prog.common.UserInfoExplicit;
 import java.io.Serializable;
 
 public class Request implements Serializable {
+    private static int lastId = 0;
     private final String command;
     private final byte[] body;
-
     private final String authToken;
-
+    private final int id;
     /**
      * @deprecated
      */
@@ -20,12 +20,14 @@ public class Request implements Serializable {
         this.command = command;
         this.body = body;
         this.authToken = null;
+        this.id = lastId++;
     }
 
     public Request(String command, byte[] body, String authToken) {
         this.command = command;
         this.body = body;
         this.authToken = authToken;
+        this.id = lastId++;
     }
 
     /**
@@ -67,5 +69,9 @@ public class Request implements Serializable {
                 "command='" + command + '\'' +
                 ", body=" + body.toString() +
                 '}';
+    }
+
+    public Integer getId() {
+        return id;
     }
 }

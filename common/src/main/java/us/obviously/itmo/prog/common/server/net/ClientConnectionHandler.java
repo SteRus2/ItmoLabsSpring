@@ -56,7 +56,7 @@ public class ClientConnectionHandler {
         }
     }
 
-    public void run() {
+    public void  run() {
         requestsService.submit(() -> {
             while (true) {
                 try {
@@ -83,32 +83,32 @@ public class ClientConnectionHandler {
                 String REGISTER_UNIQUE_COMMAND = "register";
                 String LOGIN_UNIQUE_COMMAND = "login";
                 if (request.getCommand().equals(LOGIN_UNIQUE_COMMAND)) {
-                    response = action.run(data, request.getBody(), null, databaseManager);
+                    response = action.run(data, request.getId(), request.getBody(), null, databaseManager);
                 } else if (request.getCommand().equals(REGISTER_UNIQUE_COMMAND)) {
-                    response = action.run(data, request.getBody(), null, databaseManager);
+                    response = action.run(data, request.getId(), request.getBody(), null, databaseManager);
                 } else if (request.getPassword() != null || request.getLogin() != null) {
-                    response = new Response("API обновился, используйте токен вместо логина и пароля", ResponseStatus.UNAUTHORIZED);
+                    response = new Response(request.getId(), "API обновился, используйте токен вместо логина и пароля", ResponseStatus.UNAUTHORIZED);
                 } else if (request.getAuthToken() == null) {
-                    response = new Response("Не передан токен", ResponseStatus.UNAUTHORIZED);
+                    response = new Response(request.getId(), "Не передан токен", ResponseStatus.UNAUTHORIZED);
                 } else {
                     var jwtValidator = new JwtValidator();
                     var token = jwtValidator.validate(request.getAuthToken());
                     var expiresAt = token.getExpiresAtAsInstant();
                     if (Instant.now().isAfter(expiresAt)) {
-                        response = new Response("Токен спёкся", ResponseStatus.UNAUTHORIZED);
+                        response = new Response(request.getId(), "Токен спёкся", ResponseStatus.UNAUTHORIZED);
                     } else {
                         int id = Integer.parseInt(token.getClaim("id").asString());
                         var username = token.getClaim("username").asString();
-                        response = action.run(data, request.getBody(), new UserInfoPublic(id, username), databaseManager);
+                        response = action.run(data, request.getId(), request.getBody(), new UserInfoPublic(id, username), databaseManager);
                     }
                 }
 
                 //Отправка ответов клиенту
                 logger.info("Ответ клиенту ( " + socketChannel.getRemoteAddress() + " ), ответ " + response.toString());
             } catch (ActionDoesNotExistException e) {
-                response = new Response("Действие не сертифицировано", ResponseStatus.BAD_REQUEST);
+                response = new Response(request.getId(), "Действие не сертифицировано", ResponseStatus.BAD_REQUEST);
             } catch (InvalidTokenException e) {
-                response = new Response("Невалидный токен. Переавторизиацрауйтесь", ResponseStatus.UNAUTHORIZED);
+                response = new Response(request.getId(), "Невалидный токен. Переавторизиацрауйтесь", ResponseStatus.UNAUTHORIZED);
             }
 
             Response finalResponse = response;

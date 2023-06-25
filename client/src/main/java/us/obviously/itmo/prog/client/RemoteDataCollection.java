@@ -33,7 +33,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<VoidModel, DataInfo>();
         rm.send(client, new VoidModel(), "filter_greater_than_group_admin");
         try {
-            return rm.recieve(client);
+            return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -44,7 +44,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<VoidModel, HashMap<Integer, StudyGroup>>();
         rm.send(client, new VoidModel(), "data");
         try {
-            return rm.recieve(client);
+            return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -55,7 +55,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<KeyGroupModel, Integer>();
         rm.send(client, new KeyGroupModel(item, key), "insert");
         try {
-            return rm.recieve(client);
+            return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -74,7 +74,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<KeyGroupModel, VoidModel>();
         rm.send(client, new KeyGroupModel(item, key), "update");
         try {
-            rm.recieve(client);
+            rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -94,7 +94,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<KeyModel, VoidModel>();
         rm.send(client, new KeyModel(key), "remove");
         try {
-            rm.recieve(client);
+            rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -113,7 +113,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<VoidModel, VoidModel>();
         rm.send(client, new VoidModel(), "clear");
         try {
-            rm.recieve(client);
+            rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -133,7 +133,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<VoidModel, VoidModel>();
         rm.send(client, new VoidModel(), "save");
         try {
-            rm.recieve(client);
+            rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -153,7 +153,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<KeyGroupModel, VoidModel>();
         rm.send(client, new KeyGroupModel(item, key), "replace-greater");
         try {
-            rm.recieve(client);
+            rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -173,7 +173,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<KeyModel, VoidModel>();
         rm.send(client, new KeyModel(key), "remove-greater");
         try {
-            rm.recieve(client);
+            rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -194,7 +194,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<KeyModel, VoidModel>();
         rm.send(client, new KeyModel(key), "remove-lower");
         try {
-            rm.recieve(client);
+            rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -215,7 +215,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<VoidModel, Map<String, List<StudyGroup>>>();
         rm.send(client, new VoidModel(), "counting-name");
         try {
-            return rm.recieve(client);
+            return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -235,7 +235,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<Person, List<StudyGroup>>();
         rm.send(client, groupAdmin, "info");
         try {
-            return rm.recieve(client);
+            return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -255,7 +255,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<VoidModel, List<Semester>>();
         rm.send(client, new VoidModel(), "ascending-semester");
         try {
-            return rm.recieve(client);
+            return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -277,7 +277,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<VoidModel, Boolean>();
         rm.send(client, new VoidModel(), "can-save");
         try {
-            return rm.recieve(client);
+            return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -297,7 +297,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<UserModel, String>();
         rm.send(client, user, "login");
         try {
-            var token = rm.recieve(client);
+            var token = rm.receive(client);
             var userInfo = parseToken(token);
             client.setId(userInfo.getId());
             client.setLogin(userInfo.getLogin());
@@ -314,7 +314,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<UserModel, String>();
         rm.send(client, user, "register");
         try {
-            var token = rm.recieve(client);
+            var token = rm.receive(client);
             var userInfo = parseToken(token);
             client.setId(userInfo.getId());
             client.setLogin(userInfo.getLogin());
@@ -339,7 +339,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<Integer, StudyGroup>();
         rm.send(client, id, "check");
         try {
-            return rm.recieve(client);
+            return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -350,7 +350,7 @@ public class RemoteDataCollection implements DataCollection {
         var rm = new RequestManager<VoidModel, VoidModel>();
         rm.send(client, new VoidModel(), "ping");
         try {
-            rm.recieve(client);
+            rm.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }

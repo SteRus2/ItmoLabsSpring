@@ -1,26 +1,32 @@
 package us.obviously.itmo.prog.client;
 
 
+import us.obviously.itmo.prog.common.actions.Request;
+import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToCloseConnection;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToConnectToServerException;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteException;
-import us.obviously.itmo.prog.common.actions.Request;
-import us.obviously.itmo.prog.common.actions.Response;
 
 import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static java.lang.Thread.sleep;
 
 public class Client implements ClientConnectionManager {
     private static final int DATA_SIZE = 15000;
     private static Socket connection;
     private final int port;
+    private final Map<Integer, RequestManager<?, ?>> requestManagers = new HashMap<>();
     private boolean isActive;
     private int id = 0;
     private String login = null;
     private String password = null;
     private String authToken = null;
+    private final List<Response> responses = new ArrayList<>();
 
     public Client(int port) throws FailedToConnectToServerException {
         this.port = port;
@@ -41,6 +47,7 @@ public class Client implements ClientConnectionManager {
         connection = new Socket();
         InetSocketAddress address = new InetSocketAddress(host, port);
         connection.connect(address, 1000);
+
     }
 
 
@@ -88,26 +95,57 @@ public class Client implements ClientConnectionManager {
         System.out.println("Клиент закрыт!");
     }
 
+    public void listener() throws FailedToReadRemoteException {
+        while (true) {
+            ByteBuffer byteBuffer;
+            try {
+                byteBuffer = read();
+            } catch (IOException e) {
+                throw new FailedToReadRemoteException("Не удается получить данные с сервера, попробуйте позднее");
+            }
+            ByteArrayInputStream bis = new ByteArrayInputStream(byteBuffer.array());
+            ObjectInputStream objectInputStream;
+            Response response;
+            try {
+                objectInputStream = new ObjectInputStream(bis);
+                response = (Response) objectInputStream.readObject();
+                responses.add(response);
+//                var requestManager = requestManagers.get(response.getRequestId());
+                // notify requestManager (*)
+            } catch (IOException e) {
+                throw new FailedToReadRemoteException(e.getMessage());
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     @Override
-    public Response waitResponse() throws FailedToReadRemoteException {
-        ByteBuffer byteBuffer;
-        try {
-            byteBuffer = read();
-        } catch (IOException e) {
-            throw new FailedToReadRemoteException("Не удается получить данные с сервера, попробуйте позднее");
+    public Response waitResponse(Integer requestId, RequestManager<?, ?> manager) {
+//        requestManagers.put(requestId, manager);
+//        while (response_not_found) {
+        while (true) {
+//            System.out.println(responses);
+            try {
+                sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            for (Response response : responses) {
+                if (Objects.equals(response.getRequestId(), requestId)) {
+                    responses.remove(response);
+                    return response;
+                }
+            };
+
+//            try {
+////                wait(); // while notify (*)
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(byteBuffer.array());
-        ObjectInputStream objectInputStream;
-        Response response;
-        try {
-            objectInputStream = new ObjectInputStream(bis);
-            response = (Response) objectInputStream.readObject();
-        } catch (IOException e) {
-            throw new FailedToReadRemoteException(e.getMessage());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return response;
+        // TODO: find response
+//        return response;
     }
 
     @Override

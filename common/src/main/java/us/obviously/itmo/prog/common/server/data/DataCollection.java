@@ -3,10 +3,10 @@ package us.obviously.itmo.prog.common.server.data;
 import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.UserInfoExplicit;
 import us.obviously.itmo.prog.common.action_models.UserModel;
-import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.server.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.common.server.exceptions.UsedKeyException;
 
@@ -54,5 +54,6 @@ public interface DataCollection {
     StudyGroup checkGroup(Integer id) throws BadRequestException;
 
 
-    default void ping() throws BadRequestException {}
+    default void ping() throws BadRequestException {
+    }
 }
