@@ -14,6 +14,8 @@ import us.obviously.itmo.prog.client.manager.Manager;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToConnectToServerException;
 import us.obviously.itmo.prog.gui.Main;
+import us.obviously.itmo.prog.gui.i18n.Internalization;
+import us.obviously.itmo.prog.gui.i18n.Language;
 import us.obviously.itmo.prog.gui.views.ViewsManager;
 
 import java.io.IOException;
@@ -23,7 +25,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ConnectionController implements Initializable {
+public class ConnectionController implements Initializable, Translatable {
     private final ExecutorService executorService;
     @FXML
     public Text message;
@@ -33,6 +35,8 @@ public class ConnectionController implements Initializable {
     public Button signInButton;
     @FXML
     public Button signUpButton;
+
+    ErrorLabel errorLabel;
 
     public ConnectionController() {
         executorService = Executors.newSingleThreadExecutor();
@@ -60,7 +64,7 @@ public class ConnectionController implements Initializable {
     }
 
     private void createConnection() {
-        message.setText("Loading...");
+        showMessage(ErrorLabel.LOADING);
         try {
             Main.client = new Client(MainClient.port);
             Main.dataCollection = new RemoteDataCollection(Main.client);
@@ -78,11 +82,16 @@ public class ConnectionController implements Initializable {
         }
     }
 
+    private void showMessage(ErrorLabel label) {
+        errorLabel = label;
+        displayErrorText();
+    }
+
     private void showSignUpStage(Stage stage) {
         try {
             ViewsManager.showSignUpView(stage);
         } catch (IOException e) {
-            message.setText("Ошибка загрузки страницы");
+            showMessage(ErrorLabel.LOADING_RESOURCE);
         }
     }
 
@@ -90,7 +99,7 @@ public class ConnectionController implements Initializable {
         try {
             ViewsManager.showSignInView(stage);
         } catch (IOException e) {
-            message.setText("Ошибка загрузки страницы");
+            showMessage(ErrorLabel.LOADING_RESOURCE);
         }
     }
 
@@ -104,5 +113,30 @@ public class ConnectionController implements Initializable {
     public void signUp(ActionEvent actionEvent) {
         var stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         showSignUpStage(stage);
+    }
+
+    @Override
+    public void setBundle(Language language) {
+        signInButton.setText(Internalization.getTranslation("connection.signIn"));
+        signUpButton.setText(Internalization.getTranslation("connection.signUp"));
+        repeatButton.setText(Internalization.getTranslation("connection.repeat"));
+        repeatButton.setText(Internalization.getTranslation("connection.repeat"));
+        displayErrorText();
+    }
+
+    private void displayErrorText() {
+        if (errorLabel == null) return;
+        message.setText(Internalization.getTranslation(errorLabel.key));
+    }
+
+    private enum ErrorLabel {
+        LOADING("loading"),
+        LOADING_RESOURCE("errors.resourceLoadingError");
+
+        private final String key;
+
+        ErrorLabel(String key) {
+            this.key = key;
+        }
     }
 }

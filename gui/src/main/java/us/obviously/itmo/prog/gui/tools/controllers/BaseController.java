@@ -6,13 +6,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import us.obviously.itmo.prog.gui.controllers.Translatable;
 import us.obviously.itmo.prog.gui.views.ViewsManager;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class BaseController implements Initializable {
+public abstract class BaseController implements Initializable, Translatable {
 
     protected final ExecutorService executorService = Executors.newSingleThreadExecutor();
 

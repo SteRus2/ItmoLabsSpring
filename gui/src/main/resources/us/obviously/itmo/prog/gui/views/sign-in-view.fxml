@@ -12,7 +12,10 @@
       maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="us.obviously.itmo.prog.gui.controllers.SignInController">
-    <Text text="Sign In" style="-fx-font-weight: bold;">
+
+    <fx:include source="menu-bar.fxml"/>
+
+    <Text fx:id="titleText" text="Sign In" style="-fx-font-weight: bold;">
         <font>
             <Font size="24.0"/>
         </font>
@@ -24,7 +27,7 @@
     <Button fx:id="signInButton" mnemonicParsing="false" onAction="#signIn"
             text="Sign In">
     </Button>
-    <Text fill="#404040" onMouseClicked="#showSignUpStage" strokeType="OUTSIDE"
+    <Text fx:id="signUpText" fill="#404040" onMouseClicked="#showSignUpStage" strokeType="OUTSIDE"
           strokeWidth="0.0" text="Don't have an account? Register">
         <cursor>
             <Cursor fx:constant="HAND"/>

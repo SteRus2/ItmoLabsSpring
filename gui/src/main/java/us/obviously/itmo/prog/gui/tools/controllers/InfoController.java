@@ -6,6 +6,7 @@ import javafx.scene.text.Text;
 import us.obviously.itmo.prog.common.server.data.DataInfo;
 import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
 import us.obviously.itmo.prog.gui.Main;
+import us.obviously.itmo.prog.gui.i18n.Language;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,5 +36,10 @@ public class InfoController extends BaseController {
         } catch (BadRequestException e) {
             showErrorText(e.getMessage());
         }
+    }
+
+    @Override
+    public void setBundle(Language language) {
+
     }
 }

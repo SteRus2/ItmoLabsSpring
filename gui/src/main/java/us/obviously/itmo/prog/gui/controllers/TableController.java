@@ -19,13 +19,18 @@ import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
 import us.obviously.itmo.prog.gui.Main;
+import us.obviously.itmo.prog.gui.i18n.Internalization;
+import us.obviously.itmo.prog.gui.i18n.Language;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TableController implements Initializable {
+public class TableController implements Initializable, Translatable {
 
     private final ExecutorService executorService;
     @FXML
@@ -34,13 +39,19 @@ public class TableController implements Initializable {
     public Label titleText;
     @FXML
     public VBox sidebar;
-    Window window;
-    @FXML
-    private TextField usernameField;
-    @FXML
-    private TextField passwordField;
-    @FXML
-    private Button signInButton;
+    TableColumn<StudyGroup, Integer> idColumn;
+    TableColumn<StudyGroup, String> nameColumn;
+    TableColumn<StudyGroup, String> coordinatesXColumn;
+    TableColumn<StudyGroup, String> coordinatesYColumn;
+    TableColumn<StudyGroup, java.util.Date> creationDateColumn;
+    TableColumn<StudyGroup, Integer> studentsCountColumn;
+    TableColumn<StudyGroup, String> formOfEducationColumn;
+    TableColumn<StudyGroup, String> semesterColumn;
+    TableColumn<StudyGroup, Person> groupAdminColumn;
+    TableColumn<StudyGroup, String> groupAdminNameColumn;
+    TableColumn<StudyGroup, java.time.ZonedDateTime> groupAdminBirthdayColumn;
+    TableColumn<StudyGroup, Integer> ownerIdColumn;
+    TableColumn<StudyGroup, String> ownerUsernameColumn;
     @FXML
     private Text errorMessage;
 
@@ -64,6 +75,7 @@ public class TableController implements Initializable {
             ObservableList<StudyGroup> observableList = getStudyGroups(groupList);
             tableView.setItems(observableList);
         } catch (BadRequestException e) {
+            System.out.println(e.getMessage());
             errorMessage.setText("Ошибка при загрузке информации");
         }
     }
@@ -87,63 +99,85 @@ public class TableController implements Initializable {
     }
 
     public void buildTable() {
-        TableColumn<StudyGroup, Integer> idColumn = new TableColumn<>("ID");
+        idColumn = new TableColumn<>();
         idColumn.setMinWidth(20);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        TableColumn<StudyGroup, String> nameColumn = new TableColumn<>("Name");
+        nameColumn = new TableColumn<>();
         nameColumn.setMinWidth(20);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<StudyGroup, String> coordinatesXColumn = new TableColumn<>("X");
+        coordinatesXColumn = new TableColumn<>();
         coordinatesXColumn.setMinWidth(20);
         coordinatesXColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCoordinates().getX().toString()));
 
-        TableColumn<StudyGroup, String> coordinatesYColumn = new TableColumn<>("Y");
+        coordinatesYColumn = new TableColumn<>();
         coordinatesYColumn.setMinWidth(20);
         coordinatesYColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCoordinates().getX().toString()));
 
-        TableColumn<StudyGroup, java.util.Date> creationDateColumn = new TableColumn<>("Creation Date");
+        creationDateColumn = new TableColumn<>();
         creationDateColumn.setMinWidth(20);
         creationDateColumn.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
 
-        TableColumn<StudyGroup, Integer> studentsCountColumn = new TableColumn<>("Students Count");
+        studentsCountColumn = new TableColumn<>();
         studentsCountColumn.setMinWidth(20);
         studentsCountColumn.setCellValueFactory(new PropertyValueFactory<>("studentsCount"));
 
-        TableColumn<StudyGroup, String> formOfEducationColumn = new TableColumn<>("Form Of Education");
+        formOfEducationColumn = new TableColumn<>();
         formOfEducationColumn.setMinWidth(20);
         formOfEducationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormOfEducation().key));
 
-        TableColumn<StudyGroup, String> semesterColumn = new TableColumn<>("Semester");
+        semesterColumn = new TableColumn<>();
         semesterColumn.setMinWidth(20);
         formOfEducationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSemesterEnum().key));
 
-        TableColumn<StudyGroup, Person> groupAdminColumn = new TableColumn<>("Group Admin");
+        groupAdminColumn = new TableColumn<>();
         groupAdminColumn.setMinWidth(20);
         groupAdminColumn.setCellValueFactory(new PropertyValueFactory<>("groupAdmin"));
 
-        TableColumn<StudyGroup, String> groupAdminNameColumn = new TableColumn<>("GA Name");
+        groupAdminNameColumn = new TableColumn<>();
         groupAdminColumn.setMinWidth(20);
         coordinatesYColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPerson().getName()));
 
-        TableColumn<StudyGroup, java.time.ZonedDateTime> groupAdminBirthdayColumn = new TableColumn<>("GA Name");
+        groupAdminBirthdayColumn = new TableColumn<>();
         groupAdminColumn.setMinWidth(20);
 //        coordinatesYColumn.setCellValueFactory(cellData -> new TableCell<StudyGroup, java.time.ZonedDateTime>() {});
 
-        TableColumn<StudyGroup, Integer> ownerIdColumn = new TableColumn<>("Owner ID");
+        ownerIdColumn = new TableColumn<>();
         ownerIdColumn.setMinWidth(20);
         ownerIdColumn.setCellValueFactory(new PropertyValueFactory<>("ownerId"));
 
-        TableColumn<StudyGroup, String> ownerUsernameColumn = new TableColumn<>("Owner Username");
+        ownerUsernameColumn = new TableColumn<>();
         ownerUsernameColumn.setMinWidth(20);
         ownerUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("ownerUsername"));
 
         tableView.getColumns().addAll(idColumn, nameColumn, coordinatesXColumn, coordinatesYColumn, creationDateColumn, studentsCountColumn, formOfEducationColumn, semesterColumn, groupAdminColumn, ownerIdColumn, ownerUsernameColumn);
+
+        displayColumnTitles();
     }
 
     private ObservableList<StudyGroup> getStudyGroups(List<StudyGroup> list) {
         return FXCollections.observableList(list);
     }
 
+    @Override
+    public void setBundle(Language language) {
+        displayColumnTitles();
+    }
+
+    private void displayColumnTitles() {
+        idColumn.setText(Internalization.getTranslation("mainTable.columns.idColumn"));
+        nameColumn.setText(Internalization.getTranslation("mainTable.columns.nameColumn"));
+        coordinatesXColumn.setText(Internalization.getTranslation("mainTable.columns.coordinatesXColumn"));
+        coordinatesYColumn.setText(Internalization.getTranslation("mainTable.columns.coordinatesYColumn"));
+        creationDateColumn.setText(Internalization.getTranslation("mainTable.columns.creationDateColumn"));
+        studentsCountColumn.setText(Internalization.getTranslation("mainTable.columns.studentsCountColumn"));
+        formOfEducationColumn.setText(Internalization.getTranslation("mainTable.columns.formOfEducationColumn"));
+        semesterColumn.setText(Internalization.getTranslation("mainTable.columns.semesterColumn"));
+        groupAdminColumn.setText(Internalization.getTranslation("mainTable.columns.groupAdminColumn"));
+        groupAdminNameColumn.setText(Internalization.getTranslation("mainTable.columns.groupAdminNameColumn"));
+        groupAdminBirthdayColumn.setText(Internalization.getTranslation("mainTable.columns.groupAdminBirthdayColumn"));
+        ownerIdColumn.setText(Internalization.getTranslation("mainTable.columns.ownerIdColumn"));
+        ownerUsernameColumn.setText(Internalization.getTranslation("mainTable.columns.ownerUsernameColumn"));
+    }
 }

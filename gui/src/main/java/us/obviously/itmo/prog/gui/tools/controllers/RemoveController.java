@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.server.exceptions.NoSuchIdException;
 import us.obviously.itmo.prog.gui.Main;
+import us.obviously.itmo.prog.gui.i18n.Language;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -53,5 +54,10 @@ public class RemoveController extends BaseController {
 
     public void onEnter(ActionEvent actionEvent) {
         apply(actionEvent);
+    }
+
+    @Override
+    public void setBundle(Language language) {
+
     }
 }

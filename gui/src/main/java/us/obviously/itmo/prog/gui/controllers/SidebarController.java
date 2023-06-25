@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import us.obviously.itmo.prog.gui.Main;
+import us.obviously.itmo.prog.gui.i18n.Language;
 import us.obviously.itmo.prog.gui.tools.AbstractTool;
 import us.obviously.itmo.prog.gui.views.ViewsManager;
 
@@ -17,17 +18,18 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
-public class SidebarController implements Initializable {
+public class SidebarController implements Initializable, Translatable {
     @FXML
     public Text usernameText;
     @FXML
     public Button logoutButton;
     @FXML
     public VBox commandBox;
+    private LinkedList<AbstractTool> commands;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        var commands = new LinkedList<AbstractTool>();
+        commands = new LinkedList<AbstractTool>();
         commands.add(new AbstractTool("Добавить", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
@@ -101,9 +103,7 @@ public class SidebarController implements Initializable {
             }
         }));
         commands.forEach((value) -> {
-            var button = new Button(value.displayName());
-            button.setOnAction(value.event());
-            commandBox.getChildren().add(button);
+            commandBox.getChildren().add(value.button);
         });
 
         usernameText.setText(Main.client.getLogin());
@@ -117,6 +117,13 @@ public class SidebarController implements Initializable {
         } catch (IOException e) {
             // TODO: выводить сообщение
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setBundle(Language language) {
+        for (AbstractTool command : commands) {
+            command.updateText();
         }
     }
 }

@@ -12,7 +12,7 @@
       maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="us.obviously.itmo.prog.gui.controllers.SignUpController">
-    <Text text="Sign Up" style="-fx-font-weight: bold;">
+    <Text fx:id="titleText" text="Sign Up" style="-fx-font-weight: bold;">
         <font>
             <Font size="24.0"/>
         </font>
@@ -25,7 +25,7 @@
             text="Sign Up">
     </Button>
     <Text fill="#404040" onMouseClicked="#showSignInStage" strokeType="OUTSIDE"
-          strokeWidth="0.0" text="Have an account? Sign In">
+          fx:id="signInText" strokeWidth="0.0" text="Have an account? Sign In">
         <cursor>
             <Cursor fx:constant="HAND"/>
         </cursor>
