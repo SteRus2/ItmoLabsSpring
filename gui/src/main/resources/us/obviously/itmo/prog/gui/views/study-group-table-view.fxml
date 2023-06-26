@@ -3,20 +3,18 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="us.obviously.itmo.prog.gui.controllers.StudyGroupTableController">
-    <VBox alignment="CENTER" spacing="20.0">
-        <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-        </padding>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="us.obviously.itmo.prog.gui.controllers.StudyGroupTableController" alignment="CENTER"
+      spacing="20.0">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
 
-        <Label fx:id="titleText" text="Группы"/>
-        <TableView fx:id="tableView"/>
-        <Text fx:id="errorMessage" fill="#F00"/>
+    <Label fx:id="titleText" text="Группы"/>
+    <TableView fx:id="tableView"/>
+    <Text fx:id="errorMessage" fill="#F00"/>
 
-        <fx:include source="graph-view.fxml"/>
-    </VBox>
-</BorderPane>
+    <fx:include source="graph-view.fxml"/>
+</VBox>

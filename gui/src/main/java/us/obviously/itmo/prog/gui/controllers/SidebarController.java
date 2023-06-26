@@ -53,14 +53,6 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("replace", event -> {
-            Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
-            try {
-                ViewsManager.showReplaceToolView(stage);
-            } catch (IOException e) {
-                // error
-            }
-        }));
         commands.add(new AbstractTool("clear", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
@@ -82,14 +74,6 @@ public class SidebarController implements Initializable, Translatable {
                 throw new RuntimeException(e);
             }
         }));
-        commands.add(new AbstractTool("groupByName", event -> {
-            Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
-            try {
-                ViewsManager.showGroupByNameToolView(stage);
-            } catch (IOException e) {
-                // error
-            }
-        }));
         commands.add(new AbstractTool("serviceInformation", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
@@ -102,14 +86,6 @@ public class SidebarController implements Initializable, Translatable {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showFilterByGroupAdminToolView(stage);
-            } catch (IOException e) {
-                // error
-            }
-        }));
-        commands.add(new AbstractTool("meaningsOfSemesters", event -> {
-            Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
-            try {
-                ViewsManager.showSemesterValuesToolView(stage);
             } catch (IOException e) {
                 // error
             }

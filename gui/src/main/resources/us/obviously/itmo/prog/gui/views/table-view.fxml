@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="us.obviously.itmo.prog.gui.controllers.StudyGroupTableController">
+            fx:controller="us.obviously.itmo.prog.gui.controllers.TableController">
     <left>
         <fx:include fx:id="sidebar" source="sidebar-view.fxml"/>
     </left>
@@ -17,11 +15,19 @@
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
             </padding>
 
-            <Label fx:id="titleText" text="Группы"/>
-            <TableView fx:id="tableView"/>
-            <Text fx:id="errorMessage" fill="#F00"/>
+            <ComboBox fx:id="tableComboBox"/>
 
-            <fx:include source="graph-view.fxml"/>
+            <fx:include managed="false" fx:id="studyGroupTable" source="study-group-table-view.fxml"/>
+            <fx:include managed="false" fx:id="studyGroupTableGroupByName"
+                        source="study-group-table-group-by-name-view.fxml"/>
+            <fx:include managed="false" fx:id="semesterTable" source="semester-table-view.fxml"/>
+
+
+            <!--            <Label fx:id="titleText" text="Группы"/>-->
+            <!--            <TableView fx:id="tableView"/>-->
+            <!--            <Text fx:id="errorMessage" fill="#F00"/>-->
+
+            <!--            <fx:include source="graph-view.fxml"/>-->
         </VBox>
     </right>
 </BorderPane>

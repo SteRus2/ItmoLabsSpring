@@ -135,7 +135,6 @@ public class UpdateController extends BaseController {
     }
 
     public void setStudyGroup(StudyGroup studyGroup) {
-//        var studyGroup = Main.currentStudyGroups.get(id);
         if (studyGroup == null || studyGroup.getId() == null) {
             throw new RuntimeException("ТАКОГО БЫТЬ НЕ ДОЛЖНО");
         }
