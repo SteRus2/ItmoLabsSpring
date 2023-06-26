@@ -126,7 +126,7 @@ public class StudyGroupTableController implements Initializable, Translatable {
                 Map<Integer, StudyGroup> groups = Main.manager.getDataCollection().getData();
                 table.updateStudyGroups(groups);
             }
-            sleep(2000);
+            sleep(1000);
             loadStudyGroups();
         } catch (BadRequestException e) {
             System.out.println(e.getMessage());

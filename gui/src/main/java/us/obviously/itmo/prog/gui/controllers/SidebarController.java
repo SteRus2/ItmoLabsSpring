@@ -6,6 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -32,11 +34,14 @@ public class SidebarController implements Initializable, Translatable {
     public Button logoutButton;
     @FXML
     public VBox commandBox;
+    public TextField searchField;
     private LinkedList<AbstractTool> commands;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        commands = new LinkedList<AbstractTool>();
+        searchField.setText(Main.searchText);
+
+        commands = new LinkedList<>();
         commands.add(new AbstractTool("add", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
@@ -119,5 +124,11 @@ public class SidebarController implements Initializable, Translatable {
             command.updateText();
         }
         logoutButton.setText(Internalization.getTranslation("sidebar.logout"));
+    }
+
+    public void onChangeSearchValue(KeyEvent inputMethodEvent) {
+        Main.searchText = this.searchField.getText();
+        System.out.println(Main.searchText);
+        Main.updateTextFilter();
     }
 }

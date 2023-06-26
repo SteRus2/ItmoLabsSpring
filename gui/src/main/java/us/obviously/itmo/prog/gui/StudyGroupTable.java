@@ -51,8 +51,8 @@ public class StudyGroupTable implements Translatable {
     }
 
     public void updateStudyGroups(Map<Integer, StudyGroup> groups) {
-        Main.currentStudyGroups = groups;
-        List<StudyGroup> groupList = new ArrayList<>(groups.values());
+        Main.setHashMap(groups);
+        List<StudyGroup> groupList = new ArrayList<>(Main.currentStudyGroups.values());
         ObservableList<StudyGroup> observableList = getStudyGroups(groupList);
         tableView.setItems(observableList);
     }

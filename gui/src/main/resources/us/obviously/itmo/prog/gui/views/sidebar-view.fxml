@@ -3,13 +3,22 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="us.obviously.itmo.prog.gui.controllers.SidebarController"
-      prefHeight="400.0" prefWidth="200.0">
+      prefHeight="400.0" spacing="10.0" prefWidth="200.0" alignment="CENTER">
+    <padding>
+        <Insets bottom="20" right="20" top="20" left="20"/>
+    </padding>
 
-    <Text fx:id="usernameText"/>
-    <Button fx:id="logoutButton" onAction="#signOut" text="Logout"/>
+    <fx:include source="menu-bar.fxml"/>
+
+    <Text styleClass="sterus" fx:id="usernameText"/>
+    <Button styleClass="logout" fx:id="logoutButton" onAction="#signOut" text="Logout"/>
+
+    <TextField fx:id="searchField" onKeyTyped="#onChangeSearchValue"/>
 
     <VBox spacing="10.0" alignment="CENTER" fx:id="commandBox">
 

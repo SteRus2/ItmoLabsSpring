@@ -5,17 +5,17 @@ import java.util.ListResourceBundle;
 public class ResourceBundle_ru extends ListResourceBundle {
 
     private final Object[][] contents = {
-            {"loading", "Загрузка..."},
-            {"errors.resourceLoadingError", "Ошибка при загрузке страницы"},
-
-            {"formats.date", "dd.MM.yyyy"},
-            {"formats.zonedDate", "dd.MM.yyyy - hh:mm"},
-
             {"languages.ru", "Русский"},
             {"languages.en", "English"},
             {"languages.ua", "Український"},
             {"languages.ro", "Română"},
             {"languages.es_SV", "Español"},
+
+            {"formats.date", "dd.MM.yyyy"},
+            {"formats.zonedDate", "dd.MM.yyyy - hh:mm"},
+
+            {"loading", "Загрузка..."},
+            {"errors.resourceLoadingError", "Ошибка при загрузке страницы"},
 
             {"sidebar.logout", "Выйти"},
 

@@ -49,6 +49,21 @@ Button:hover{
     -fx-background-color: #cacaca;
 }
 
+.logout {
+    -fx-padding: 4px 18px;
+    -fx-font-size: 10px;
+    -jfx-button-type: raised;
+    -fx-background-color: #e7baba;
+    -fx-text-fill: #260606;
+    -fx-font-weight: medium;
+    -fx-cursor: hand;
+    -fx-transition: 0.1s;
+}
+
+.logout:hover{
+    -fx-background-color: #e39393;
+}
+
 VBox {
     padding: 20px;
 }
@@ -104,13 +119,13 @@ TextField, PasswordField {
     -fx-padding: 0.0em;
 }
 
-.table-row-cell: highlighted {
+.table-row-cell:highlighted {
     -fx-background-color: -primary;
     -fx-background-radius: 5px;
     -fx-background-insets: 2px;
 }
 
-.table-row-cell: selected {
+.table-row-cell:selected {
     -fx-background-color: -tertiary;
     -fx-text-background-color: white;
     -fx-background-radius: 5px;
@@ -147,4 +162,11 @@ TextField, PasswordField {
 .table-view .virtual-flow .scroll-bar .decrement-button {
     -fx-opacity: 0;
     -fx-padding: 2;
+}
+
+
+.sterus {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
 }
