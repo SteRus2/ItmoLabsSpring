@@ -1,5 +1,6 @@
 package us.obviously.itmo.prog.client;
 
+
 import us.obviously.itmo.prog.common.actions.Request;
 import us.obviously.itmo.prog.common.actions.Response;
 import us.obviously.itmo.prog.common.serializers.Serializer;
@@ -8,33 +9,21 @@ import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteExcepti
 
 import java.io.IOException;
 
-
-public class RequestManager<T, D> {
-    private final Serializer<T> requestSer = new Serializer<>();
-    private final Serializer<D> responseSer = new Serializer<>();
+public class DataReceiver<T> {
+    private final Serializer<T> responseSer = new Serializer<>();
+    private final RequestManager<?, T> manager;
     private Request request;
+    private Client client;
 
-    public void send(Client client, T arguments, String commandName) {
-        byte[] body;
-        body = this.requestSer.serialize(arguments);
-        request = new Request(commandName, body, client.getAuthToken());
-        try {
-            client.request(request);
-        } catch (IOException e) {
-            try {
-                client.connect(client.getPort());
-                client.request(request);
-            } catch (IOException ignored) {
-            }
-        }
+
+    public DataReceiver(Request request, RequestManager<?, T> manager, Client client) {
+        this.request = request;
+        this.manager = manager;
+        this.client = client;
     }
 
-    public DataReceiver<D> getReceiver(Client client) {
-        return new DataReceiver<D>(request, this, client);
-    }
-
-    public D receive(Client client) throws BadRequestException, FailedToReadRemoteException {
-        Response response = client.waitResponse(request.getId(), this);
+    public T receive() throws BadRequestException, FailedToReadRemoteException {
+        Response response = client.waitResponse(request.getId(), this.manager);
         try {
             switch (response.getStatus()) {
                 case OK, CREATED -> {
@@ -49,5 +38,4 @@ public class RequestManager<T, D> {
             throw new RuntimeException();
         }
     }
-
 }

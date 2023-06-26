@@ -3,6 +3,8 @@ package us.obviously.itmo.prog.gui.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 import us.obviously.itmo.prog.gui.i18n.Internalization;
 import us.obviously.itmo.prog.gui.i18n.Language;
@@ -35,6 +37,12 @@ public class MenuBar implements Initializable, Translatable {
                 return null;
             }
         });
+//        langComboBox.setEditable(true);
+//        langComboBox.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+//            if (event.getCode() == KeyCode.TAB) {
+//                event.consume();
+//            }
+//        });
         updateCurrentLanguage();
     }
 

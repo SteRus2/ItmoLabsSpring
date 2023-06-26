@@ -13,7 +13,7 @@
       xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="us.obviously.itmo.prog.gui.controllers.SignInController">
 
-    <fx:include source="menu-bar.fxml"/>
+<!--    <fx:include source="menu-bar.fxml"/>-->
 
     <Text fx:id="titleText" text="Sign In" style="-fx-font-weight: bold;">
         <font>

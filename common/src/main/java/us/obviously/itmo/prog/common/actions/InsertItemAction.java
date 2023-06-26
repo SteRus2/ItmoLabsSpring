@@ -19,6 +19,7 @@ public class InsertItemAction extends Action<KeyGroupModel, Integer> {
             newId = getDatabaseManager().insertItem(arguments, getUserInfo());
             arguments.getStudyGroup().setOwnerUsername(getUserInfo().getLogin());
             dataCollection.insertItem(arguments.getStudyGroup(), newId, getUserInfo().getId());
+            // notifyUsers();
         } catch (UsedKeyException e) {
             return new Response("Ключ уже используется", ResponseStatus.BAD_REQUEST);
         } catch (SQLException e) {

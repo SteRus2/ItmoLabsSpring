@@ -1,5 +1,6 @@
 package us.obviously.itmo.prog.client.manager;
 
+import us.obviously.itmo.prog.client.RemoteDataCollection;
 import us.obviously.itmo.prog.client.commands.*;
 import us.obviously.itmo.prog.common.console.ConsoleColors;
 import us.obviously.itmo.prog.common.console.Messages;
@@ -18,14 +19,14 @@ import java.util.*;
  */
 public class Manager<T> implements Management {
     private final Scanner scanner;
-    private final DataCollection dataCollection;
+    private final RemoteDataCollection dataCollection;
     private final HashMap<String, AbstractCommand> commands;
     private final List<AbstractCommand> commandsList;
     private final List<String> loadedScripts = new ArrayList<>();
     private Scanner fileScanner;
     private Boolean active;
 
-    public Manager(DataCollection dataCollection, Scanner scanner) {
+    public Manager(RemoteDataCollection dataCollection, Scanner scanner) {
         this.dataCollection = dataCollection;
         this.scanner = scanner;
 

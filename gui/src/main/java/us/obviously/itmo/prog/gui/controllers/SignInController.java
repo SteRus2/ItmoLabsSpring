@@ -5,6 +5,8 @@
  */
 package us.obviously.itmo.prog.gui.controllers;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,9 +25,12 @@ import us.obviously.itmo.prog.gui.views.ViewsManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SignInController implements Initializable, Translatable {
 
+    private final ExecutorService executorService;
     public Text signUpText;
     public Text titleText;
     @FXML
@@ -42,7 +47,7 @@ public class SignInController implements Initializable, Translatable {
     private InfoLabels infoLabel;
 
     public SignInController() {
-
+        executorService = Executors.newSingleThreadExecutor();
     }
 
     @Override
@@ -56,7 +61,7 @@ public class SignInController implements Initializable, Translatable {
         var password = this.passwordField.getText();
 
         if (this.validate(username, password)) {
-            signInRequest(username, password, event);
+            executorService.submit(() -> signInRequest(username, password, event));
         }
     }
 
@@ -68,8 +73,10 @@ public class SignInController implements Initializable, Translatable {
             var answer = Main.manager.getDataCollection().loginUser(user);
             answer.getLogin();
             hideInfoMessage();
-            var stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            showTableView(stage);
+            Platform.runLater(() -> {
+                var stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                showTableView(stage);
+            });
         } catch (BadRequestException e) {
             this.showErrorMessage(ErrorLabels.INVALID_CREDENTIALS);
             System.out.println(e.getMessage());
@@ -82,6 +89,7 @@ public class SignInController implements Initializable, Translatable {
         try {
             ViewsManager.showTableView(stage);
         } catch (IOException e) {
+            e.printStackTrace(System.out);
             showErrorMessage(ErrorLabels.LOADING_RESOURCE);
         }
     }
@@ -113,6 +121,7 @@ public class SignInController implements Initializable, Translatable {
         infoLabel = message;
         displayInfoText();
     }
+
     private void displayInfoText() {
         if (infoLabel == null) return;
         infoMessage.setText(Internalization.getTranslation(infoLabel.key));
@@ -144,6 +153,7 @@ public class SignInController implements Initializable, Translatable {
     }
 
     private void hideErrorMessage() {
+        errorMessage.setText("");
         errorMessage.setVisible(false);
     }
 

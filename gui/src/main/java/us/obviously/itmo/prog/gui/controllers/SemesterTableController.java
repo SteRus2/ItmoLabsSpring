@@ -25,31 +25,35 @@ import us.obviously.itmo.prog.gui.i18n.Internalization;
 import us.obviously.itmo.prog.gui.i18n.Language;
 
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class TableController implements Initializable, Translatable {
+public class SemesterTableController implements Initializable, Translatable {
 
+    private final ExecutorService executorService;
+    private final ExecutorService listenUpdatesExecutorService;
     @FXML
     public Text infoMessage;
     @FXML
     public Label titleText;
-    @FXML
-    public VBox sidebar;
     TableColumn<Semester, String> semesterColumn;
     @FXML
     private Text errorMessage;
 
-    public TableController() {
+    @FXML
+    private TableView<Semester> tableView;
 
+    public SemesterTableController() {
+        executorService = Executors.newSingleThreadExecutor();
+        listenUpdatesExecutorService = Executors.newSingleThreadExecutor();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
             buildTable();
+            executorService.submit(this::loadSemesters);
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
@@ -63,7 +67,7 @@ public class TableController implements Initializable, Translatable {
         while (true) {
             try {
                 List<Semester> semesters = requestManager.receive(Main.client);
-                updateStudyGroups(semesters);
+                updateSemesters(semesters);
             } catch (BadRequestException e) {
                 System.out.println(e.getMessage());
                 errorMessage.setText("Ошибка при загрузке информации"); // TODO: replace with internalize
@@ -77,18 +81,19 @@ public class TableController implements Initializable, Translatable {
 //        Main.manager.sendStudyGroupsTableUnattachRequest();
     }
 
-    private void loadStudyGroups() {
+    private void loadSemesters() {
         try {
             List<Semester> semesters = Main.manager.getDataCollection().printFieldAscendingSemesterEnum();
-            updateStudyGroups(semesters);
+            updateSemesters(semesters);
         } catch (BadRequestException e) {
             System.out.println(e.getMessage());
             errorMessage.setText("Ошибка при загрузке информации");
         }
     }
 
-    private void updateStudyGroups(List<Semester> semesters) {
+    private void updateSemesters(List<Semester> semesters) {
         ObservableList<Semester> observableList = getSemesters(semesters);
+        tableView.setItems(observableList);
     }
 
     private void showInfoMessage(String message) {
@@ -111,6 +116,18 @@ public class TableController implements Initializable, Translatable {
 
     public void buildTable() {
 
+        semesterColumn = new TableColumn<>();
+        semesterColumn.setMinWidth(20);
+        semesterColumn.setCellValueFactory(cellData -> {
+            String key = "semester.null";
+            Semester value = cellData.getValue();
+            if (value != null) key = value.key;
+            return new SimpleStringProperty(Internalization.getTranslation(key));
+        });
+
+        tableView.getColumns().add(semesterColumn);
+
+        displayColumnTitles();
     }
 
     private ObservableList<Semester> getSemesters(List<Semester> list) {

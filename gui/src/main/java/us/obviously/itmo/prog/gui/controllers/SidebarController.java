@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import us.obviously.itmo.prog.gui.Main;
+import us.obviously.itmo.prog.gui.i18n.Internalization;
 import us.obviously.itmo.prog.gui.i18n.Language;
 import us.obviously.itmo.prog.gui.tools.AbstractTool;
 import us.obviously.itmo.prog.gui.views.ViewsManager;
@@ -30,7 +31,7 @@ public class SidebarController implements Initializable, Translatable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         commands = new LinkedList<AbstractTool>();
-        commands.add(new AbstractTool("Добавить", event -> {
+        commands.add(new AbstractTool("add", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showAddToolView(stage);
@@ -38,7 +39,7 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("Удалить", event -> {
+        commands.add(new AbstractTool("delete", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showRemoveToolView(stage);
@@ -46,7 +47,7 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("Заменить", event -> {
+        commands.add(new AbstractTool("replace", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showReplaceToolView(stage);
@@ -54,7 +55,7 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("Очистить", event -> {
+        commands.add(new AbstractTool("clear", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showClearToolView(stage);
@@ -62,7 +63,7 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("Исполнить скрипт", event -> {
+        commands.add(new AbstractTool("executeScript", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showExecuteScriptToolView(stage);
@@ -70,7 +71,7 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("Группировка по имени", event -> {
+        commands.add(new AbstractTool("groupByName", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showGroupByNameToolView(stage);
@@ -78,7 +79,7 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("Служебная информация", event -> {
+        commands.add(new AbstractTool("serviceInformation", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showInfoToolView(stage);
@@ -86,7 +87,7 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("Фильтр по админу группы", event -> {
+        commands.add(new AbstractTool("filterByGroupAdmin", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showFilterByGroupAdminToolView(stage);
@@ -94,7 +95,7 @@ public class SidebarController implements Initializable, Translatable {
                 // error
             }
         }));
-        commands.add(new AbstractTool("Значения семестров", event -> {
+        commands.add(new AbstractTool("meaningsOfSemesters", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
                 ViewsManager.showSemesterValuesToolView(stage);
@@ -107,6 +108,10 @@ public class SidebarController implements Initializable, Translatable {
         });
 
         usernameText.setText(Main.client.getLogin());
+
+        setBundle(Language.RUSSIAN);
+
+        Internalization.addTranslatable(this);
     }
 
     @FXML
@@ -122,8 +127,10 @@ public class SidebarController implements Initializable, Translatable {
 
     @Override
     public void setBundle(Language language) {
+        // TODO: не вызывается
         for (AbstractTool command : commands) {
             command.updateText();
         }
+        logoutButton.setText(Internalization.getTranslation("sidebar.logout"));
     }
 }

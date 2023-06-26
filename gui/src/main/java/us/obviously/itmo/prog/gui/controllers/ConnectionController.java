@@ -13,6 +13,7 @@ import us.obviously.itmo.prog.client.RemoteDataCollection;
 import us.obviously.itmo.prog.client.manager.Manager;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToConnectToServerException;
+import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.gui.Main;
 import us.obviously.itmo.prog.gui.i18n.Internalization;
 import us.obviously.itmo.prog.gui.i18n.Language;
@@ -67,6 +68,14 @@ public class ConnectionController implements Initializable, Translatable {
         showMessage(ErrorLabel.LOADING);
         try {
             Main.client = new Client(MainClient.port);
+            ExecutorService listenerExecutorService = Executors.newSingleThreadExecutor();
+            listenerExecutorService.submit(() -> {
+                try {
+                    Main.client.listener();
+                } catch (FailedToReadRemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             Main.dataCollection = new RemoteDataCollection(Main.client);
             var scanner = new Scanner(System.in);
             Main.manager = new Manager<StudyGroup>(Main.dataCollection, scanner);

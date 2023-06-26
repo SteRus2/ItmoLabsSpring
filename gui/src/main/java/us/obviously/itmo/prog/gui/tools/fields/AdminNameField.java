@@ -1,19 +1,18 @@
 package us.obviously.itmo.prog.gui.tools.fields;
 
-import javafx.scene.control.TextField;
 import org.controlsfx.validation.ValidationResult;
 
-public class GroupNameField extends AbstractTextField {
+public class AdminNameField extends AbstractTextField {
 
-    public GroupNameField() {
+    public AdminNameField() {
         this("");
     }
 
-    public GroupNameField(String defaultValue) {
-        super("groupName");
+    public AdminNameField(String defaultValue) {
+        super("admin.name");
         registerValidator((control, value) -> {
             if (value == null || value.equals("")) {
-                return ValidationResult.fromError(control, "field.groupName.errors.blank");
+                return ValidationResult.fromError(control, "field.admin.name.errors.blank");
             }
             return ValidationResult.fromInfo(control, "ok");
         });

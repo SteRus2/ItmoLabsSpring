@@ -6,7 +6,6 @@ import us.obviously.itmo.prog.common.server.exceptions.FailedToCloseConnection;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToConnectToServerException;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.client.manager.Manager;
-import us.obviously.itmo.prog.common.server.data.DataCollection;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteException;
 
@@ -31,7 +30,7 @@ public class MainClient {
                     throw new RuntimeException(e);
                 }
             });
-            DataCollection dataCollection = new RemoteDataCollection(client);
+            RemoteDataCollection dataCollection = new RemoteDataCollection(client);
             Management manager = new Manager<StudyGroup>(dataCollection, scanner);
             client.run();
             manager.run();

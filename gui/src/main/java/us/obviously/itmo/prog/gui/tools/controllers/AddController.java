@@ -3,20 +3,20 @@ package us.obviously.itmo.prog.gui.tools.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationResult;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-import us.obviously.itmo.prog.common.model.Semester;
+import us.obviously.itmo.prog.common.model.Coordinates;
+import us.obviously.itmo.prog.common.model.Person;
+import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.server.exceptions.UsedKeyException;
+import us.obviously.itmo.prog.gui.Main;
+import us.obviously.itmo.prog.gui.i18n.Internalization;
 import us.obviously.itmo.prog.gui.i18n.Language;
-import us.obviously.itmo.prog.gui.tools.fields.AbstractField;
-import us.obviously.itmo.prog.gui.tools.fields.GroupNameField;
+import us.obviously.itmo.prog.gui.tools.fields.*;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -24,119 +24,116 @@ import java.util.ResourceBundle;
 public class AddController extends BaseController {
 
     public GridPane grid;
-    private Object apply;
-    private List<AbstractField<?, ?>> fieldList;
+    public Button submitButton;
+    public Button cancelButton;
+    private List<AbstractField<?, ?, ?>> fieldList;
+    private GroupNameField groupNameField;
+    private CoordinatesXField coordinatesXField;
+    private CoordinatesYField coordinatesYField;
+    private StudentsCountField studentsCountField;
+    private FormOfEducationField formOfEducationField;
+    private SemesterField semesterField;
+    private AdminNameField adminNameField;
+    private AdminBirthdayField birthdayField;
+    private AdminEyeColorField eyeColorField;
+    private AdminHairColorField hairColorField;
+    private AdminNationalityField nationalityField;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        try {
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(25, 25, 25, 25));
 
-        fieldList = new LinkedList<AbstractField<?, ?>>();
+            fieldList = new LinkedList<>();
 
-        var groupName = new GroupNameField();
-        groupName.addToGrid(grid, 1);
-        fieldList.add(groupName);
+            int currentIndex = 0;
 
+            groupNameField = new GroupNameField();
+            groupNameField.addToGrid(grid, currentIndex++);
+            groupNameField.getControl().setOnAction(this::onEnter);
+            fieldList.add(groupNameField);
 
-        Label coordinatesXLabel = new Label("X");
-        grid.add(coordinatesXLabel, 0, 2);
-        var coordinatesXColumn = new TextField(); // String
-        grid.add(coordinatesXColumn, 1, 2);
-        coordinatesXColumn.setOnAction(this::onEnter);
-        ValidationSupport coordinatesXValidation = new ValidationSupport();
-        Validator<String> coordinatesXValidator = (control, value) -> {
-//            boolean condition = value == null || value.matches();
-            boolean condition = true;
-            return ValidationResult.fromMessageIf(control, "not ", Severity.ERROR, condition);
-        };
-        coordinatesXValidation.registerValidator(coordinatesXColumn, coordinatesXValidator);
-//        coordinatesXColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCoordinates().getX().toString()));
+            coordinatesXField = new CoordinatesXField();
+            coordinatesXField.addToGrid(grid, currentIndex++);
+            fieldList.add(coordinatesXField);
 
-        Label coordinatesYLabel = new Label("Y");
-        grid.add(coordinatesYLabel, 0, 3);
-        var coordinatesYColumn = new TextField(); // String
-        grid.add(coordinatesYColumn, 1, 3);
-        coordinatesYColumn.setOnAction(this::onEnter);
-//        coordinatesYColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCoordinates().getX().toString()));
+            coordinatesYField = new CoordinatesYField();
+            coordinatesYField.addToGrid(grid, currentIndex++);
+            fieldList.add(coordinatesYField);
 
-        Label creationDateLabel = new Label("Creation Date");
-        grid.add(creationDateLabel, 0, 4);
-        var creationDateColumn = new TextField(); // java
-        grid.add(creationDateColumn, 1, 4);
-        creationDateColumn.setOnAction(this::onEnter);
-//        creationDateColumn.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+            studentsCountField = new StudentsCountField();
+            studentsCountField.addToGrid(grid, currentIndex++);
+            fieldList.add(studentsCountField);
 
-        Label studentsCountLabel = new Label("Students Count");
-        grid.add(studentsCountLabel, 0, 5);
-        var studentsCountColumn = new TextField(); // Integer
-        grid.add(studentsCountColumn, 1, 5);
-        studentsCountColumn.setOnAction(this::onEnter);
-//        studentsCountColumn.setCellValueFactory(new PropertyValueFactory<>("studentsCount"));
+            formOfEducationField = new FormOfEducationField();
+            formOfEducationField.addToGrid(grid, currentIndex++);
+            fieldList.add(formOfEducationField);
 
-        Label formOfEducationLabel = new Label("Form Of Education");
-        grid.add(formOfEducationLabel, 0, 6);
-        var formOfEducationColumn = new TextField(); // String
-        grid.add(formOfEducationColumn, 1, 6);
-        formOfEducationColumn.setOnAction(this::onEnter);
-//        formOfEducationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormOfEducation().key));
+            semesterField = new SemesterField();
+            semesterField.addToGrid(grid, currentIndex++);;
+            fieldList.add(semesterField);
 
-        Label semesterLabel = new Label("Semester");
-        grid.add(semesterLabel, 0, 7);
-        var semesterColumn = new TextField(); // String
-        grid.add(semesterColumn, 1, 7);
-        semesterColumn.setOnAction(this::onEnter);
-        ComboBox<Semester> cbxStatus = new ComboBox<>();
-        cbxStatus.getItems().setAll(Semester.values());
-        ValidationSupport semesterValidation = new ValidationSupport();
-//        Validator<String> semesterValidator = new Validator<String>() {
-//            @Override
-//            public ValidationResult apply(Control control, String value) {
-//                boolean condition = value == null || value.matches();
-//                return ValidationResult.fromMessageIf(control, "not ", Severity.ERROR, condition);
-//            }
-//        }
-//        semesterValidation.registerValidator(semesterColumn, semesterValidator);
-//        formOfEducationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSemesterEnum().key));
+            /* ADMIN FIELDS */
 
-        Label groupAdminLabel = new Label("Group Admin");
-        grid.add(groupAdminLabel, 0, 8);
-        var groupAdminColumn = new TextField(); // Person
-        grid.add(groupAdminColumn, 1, 8);
-        groupAdminColumn.setOnAction(this::onEnter);
-//        groupAdminColumn.setCellValueFactory(new PropertyValueFactory<>("groupAdmin"));
+            adminNameField = new AdminNameField();
+            adminNameField.addToGrid(grid, currentIndex++);
+            adminNameField.getControl().setOnAction(this::onEnter);
+            fieldList.add(adminNameField);
 
-//        var groupAdminColumn = new TextField(GA Name"); // String
-//        field.add(groupAdminColumn, 1, 9);
-//        groupAdminColumn.setOnAction(this::onEnter);();
-//        coordinatesYColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPerson().getName()));
+            birthdayField = new AdminBirthdayField();
+            birthdayField.addToGrid(grid, currentIndex++);
+            fieldList.add(birthdayField);
 
-//        var groupAdminColumn = new TextField(GA Name"); // java
-//        field.add(groupAdminColumn, 1, 10);
-//        groupAdminColumn.setOnAction(this::onEnter);();
-//        coordinatesYColumn.setCellValueFactory(cellData -> new TableCell<StudyGroup, java.time.ZonedDateTime>() {});
+            eyeColorField = new AdminEyeColorField();
+            eyeColorField.addToGrid(grid, currentIndex++);
+            fieldList.add(eyeColorField);
 
-        Label ownerIdLabel = new Label("Owner ID");
-        grid.add(ownerIdLabel, 0, 11);
-        var ownerIdColumn = new TextField(); // Integer
-        grid.add(ownerIdColumn, 1, 11);
-        ownerIdColumn.setOnAction(this::onEnter);
-//        ownerIdColumn.setCellValueFactory(new PropertyValueFactory<>("ownerId"));
+            hairColorField = new AdminHairColorField();
+            hairColorField.addToGrid(grid, currentIndex++);
+            fieldList.add(hairColorField);
 
-        Label ownerUsernameLabel = new Label("Owner Username");
-        grid.add(ownerUsernameLabel, 0, 12);
-        var ownerUsernameColumn = new TextField(); // String
-        grid.add(ownerUsernameColumn, 1, 12);
-        ownerUsernameColumn.setOnAction(this::onEnter);
-//        ownerUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("ownerUsername"));
+            nationalityField = new AdminNationalityField();
+            nationalityField.addToGrid(grid, currentIndex++);
+            fieldList.add(nationalityField);
 
+            /* ADMIN FIELDS FINISH */
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
 
     }
 
     @FXML
     private void apply(ActionEvent actionEvent) {
+        if (this.validate()) {
+            var groupName = groupNameField.getValue();
+            var coordinatesX = coordinatesXField.getValue();
+            var coordinatesY = coordinatesYField.getValue();
+            var studentsCount = studentsCountField.getValue();
+            var formOfEducation = formOfEducationField.getValue();
+            var semester = semesterField.getValue();
+            var adminName = adminNameField.getValue();
+            var birthday = birthdayField.getValue();
+            var eyeColor = eyeColorField.getValue();
+            var hairColor = hairColorField.getValue();
+            var nationality = nationalityField.getValue();
 
+            Person person = new Person(adminName, birthday, eyeColor, hairColor, nationality);
+            Coordinates coordinates = new Coordinates(coordinatesX, coordinatesY);
+            var dateNow = new Date();
+            StudyGroup studyGroup = new StudyGroup(null, groupName, coordinates, dateNow, studentsCount, formOfEducation, semester, person);
+            try {
+                Main.manager.getDataCollection().insertItem(studyGroup, -1);
+                errorText.setText("FINE))");
+            } catch (UsedKeyException e) {
+                errorText.setText("USED KEY");
+
+            } catch (BadRequestException e) {
+                errorText.setText("BAD RQEUS" + e.getMessage());
+            }
+        }
     }
 
     @FXML
@@ -145,7 +142,7 @@ public class AddController extends BaseController {
     }
 
     private boolean validate() {
-        var dirtyFields = new LinkedList<AbstractField<?, ?>>();
+        var dirtyFields = new LinkedList<AbstractField<?, ?, ?>>();
         this.fieldList.forEach(field -> {
             var errorList = field.validate();
             if (errorList.isEmpty()) return;
@@ -160,6 +157,7 @@ public class AddController extends BaseController {
 
     @Override
     public void setBundle(Language language) {
-
+        submitButton.setText(Internalization.getTranslation("tool.add.submit"));
+        cancelButton.setText(Internalization.getTranslation("tool.add.cancel"));
     }
 }

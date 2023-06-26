@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:id="layout"
+           fx:controller="us.obviously.itmo.prog.gui.controllers.GraphController"
+           prefHeight="400.0" prefWidth="600.0">
+
+</StackPane>

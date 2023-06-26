@@ -1,21 +1,21 @@
 package us.obviously.itmo.prog.client;
 
 
-import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteException;
-import us.obviously.itmo.prog.common.server.exceptions.JwtTokenExpiredException;
 import us.obviously.itmo.prog.common.UserInfo;
 import us.obviously.itmo.prog.common.UserInfoPublic;
 import us.obviously.itmo.prog.common.action_models.KeyGroupModel;
 import us.obviously.itmo.prog.common.action_models.KeyModel;
 import us.obviously.itmo.prog.common.action_models.UserModel;
 import us.obviously.itmo.prog.common.action_models.VoidModel;
-import us.obviously.itmo.prog.common.server.data.DataCollection;
-import us.obviously.itmo.prog.common.server.data.DataInfo;
-import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.Semester;
 import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.common.server.data.DataCollection;
+import us.obviously.itmo.prog.common.server.data.DataInfo;
+import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
+import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.common.server.exceptions.InvalidTokenException;
+import us.obviously.itmo.prog.common.server.exceptions.JwtTokenExpiredException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +50,22 @@ public class RemoteDataCollection implements DataCollection {
         }
     }
 
+    public DataReceiver<HashMap<Integer, StudyGroup>> startListenData() {
+        var rm = new RequestManager<VoidModel, HashMap<Integer, StudyGroup>>();
+        rm.send(client, new VoidModel(), "start-listen-data");
+        return rm.getReceiver(client);
+    }
+
+    public VoidModel stopListenData() throws BadRequestException {
+        var rm = new RequestManager<VoidModel, VoidModel>();
+        rm.send(client, new VoidModel(), "stop-listen-data");
+        try {
+            return rm.receive(client);
+        } catch (FailedToReadRemoteException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
     @Override
     public Integer insertItem(StudyGroup item, int key) throws BadRequestException {
         var rm = new RequestManager<KeyGroupModel, Integer>();
@@ -63,7 +79,7 @@ public class RemoteDataCollection implements DataCollection {
         /*var action = new InsertItemAction();
         action.send(this.client, new KeyGroupModel(item, key));
         try {
-            action.recieve(client);
+            action.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }*/

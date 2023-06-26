@@ -27,7 +27,16 @@ public class ViewsManager {
     }
 
     public static void showTableView(Stage stage) throws IOException {
+//        showSemesterTableView(stage);
         showView(stage, "Table", "views/table-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showStudyGroupTableView(Stage stage) throws IOException {
+        showView(stage, "Study Group Table", "views/study-group-table-view.fxml", "styles/fonts.css", "assets/icon.png");
+    }
+
+    public static void showSemesterTableView(Stage stage) throws IOException {
+        showView(stage, "Semester Table", "views/semester-table-view.fxml", "styles/fonts.css", "assets/icon.png");
     }
 
     public static void showAddToolView(Stage stage) throws IOException {

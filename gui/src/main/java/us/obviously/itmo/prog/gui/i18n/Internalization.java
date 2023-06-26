@@ -2,12 +2,15 @@ package us.obviously.itmo.prog.gui.i18n;
 
 import us.obviously.itmo.prog.gui.controllers.Translatable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 public class Internalization {
     private static Language currentLanguage;
     private static ResourceBundle currentBundle;
     private static Translatable currentController;
+    private static Collection<Translatable> translatables = new ArrayList<>();
 
     static {
         setLanguage(Language.RUSSIAN); // Default language
@@ -41,7 +44,14 @@ public class Internalization {
     }
 
     private static void requestTranslateCurrentController() {
+        translatables.forEach(translatable -> {
+            translatable.setBundle(getCurrentLanguage());
+        });
         if (currentController == null) return;
         currentController.setBundle(getCurrentLanguage());
+    }
+
+    public static void addTranslatable(Translatable translatableController) {
+        Internalization.translatables.add(translatableController);
     }
 }
