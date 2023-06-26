@@ -30,4 +30,9 @@ public class StudentsCountField extends AbstractField<Integer, Slider, Float> {
     public Integer getValue() {
         return Math.toIntExact(Math.round(getControl().getValue()));
     }
+
+    @Override
+    public void setValue(Integer value) {
+        getControl().setValue(value);
+    }
 }

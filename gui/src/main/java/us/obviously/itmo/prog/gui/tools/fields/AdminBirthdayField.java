@@ -30,4 +30,9 @@ public class AdminBirthdayField extends AbstractField<ZonedDateTime, DatePicker,
     public ZonedDateTime getValue() {
         return getControl().getValue().atStartOfDay(ZoneId.systemDefault());
     }
+
+    @Override
+    public void setValue(ZonedDateTime value) {
+        getControl().setValue(value.toLocalDate());
+    }
 }

@@ -7,6 +7,7 @@ module us.obviously.itmo.prog.gui {
     requires org.kordamp.ikonli.javafx;
     requires us.obviously.itmo.prog.common;
     requires us.obviously.itmo.prog.client;
+    requires java.desktop;
 
     opens us.obviously.itmo.prog.gui to javafx.fxml;
     opens us.obviously.itmo.prog.gui.controllers to javafx.fxml;

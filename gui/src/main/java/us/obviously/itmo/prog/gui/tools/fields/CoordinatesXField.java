@@ -28,4 +28,9 @@ public class CoordinatesXField extends AbstractField<Long, Slider, Double> {
     public Long getValue() {
         return Math.round(getControl().getValue());
     }
+
+    @Override
+    public void setValue(Long value) {
+        getControl().setValue(value);
+    }
 }

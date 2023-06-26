@@ -30,4 +30,9 @@ public class AbstractComboBoxField<T> extends AbstractReqField<T, ComboBox<T>> {
     public T getValue() {
         return getControl().getValue();
     }
+
+    @Override
+    public void setValue(T value) {
+        getControl().setValue(value);
+    }
 }

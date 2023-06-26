@@ -67,7 +67,13 @@ public class ResourceBundle_ru extends ListResourceBundle {
             {"tools.meaningsOfSemesters", "Значения семестров"},
 
             {"tool.add.submit", "Спасибо"},
-            {"tool.add.cancel", "Отмена"},
+            {"tool.add.cancel", "Отмена, спасибо"},
+
+            {"tool.update.submit", "Спасибо"},
+            {"tool.update.cancel", "Отмена, спасибо"},
+            {"tool.update.delete", "Больше не нужен, спасибо"},
+            {"tool.update.delete.success.title", "Успешно удалено"},
+            {"tool.update.delete.success.message", "Пожалуйста"},
 
             {"field.groupName", "Название группы"},
             {"field.groupName.errors.blank", "Не может быть пустым"},
@@ -85,6 +91,7 @@ public class ResourceBundle_ru extends ListResourceBundle {
             {"field.admin.eyeColor", "Глазки админа"},
             {"field.admin.hairColor", "Волосы админа"},
             {"field.admin.nationality", "Кожа админа"},
+            {"field.replaceIfGreater", "Заменить только если новый больше предыдущего"},
 
             {"semester.second", "Второй"},
             {"semester.third", "Третий"},
@@ -134,6 +141,8 @@ public class ResourceBundle_ru extends ListResourceBundle {
             {"admin.eyeColor.null", "Не указан"},
             {"admin.hairColor.null", "Не указан"},
             {"admin.nationality.null", "Не указан"},
+
+            {"files.executeScript", "Исполнить скрипт"}
     };
 
     public Object[][] getContents() {

@@ -15,4 +15,9 @@ public class AbstractTextField extends AbstractReqField<String, TextField> {
     public String getValue() {
         return getControl().getText();
     }
+
+    @Override
+    public void setValue(String value) {
+        this.getControl().setText(value);
+    }
 }

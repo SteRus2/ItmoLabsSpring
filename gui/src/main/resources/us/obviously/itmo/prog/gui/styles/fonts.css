@@ -117,6 +117,15 @@ TextField, PasswordField {
     -fx-background-insets: 2px;
 }
 
+.table-row-cell:empty {
+    -fx-background-color: -white;
+    height: 0px;
+}
+
+.table-row-cell:empty .table-cell {
+    -fx-border-width: 0px;
+}
+
 .table-view .virtual-flow .scroll-bar:vertical,
 .table-view .virtual-flow .scroll-bar:vertical .track,
 .table-view .virtual-flow .scroll-bar:vertical .track-background,

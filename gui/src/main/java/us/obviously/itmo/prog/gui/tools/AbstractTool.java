@@ -18,6 +18,7 @@ public final class AbstractTool {
         this.event = event;
         this.button = new Button();
         this.button.setOnAction(event);
+        this.button.setPrefWidth(600);
         updateText();
     }
 

@@ -32,4 +32,9 @@ public class CoordinatesYField extends AbstractField<Float, Slider, Double> {
     public Float getValue() {
         return (float) getControl().getValue();
     }
+
+    @Override
+    public void setValue(Float value) {
+        getControl().setValue(value);
+    }
 }

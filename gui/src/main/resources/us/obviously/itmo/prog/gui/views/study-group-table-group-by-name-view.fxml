@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+        minHeight="400"
+      minWidth="800"
+      alignment="CENTER" spacing="20.0"
+      fx:controller="us.obviously.itmo.prog.gui.controllers.StudyGroupTableGroupByNameController">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label fx:id="titleText" text="Группы"/>
+    <ScrollPane>
+        <VBox minWidth="800" minHeight="400" fx:id="tableViewsLayout" alignment="CENTER" spacing="20.0"/>
+    </ScrollPane>
+    <!--        <Text fx:id="errorMessage" fill="#F00"/>-->
+
+    <!--        <fx:include source="graph-view.fxml"/>-->
+</VBox>

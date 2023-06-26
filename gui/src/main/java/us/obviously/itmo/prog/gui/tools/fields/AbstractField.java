@@ -74,4 +74,6 @@ public abstract class AbstractField<S, T extends Control, R> {
     }
 
     public abstract S getValue();
+
+    public abstract void setValue(S value);
 }
