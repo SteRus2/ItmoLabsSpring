@@ -76,7 +76,7 @@ public class ViewsManager {
     }
 
     public static void showFilterByGroupAdminToolView(Stage stage) throws IOException {
-        showView(stage, "Filter by group admin", "views/tools/filter-by-group-admin-view.fxml", "styles/fonts.css", "assets/icon.png");
+        showView(stage, "Filter by group admin", "views/tools/filter-by-admin-view.fxml", "styles/fonts.css", "assets/icon.png");
     }
 
     public static void showSemesterValuesToolView(Stage stage) throws IOException {

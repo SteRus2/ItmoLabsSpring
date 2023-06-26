@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import us.obviously.itmo.prog.client.Client;
 import us.obviously.itmo.prog.client.RemoteDataCollection;
 import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.gui.views.ViewsManager;
@@ -23,6 +24,8 @@ public class Main extends Application {
     public static Management manager;
 
     public static Map<Integer, StudyGroup> currentStudyGroups = new HashMap<>();
+    public static boolean filterByAdmin = false;
+    public static Person adminFilter = new Person();
 
     public static void main(String[] args) {
         launch();

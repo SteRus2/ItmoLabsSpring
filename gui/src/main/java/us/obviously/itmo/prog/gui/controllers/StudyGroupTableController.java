@@ -119,8 +119,13 @@ public class StudyGroupTableController implements Initializable, Translatable {
 
     private void loadStudyGroups() {
         try {
-            Map<Integer, StudyGroup> groups = Main.manager.getDataCollection().getData();
-            table.updateStudyGroups(groups);
+            if (Main.filterByAdmin) {
+                List<StudyGroup> groups = Main.manager.getDataCollection().filterGreaterThanGroupAdmin(Main.adminFilter);
+                table.updateStudyGroups(groups);
+            } else {
+                Map<Integer, StudyGroup> groups = Main.manager.getDataCollection().getData();
+                table.updateStudyGroups(groups);
+            }
             sleep(2000);
             loadStudyGroups();
         } catch (BadRequestException e) {

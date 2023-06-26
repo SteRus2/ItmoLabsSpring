@@ -75,6 +75,10 @@ public class ResourceBundle_ru extends ListResourceBundle {
             {"tool.update.delete.success.title", "Успешно удалено"},
             {"tool.update.delete.success.message", "Пожалуйста"},
 
+            {"tool.filterByAdmin.submit", "Спасибо"},
+            {"tool.filterByAdmin.cancel", "Отмена, спасибо"},
+            {"tool.filterByAdmin.delete", "Больше не нужен, спасибо"},
+
             {"field.groupName", "Название группы"},
             {"field.groupName.errors.blank", "Не может быть пустым"},
             {"field.coordinates.x", "Координата X"},
@@ -92,6 +96,7 @@ public class ResourceBundle_ru extends ListResourceBundle {
             {"field.admin.hairColor", "Волосы админа"},
             {"field.admin.nationality", "Кожа админа"},
             {"field.replaceIfGreater", "Заменить только если новый больше предыдущего"},
+            {"field.adminFilterEnabled", "Фильтр активен, спасибо"},
 
             {"semester.second", "Второй"},
             {"semester.third", "Третий"},
