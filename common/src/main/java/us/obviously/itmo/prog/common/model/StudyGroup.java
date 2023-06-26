@@ -27,11 +27,6 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     public StudyGroup() {
     }
 
-    public Person getPerson() {
-        return groupAdmin;
-    }
-
-
     public StudyGroup(Integer id, String name, Coordinates coordinates, Date creationDate, Integer studentsCount, FormOfEducation formOfEducation, Semester semesterEnum, Person groupAdmin) {
         this.id = id;
         this.name = name;
@@ -42,6 +37,7 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
         this.semesterEnum = semesterEnum;
         this.groupAdmin = groupAdmin;
     }
+
 
     public StudyGroup(Integer id, String name, Coordinates coordinates, Date creationDate, Integer studentsCount, FormOfEducation formOfEducation, Semester semesterEnum, Person groupAdmin, int ownerId, String ownerUsername) {
         this.id = id;
@@ -60,6 +56,10 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
         return new StudyGroup().new Builder();
     }
 
+    public Person getPerson() {
+        return groupAdmin;
+    }
+
     /**
      * Возвращает id
      *
@@ -67,6 +67,10 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
      */
     public Integer getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -88,21 +92,21 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     }
 
     /**
-     * Устанавливает дату создания
-     *
-     * @param creationDate дата создания группы
-     */
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    /**
      * Возвращает дату создания группы
      *
      * @return Дата создания группы
      */
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    /**
+     * Устанавливает дату создания
+     *
+     * @param creationDate дата создания группы
+     */
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     /**
@@ -186,7 +190,6 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     public void setOwnerUsername(String ownerUsername) {
         this.ownerUsername = ownerUsername;
     }
-
 
     public class Builder {
         public Builder setId(Integer id) {

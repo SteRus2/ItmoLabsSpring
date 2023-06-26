@@ -17,6 +17,7 @@ public class InsertItemAction extends Action<KeyGroupModel, Integer> {
         Integer newId;
         try {
             newId = getDatabaseManager().insertItem(arguments, getUserInfo());
+            arguments.getStudyGroup().setId(newId);
             arguments.getStudyGroup().setOwnerUsername(getUserInfo().getLogin());
             dataCollection.insertItem(arguments.getStudyGroup(), newId, getUserInfo().getId());
             // notifyUsers();
