@@ -4,9 +4,10 @@ import us.obviously.itmo.prog.client.RemoteDataCollection;
 import us.obviously.itmo.prog.client.commands.*;
 import us.obviously.itmo.prog.common.console.ConsoleColors;
 import us.obviously.itmo.prog.common.console.Messages;
+import us.obviously.itmo.prog.common.server.data.DataCollection;
+import us.obviously.itmo.prog.common.server.exceptions.ExecuteCommandException;
 import us.obviously.itmo.prog.common.server.exceptions.MissedArgumentException;
 import us.obviously.itmo.prog.common.server.exceptions.RecurrentExecuteScripts;
-import us.obviously.itmo.prog.common.server.data.DataCollection;
 import us.obviously.itmo.prog.common.server.exceptions.UnexpectedArgumentException;
 
 import java.io.File;
@@ -25,6 +26,7 @@ public class Manager<T> implements Management {
     private final List<String> loadedScripts = new ArrayList<>();
     private Scanner fileScanner;
     private Boolean active;
+    private int shell = 0;
 
     public Manager(RemoteDataCollection dataCollection, Scanner scanner) {
         this.dataCollection = dataCollection;
@@ -112,12 +114,35 @@ public class Manager<T> implements Management {
      * @inheritDoc
      */
     @Override
-    public void executeScript(String filepath) throws FileNotFoundException, RecurrentExecuteScripts {
+    public void executeScript(String filepath) throws FileNotFoundException, RecurrentExecuteScripts, ExecuteCommandException {
+        if (this.shell > 0) {
+            this.executeScriptShell(filepath);
+            return;
+        }
         if (this.loadedScripts.contains(filepath))
             throw new RecurrentExecuteScripts("Скрипт " + filepath + " начал вызываться рекуррентно.");
         var file = new File(filepath);
         this.fileScanner = new Scanner(file);
         this.loadedScripts.add(filepath);
+    }
+
+    @Override
+    public void executeScriptShell(String filepath) throws FileNotFoundException, RecurrentExecuteScripts, ExecuteCommandException {
+        if (this.shell == 0) {
+            this.loadedScripts.clear();
+        }
+        this.shell++;
+
+        if (this.loadedScripts.contains(filepath))
+            throw new RecurrentExecuteScripts("Скрипт " + filepath + " начал вызываться рекуррентно.");
+        var file = new File(filepath);
+        this.fileScanner = new Scanner(file);
+        this.loadedScripts.add(filepath);
+        int line = 1;
+        while (!waitCommandShell(filepath, line)) {
+            line++;
+        }
+        shell--;
     }
 
     /**
@@ -180,8 +205,40 @@ public class Manager<T> implements Management {
 
             command.execute(args);
 
-        } catch (UnexpectedArgumentException | MissedArgumentException e) {
+        } catch (UnexpectedArgumentException | MissedArgumentException | ExecuteCommandException e) {
             Messages.printStatement(e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * @param lineNumber номер строки
+     * @return true - чтение закончилось
+     */
+    private boolean waitCommandShell(String filepath, int lineNumber) throws ExecuteCommandException {
+        if (this.fileScanner == null || !this.fileScanner.hasNextLine()) return true;
+        String line = this.fileScanner.nextLine().trim();
+        String[] words = line.split("\\s+");
+        AbstractCommand command = null;
+        String commandName = "";
+        if (words.length > 0) {
+            commandName = words[0];
+            command = this.commands.get(commandName.toLowerCase());
+        }
+        if (command == null) {
+            if (commandName.equals("")) {
+                throw new ExecuteCommandException(filepath, lineNumber, "Не введена команда");
+            } else {
+                throw new ExecuteCommandException(filepath, lineNumber, "\"%s\" не является командой".formatted(commandName));
+            }
+        }
+        try {
+            var args = command.parseParameters(Arrays.copyOfRange(words, 1, words.length));
+
+            command.execute(args);
+
+        } catch (UnexpectedArgumentException | MissedArgumentException e) {
+            throw new ExecuteCommandException(filepath, lineNumber, e.getMessage());
         }
         return false;
     }

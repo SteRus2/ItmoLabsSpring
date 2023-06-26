@@ -1,9 +1,10 @@
 package us.obviously.itmo.prog.client.commands;
 
+import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.common.console.ConsoleColors;
 import us.obviously.itmo.prog.common.console.Messages;
+import us.obviously.itmo.prog.common.server.exceptions.ExecuteCommandException;
 import us.obviously.itmo.prog.common.server.exceptions.RecurrentExecuteScripts;
-import us.obviously.itmo.prog.client.manager.Management;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class ExecuteScriptCommand extends AbstractCommand {
      * @inheritDoc
      */
     @Override
-    public void execute(HashMap<String, String> args) {
+    public void execute(HashMap<String, String> args) throws ExecuteCommandException {
         var filepath = args.get("file_name");
         if (filepath == null || filepath.equals("")) {
             Messages.printStatement("~yefile_name ~=" +

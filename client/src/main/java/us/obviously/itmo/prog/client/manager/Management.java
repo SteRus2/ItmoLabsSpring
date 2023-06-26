@@ -1,6 +1,7 @@
 package us.obviously.itmo.prog.client.manager;
 
 import us.obviously.itmo.prog.client.commands.AbstractCommand;
+import us.obviously.itmo.prog.common.server.exceptions.ExecuteCommandException;
 import us.obviously.itmo.prog.common.server.exceptions.RecurrentExecuteScripts;
 import us.obviously.itmo.prog.common.server.data.DataCollection;
 
@@ -28,7 +29,17 @@ public interface Management {
      * @throws FileNotFoundException   Выбросит исключение, если файл не найден
      * @throws RecurrentExecuteScripts Выбросит исключение, если произошла рекурсия вызовов
      */
-    void executeScript(String filepath) throws FileNotFoundException, RecurrentExecuteScripts;
+    void executeScript(String filepath) throws FileNotFoundException, RecurrentExecuteScripts, ExecuteCommandException;
+
+
+    /**
+     * Вызов скрипта из файла <b>filepath</b>. Открывает свою оболочку.
+     *
+     * @param filepath Путь к файлу
+     * @throws FileNotFoundException   Выбросит исключение, если файл не найден
+     * @throws RecurrentExecuteScripts Выбросит исключение, если произошла рекурсия вызовов
+     */
+    void executeScriptShell(String filepath) throws FileNotFoundException, RecurrentExecuteScripts, ExecuteCommandException;
 
     /**
      * Добавить команду <b>abastractCommand</b> в мапу возможных команд

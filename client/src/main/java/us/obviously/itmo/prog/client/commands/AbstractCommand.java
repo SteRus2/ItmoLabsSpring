@@ -1,7 +1,8 @@
 package us.obviously.itmo.prog.client.commands;
 
-import us.obviously.itmo.prog.common.server.exceptions.MissedArgumentException;
 import us.obviously.itmo.prog.client.manager.Management;
+import us.obviously.itmo.prog.common.server.exceptions.ExecuteCommandException;
+import us.obviously.itmo.prog.common.server.exceptions.MissedArgumentException;
 import us.obviously.itmo.prog.common.server.exceptions.UnexpectedArgumentException;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public abstract class AbstractCommand {
      *
      * @param args Аргументы, не провалидированные
      */
-    public abstract void execute(HashMap<String, String> args);
+    public abstract void execute(HashMap<String, String> args) throws ExecuteCommandException;
 
     final public void addParameter(String name, String description, Boolean required) {
         var parameter = new Parameter(name, description, required);
