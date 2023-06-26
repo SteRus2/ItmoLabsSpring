@@ -1,5 +1,8 @@
 package us.obviously.itmo.prog.gui.controllers;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.Initializable;
@@ -13,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import us.obviously.itmo.prog.gui.Main;
 import us.obviously.itmo.prog.gui.i18n.Language;
 import us.obviously.itmo.prog.gui.views.ViewsManager;
@@ -137,6 +141,22 @@ public class GraphController implements Initializable, Translatable {
                 } catch (Exception e) {
                     System.out.println(e);
                 }
+
+
+                Timeline timeline = new Timeline(
+                        new KeyFrame(Duration.ZERO, new KeyValue(circle.radiusProperty(), studentsRadius)),
+                        new KeyFrame(Duration.seconds(0.1), new KeyValue(circle.radiusProperty(), 30))
+                );
+
+                circle.setOnMouseEntered(e -> {
+                    timeline.play();
+                });
+
+                circle.setOnMouseExited(e -> {
+                    timeline.stop();
+                    circle.setRadius(studentsRadius);
+                });
+
 
             });
             try {
