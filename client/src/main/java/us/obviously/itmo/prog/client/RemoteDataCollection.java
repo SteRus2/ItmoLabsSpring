@@ -31,7 +31,7 @@ public class RemoteDataCollection implements DataCollection {
     @Override
     public DataInfo getInfo() throws BadRequestException {
         var rm = new RequestManager<VoidModel, DataInfo>();
-        rm.send(client, new VoidModel(), "filter_greater_than_group_admin");
+        rm.send(client, new VoidModel(), "info");
         try {
             return rm.receive(client);
         } catch (FailedToReadRemoteException e) {
@@ -137,7 +137,7 @@ public class RemoteDataCollection implements DataCollection {
         /*var action = new ClearDataAction();
         action.send(this.client, new VoidModel());
         try {
-            action.recieve(client);
+            action.receive(client);
         } catch (FailedToReadRemoteException e) {
             throw new BadRequestException(e.getMessage());
         }*/
@@ -249,7 +249,7 @@ public class RemoteDataCollection implements DataCollection {
     public List<StudyGroup> filterGreaterThanGroupAdmin(Person groupAdmin) throws BadRequestException {
 
         var rm = new RequestManager<Person, List<StudyGroup>>();
-        rm.send(client, groupAdmin, "info");
+        rm.send(client, groupAdmin, "filter_greater_than_group_admin");
         try {
             return rm.receive(client);
         } catch (FailedToReadRemoteException e) {

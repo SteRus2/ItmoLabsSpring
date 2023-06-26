@@ -8,7 +8,7 @@ import java.util.List;
 
 public class FilterGreaterThanGroupAdminAction extends Action<Person, List<StudyGroup>> {
     public FilterGreaterThanGroupAdminAction() {
-        super("info");
+        super("filter_greater_than_group_admin");
     }
 
     @Override

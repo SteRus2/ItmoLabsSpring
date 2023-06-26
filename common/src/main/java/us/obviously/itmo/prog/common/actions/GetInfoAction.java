@@ -6,7 +6,7 @@ import us.obviously.itmo.prog.common.server.data.LocalDataCollection;
 
 public class GetInfoAction extends Action<VoidModel, DataInfo> {
     public GetInfoAction() {
-        super("filter_greater_than_group_admin");
+        super("info");
     }
 
     @Override
