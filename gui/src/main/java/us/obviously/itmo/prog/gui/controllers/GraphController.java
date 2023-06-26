@@ -5,14 +5,18 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.stage.Stage;
 import us.obviously.itmo.prog.gui.Main;
 import us.obviously.itmo.prog.gui.i18n.Language;
+import us.obviously.itmo.prog.gui.views.ViewsManager;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -98,11 +102,21 @@ public class GraphController implements Initializable, Translatable {
                 circle.setCenterX(mapX(group.getCoordinates().getX(), axes));
                 circle.setCenterY(mapY(group.getCoordinates().getY(), axes));
 
+                circle.setOnMouseClicked(event -> {
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    try {
+                        ViewsManager.showUpdateToolView(stage, group);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e); // TOOD: show error
+                    }
+                });
+
 
                 double studentsPercent = (studentCount - minStudents) / (maxStudents * 1.0);
                 double studentsRadius = MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) * studentsPercent;
                 circle.setRadius(studentsRadius);
-//            group.getGroupAdmin().getEyeColor();
+//              group.getGroupAdmin().getEyeColor();
+                // TODO: change color depending on owner
                 circle.setStroke(Color.ORANGE.deriveColor(0, 1, 1, 0.6));
                 circle.setFill(Color.ORANGE.deriveColor(0, 1, 1, 0.6));
                 circle.setStrokeWidth(2);
