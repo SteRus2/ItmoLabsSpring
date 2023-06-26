@@ -4,16 +4,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import us.obviously.itmo.prog.common.server.exceptions.ExecuteCommandException;
+import us.obviously.itmo.prog.common.server.exceptions.RecurrentExecuteScripts;
+import us.obviously.itmo.prog.gui.FilesManager;
 import us.obviously.itmo.prog.gui.Main;
 import us.obviously.itmo.prog.gui.i18n.Internalization;
 import us.obviously.itmo.prog.gui.i18n.Language;
+import us.obviously.itmo.prog.gui.notifications.Notifications;
 import us.obviously.itmo.prog.gui.tools.AbstractTool;
 import us.obviously.itmo.prog.gui.views.ViewsManager;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
@@ -66,9 +72,14 @@ public class SidebarController implements Initializable, Translatable {
         commands.add(new AbstractTool("executeScript", event -> {
             Stage stage = (Stage) ((Node) event.getTarget()).getScene().getWindow();
             try {
-                ViewsManager.showExecuteScriptToolView(stage);
-            } catch (IOException e) {
+                FilesManager.executeScript(stage);
+                Notifications.showAlert(Alert.AlertType.INFORMATION, stage, "Успешно!", "Скрипт успешно выполнен"); // TODO: translate
+            } catch (FileNotFoundException e) {
                 // error
+            } catch (RecurrentExecuteScripts e) {
+                throw new RuntimeException(e);
+            } catch (ExecuteCommandException e) {
+                throw new RuntimeException(e);
             }
         }));
         commands.add(new AbstractTool("groupByName", event -> {
