@@ -17,7 +17,8 @@ public class RemoveController extends BaseController {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        comboBox.getItems().addAll("Удалить по id", "Удалить все элементы, не превышающие id", "Удалить все элементы, не меньше id");
+        // TODO: make translations
+        comboBox.getItems().addAll("Удалить по id", "Удалить все элементы строго меньше id", "Удалить все элементы, не меньше id");
     }
 
 

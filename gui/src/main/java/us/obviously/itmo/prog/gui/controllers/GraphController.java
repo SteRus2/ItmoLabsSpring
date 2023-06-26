@@ -10,6 +10,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
 import us.obviously.itmo.prog.gui.Main;
@@ -18,6 +19,8 @@ import us.obviously.itmo.prog.gui.views.ViewsManager;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,20 +30,15 @@ import java.util.function.Function;
 import static java.lang.Thread.sleep;
 
 public class GraphController implements Initializable, Translatable {
+    public static final Paint[] colors = {Color.ORANGE, Color.GREEN, Color.BLACK, Color.BLUE, Color.YELLOW, Color.LIGHTBLUE, Color.LIGHTCYAN, Color.CORAL, Color.CADETBLUE, Color.CORNSILK};
     public StackPane layout;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        Axes axes = new Axes(
-                600, 300,
-                -400, 400, 50,
-                -400, 400, 50
-        );
+        Axes axes = new Axes(600, 300, -400, 400, 50, -400, 400, 50);
 
-        Circles plot = new Circles(
-                axes
-        );
+        Circles plot = new Circles(axes);
 
         layout.getChildren().add(plot);
         layout.setPadding(new Insets(20));
@@ -55,15 +53,15 @@ public class GraphController implements Initializable, Translatable {
     static class Circles extends Pane {
         private final Axes axes;
 
-        public Circles(
-                Axes axes
-        ) {
+        public Circles(Axes axes) {
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.submit(this::rebuild);
             this.axes = axes;
         }
 
         private void rebuild() {
+
+            Map<Integer, Paint> colorMap = new HashMap<>();
 
 //            while (true) {
             if (Main.currentStudyGroups.isEmpty()) {
@@ -84,8 +82,8 @@ public class GraphController implements Initializable, Translatable {
             });
             AtomicInteger maxStudentsAtomic = new AtomicInteger();
             AtomicInteger minStudentsAtomic = new AtomicInteger(Integer.MAX_VALUE);
-            double MAX_RADIUS = 10;
-            double MIN_RADIUS = 1;
+            double MAX_RADIUS = 15;
+            double MIN_RADIUS = 5;
             Main.currentStudyGroups.forEach((id, studyGroup) -> {
                 Integer students = studyGroup.getStudentsCount();
                 if (students == null) students = 0;
@@ -102,23 +100,29 @@ public class GraphController implements Initializable, Translatable {
                 circle.setCenterX(mapX(group.getCoordinates().getX(), axes));
                 circle.setCenterY(mapY(group.getCoordinates().getY(), axes));
 
-                circle.setOnMouseClicked(event -> {
-                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    try {
-                        ViewsManager.showUpdateToolView(stage, group);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e); // TOOD: show error
-                    }
-                });
+                if (group.getOwnerId() == Main.client.getId()) {
+                    circle.setOnMouseClicked(event -> {
+                        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        try {
+                            ViewsManager.showUpdateToolView(stage, group);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e); // TOOD: show error
+                        }
+                    });
+                }
 
 
                 double studentsPercent = (studentCount - minStudents) / (maxStudents * 1.0);
                 double studentsRadius = MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) * studentsPercent;
                 circle.setRadius(studentsRadius);
 //              group.getGroupAdmin().getEyeColor();
-                // TODO: change color depending on owner
-                circle.setStroke(Color.ORANGE.deriveColor(0, 1, 1, 0.6));
-                circle.setFill(Color.ORANGE.deriveColor(0, 1, 1, 0.6));
+                Paint color;
+                if (!colorMap.containsKey(group.getOwnerId())) {
+                    colorMap.put(group.getOwnerId(), colors[colorMap.size()]);
+                }
+                color = colorMap.get(group.getOwnerId());
+                circle.setStroke(color);
+                circle.setFill(color);
                 circle.setStrokeWidth(2);
                 try {
                     Platform.runLater(() -> {
@@ -141,18 +145,14 @@ public class GraphController implements Initializable, Translatable {
 
         private double mapX(double x, Axes axes) {
             double tx = axes.getPrefWidth() / 2;
-            double sx = axes.getPrefWidth() /
-                    (axes.getXAxis().getUpperBound() -
-                            axes.getXAxis().getLowerBound());
+            double sx = axes.getPrefWidth() / (axes.getXAxis().getUpperBound() - axes.getXAxis().getLowerBound());
 
             return x * sx + tx;
         }
 
         private double mapY(double y, Axes axes) {
             double ty = axes.getPrefHeight() / 2;
-            double sy = axes.getPrefHeight() /
-                    (axes.getYAxis().getUpperBound() -
-                            axes.getYAxis().getLowerBound());
+            double sy = axes.getPrefHeight() / (axes.getYAxis().getUpperBound() - axes.getYAxis().getLowerBound());
 
             return -y * sy + ty;
         }
@@ -162,11 +162,7 @@ public class GraphController implements Initializable, Translatable {
         private final NumberAxis xAxis;
         private final NumberAxis yAxis;
 
-        public Axes(
-                int width, int height,
-                double xLow, double xHi, double xTickUnit,
-                double yLow, double yHi, double yTickUnit
-        ) {
+        public Axes(int width, int height, double xLow, double xHi, double xTickUnit, double yLow, double yHi, double yTickUnit) {
             setMinSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
             setPrefSize(width, height);
             setMaxSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
@@ -181,12 +177,7 @@ public class GraphController implements Initializable, Translatable {
             yAxis.setSide(Side.LEFT);
             yAxis.setMinorTickVisible(false);
             yAxis.setPrefHeight(height);
-            yAxis.layoutXProperty().bind(
-                    Bindings.subtract(
-                            (width / 2) + 1,
-                            yAxis.widthProperty()
-                    )
-            );
+            yAxis.layoutXProperty().bind(Bindings.subtract((width / 2) + 1, yAxis.widthProperty()));
 
             getChildren().setAll(xAxis, yAxis);
         }
@@ -202,40 +193,22 @@ public class GraphController implements Initializable, Translatable {
 
     static class Plot extends Pane {
 
-        public Plot(
-                Function<Double, Double> f,
-                double xMin, double xMax, double xInc,
-                Axes axes
-        ) {
+        public Plot(Function<Double, Double> f, double xMin, double xMax, double xInc, Axes axes) {
             Path path = new Path();
             path.setStroke(Color.ORANGE.deriveColor(0, 1, 1, 0.6));
             path.setStrokeWidth(2);
-            path.setClip(
-                    new Rectangle(
-                            0, 0,
-                            axes.getPrefWidth(),
-                            axes.getPrefHeight()
-                    )
-            );
+            path.setClip(new Rectangle(0, 0, axes.getPrefWidth(), axes.getPrefHeight()));
 
             double x = xMin;
             double y = f.apply(x);
 
-            path.getElements().add(
-                    new MoveTo(
-                            mapX(x, axes), mapY(y, axes)
-                    )
-            );
+            path.getElements().add(new MoveTo(mapX(x, axes), mapY(y, axes)));
 
             x += xInc;
             while (x < xMax) {
                 y = f.apply(x);
 
-                path.getElements().add(
-                        new LineTo(
-                                mapX(x, axes), mapY(y, axes)
-                        )
-                );
+                path.getElements().add(new LineTo(mapX(x, axes), mapY(y, axes)));
 
                 x += xInc;
             }
@@ -249,18 +222,14 @@ public class GraphController implements Initializable, Translatable {
 
         private double mapX(double x, Axes axes) {
             double tx = axes.getPrefWidth() / 2;
-            double sx = axes.getPrefWidth() /
-                    (axes.getXAxis().getUpperBound() -
-                            axes.getXAxis().getLowerBound());
+            double sx = axes.getPrefWidth() / (axes.getXAxis().getUpperBound() - axes.getXAxis().getLowerBound());
 
             return x * sx + tx;
         }
 
         private double mapY(double y, Axes axes) {
             double ty = axes.getPrefHeight() / 2;
-            double sy = axes.getPrefHeight() /
-                    (axes.getYAxis().getUpperBound() -
-                            axes.getYAxis().getLowerBound());
+            double sy = axes.getPrefHeight() / (axes.getYAxis().getUpperBound() - axes.getYAxis().getLowerBound());
 
             return -y * sy + ty;
         }

@@ -9,6 +9,8 @@ import us.obviously.itmo.prog.client.manager.Manager;
 import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteException;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,8 +19,9 @@ public class MainClient {
     public static Client client;
     public static final int port = 11253;
     private static final ExecutorService listenerExecutorService = Executors.newSingleThreadExecutor();
-
+    public static ResourceBundle mainResources;
     public static void main(String[] args) {
+//        mainResources = ResourceBundle.getBundle("GUIStrings", Locale.ENGLISH);
         try {
             ConsoleColor.initColors();
             Scanner scanner = new Scanner(System.in);
@@ -39,7 +42,7 @@ public class MainClient {
         } catch (FailedToCloseConnection e) {
             Messages.printStatement("~reПодключение не закрыто, ВНИМАНИЕ, подключение не закрыто: " + e.getMessage() + "~=");
         } catch (FailedToConnectToServerException e) {
-            Messages.printStatement("~reПодключиться не удалось: " + e.getMessage() + "~=");
+            Messages.printStatement("~re"+ mainResources.getString("failed_to_connect") +": " + e.getMessage() + "~=");
         }
     }
 }

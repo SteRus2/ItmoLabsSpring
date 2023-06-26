@@ -17,10 +17,10 @@
 
             <ComboBox fx:id="tableComboBox"/>
 
-            <fx:include managed="false" fx:id="studyGroupTable" source="study-group-table-view.fxml"/>
-            <fx:include managed="false" fx:id="studyGroupTableGroupByName"
-                        source="study-group-table-group-by-name-view.fxml"/>
-            <fx:include managed="false" fx:id="semesterTable" source="semester-table-view.fxml"/>
+            <fx:include fx:id="studyGroupTable" source="study-group-table-view.fxml"/>
+<!--            <fx:include managed="false" fx:id="studyGroupTableGroupByName"-->
+<!--                        source="study-group-table-group-by-name-view.fxml"/>-->
+<!--            <fx:include managed="false" fx:id="semesterTable" source="semester-table-view.fxml"/>-->
 
 
             <!--            <Label fx:id="titleText" text="Группы"/>-->

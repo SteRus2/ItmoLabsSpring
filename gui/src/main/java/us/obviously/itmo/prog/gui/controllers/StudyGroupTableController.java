@@ -38,6 +38,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.lang.Thread.sleep;
+
 public class StudyGroupTableController implements Initializable, Translatable {
 
     private final ExecutorService executorService;
@@ -65,12 +67,17 @@ public class StudyGroupTableController implements Initializable, Translatable {
         try {
             table = new StudyGroupTable(tableView);
             tableView.setRowFactory(tv -> {
+
                 TableRow<StudyGroup> row = new TableRow<>();
+
                 row.setOnMouseClicked(event -> {
                     if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
                             && event.getClickCount() == 2) {
 
                         StudyGroup clickedRow = row.getItem();
+                        if (clickedRow.getOwnerId() != Main.client.getId()) {
+                            return;
+                        }
                         var stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         try {
                             ViewsManager.showUpdateToolView(stage, clickedRow);
@@ -114,9 +121,13 @@ public class StudyGroupTableController implements Initializable, Translatable {
         try {
             Map<Integer, StudyGroup> groups = Main.manager.getDataCollection().getData();
             table.updateStudyGroups(groups);
+            sleep(2000);
+            loadStudyGroups();
         } catch (BadRequestException e) {
             System.out.println(e.getMessage());
             errorMessage.setText("Ошибка при загрузке информации"); // TODO: translate
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

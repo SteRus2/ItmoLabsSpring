@@ -32,8 +32,8 @@ public class TableController implements Initializable, Translatable {
     @FXML
     public VBox sidebar;
     public Pane studyGroupTable;
-    public Pane studyGroupTableGroupByName;
-    public Pane semesterTable;
+//    public Pane studyGroupTableGroupByName;
+//    public Pane semesterTable;
     public ComboBox<String> tableComboBox;
     @FXML
     private Text errorMessage;
@@ -44,28 +44,28 @@ public class TableController implements Initializable, Translatable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        List<String> list = new ArrayList<>(List.of(new String[]{"1", "2", "3"}));
-        tableComboBox.setItems(FXCollections.observableList(list));
-        tableComboBox.setOnAction(event -> {
-            var value = tableComboBox.getValue();
-            studyGroupTable.setManaged(false);
-            studyGroupTableGroupByName.setManaged(false);
-            semesterTable.setManaged(false);
-            studyGroupTable.setVisible(false);
-            studyGroupTableGroupByName.setVisible(false);
-            semesterTable.setVisible(false);
-            if (Objects.equals(value, "1")) {
-                studyGroupTable.setManaged(true);
-                studyGroupTable.setVisible(true);
-            } else if (Objects.equals(value, "2")) {
-                studyGroupTableGroupByName.setManaged(true);
-                studyGroupTableGroupByName.setVisible(true);
-            } else if (Objects.equals(value, "3")) {
-                semesterTable.setManaged(true);
-                semesterTable.setVisible(true);
-            }
-        });
-        tableComboBox.setValue("1");
+//        List<String> list = new ArrayList<>(List.of(new String[]{"1", "2", "3"}));
+//        tableComboBox.setItems(FXCollections.observableList(list));
+//        tableComboBox.setOnAction(event -> {
+//            var value = tableComboBox.getValue();
+//            studyGroupTable.setManaged(false);
+//            studyGroupTableGroupByName.setManaged(false);
+//            semesterTable.setManaged(false);
+//            studyGroupTable.setVisible(false);
+//            studyGroupTableGroupByName.setVisible(false);
+//            semesterTable.setVisible(false);
+//            if (Objects.equals(value, "1")) {
+//                studyGroupTable.setManaged(true);
+//                studyGroupTable.setVisible(true);
+//            } else if (Objects.equals(value, "2")) {
+//                studyGroupTableGroupByName.setManaged(true);
+//                studyGroupTableGroupByName.setVisible(true);
+//            } else if (Objects.equals(value, "3")) {
+//                semesterTable.setManaged(true);
+//                semesterTable.setVisible(true);
+//            }
+//        });
+//        tableComboBox.setValue("1");
     }
 
     private void updateStudyGroups(List<Semester> semesters) {
