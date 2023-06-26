@@ -11,10 +11,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
 import us.obviously.itmo.prog.common.model.Semester;
+import us.obviously.itmo.prog.gui.Main;
+import us.obviously.itmo.prog.gui.i18n.Internalization;
 import us.obviously.itmo.prog.gui.i18n.Language;
 
 import java.net.URL;
@@ -32,9 +36,9 @@ public class TableController implements Initializable, Translatable {
     @FXML
     public VBox sidebar;
     public Pane studyGroupTable;
-//    public Pane studyGroupTableGroupByName;
-//    public Pane semesterTable;
-    public ComboBox<String> tableComboBox;
+    public Pane studyGroupTableGroupByName;
+    public Pane semesterTable;
+    public ComboBox<TableViewEnum> tableComboBox;
     @FXML
     private Text errorMessage;
 
@@ -44,28 +48,44 @@ public class TableController implements Initializable, Translatable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        List<String> list = new ArrayList<>(List.of(new String[]{"1", "2", "3"}));
-//        tableComboBox.setItems(FXCollections.observableList(list));
-//        tableComboBox.setOnAction(event -> {
-//            var value = tableComboBox.getValue();
-//            studyGroupTable.setManaged(false);
-//            studyGroupTableGroupByName.setManaged(false);
-//            semesterTable.setManaged(false);
-//            studyGroupTable.setVisible(false);
-//            studyGroupTableGroupByName.setVisible(false);
-//            semesterTable.setVisible(false);
-//            if (Objects.equals(value, "1")) {
-//                studyGroupTable.setManaged(true);
-//                studyGroupTable.setVisible(true);
-//            } else if (Objects.equals(value, "2")) {
-//                studyGroupTableGroupByName.setManaged(true);
-//                studyGroupTableGroupByName.setVisible(true);
-//            } else if (Objects.equals(value, "3")) {
-//                semesterTable.setManaged(true);
-//                semesterTable.setVisible(true);
-//            }
-//        });
-//        tableComboBox.setValue("1");
+        List<TableViewEnum> list = new ArrayList<>(List.of(new TableViewEnum[]{TableViewEnum.STUDY_GROUP, TableViewEnum.STUDY_GROUP_GROUP_BY_NAME, TableViewEnum.SEMESTER}));
+        tableComboBox.setConverter(new StringConverter<TableViewEnum>() {
+            @Override
+            public String toString(TableViewEnum object) {
+                return Internalization.getTranslation(object.key);
+            }
+
+            @Override
+            public TableViewEnum fromString(String string) {
+                return null;
+            }
+        });
+        tableComboBox.setItems(FXCollections.observableList(list));
+        tableComboBox.setOnAction(event -> {
+            var value = tableComboBox.getValue();
+            studyGroupTable.setManaged(false);
+            studyGroupTableGroupByName.setManaged(false);
+            semesterTable.setManaged(false);
+            studyGroupTable.setVisible(false);
+            studyGroupTableGroupByName.setVisible(false);
+            semesterTable.setVisible(false) ;
+            Main.viewTable = value;
+            switch (value) {
+                case STUDY_GROUP -> {
+                    studyGroupTable.setManaged(true);
+                    studyGroupTable.setVisible(true);
+                }
+                case STUDY_GROUP_GROUP_BY_NAME -> {
+                    studyGroupTableGroupByName.setManaged(true);
+                    studyGroupTableGroupByName.setVisible(true);
+                }
+                case SEMESTER -> {
+                    semesterTable.setManaged(true);
+                    semesterTable.setVisible(true);
+                }
+            }
+        });
+        tableComboBox.setValue(Main.viewTable);
     }
 
     private void updateStudyGroups(List<Semester> semesters) {

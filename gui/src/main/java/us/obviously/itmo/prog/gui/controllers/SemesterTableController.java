@@ -18,6 +18,7 @@ import javafx.scene.text.Text;
 import us.obviously.itmo.prog.client.RequestManager;
 import us.obviously.itmo.prog.common.action_models.VoidModel;
 import us.obviously.itmo.prog.common.model.Semester;
+import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.common.server.exceptions.BadRequestException;
 import us.obviously.itmo.prog.common.server.exceptions.FailedToReadRemoteException;
 import us.obviously.itmo.prog.gui.Main;
@@ -28,6 +29,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static java.lang.Thread.sleep;
 
 public class SemesterTableController implements Initializable, Translatable {
 
@@ -83,11 +86,17 @@ public class SemesterTableController implements Initializable, Translatable {
 
     private void loadSemesters() {
         try {
-            List<Semester> semesters = Main.manager.getDataCollection().printFieldAscendingSemesterEnum();
-            updateSemesters(semesters);
+            if (Main.viewTable == TableViewEnum.SEMESTER) {
+                List<Semester> semesters = Main.manager.getDataCollection().printFieldAscendingSemesterEnum();
+                updateSemesters(semesters);
+            }
+            sleep(1000);
+            loadSemesters();
         } catch (BadRequestException e) {
             System.out.println(e.getMessage());
-            errorMessage.setText("Ошибка при загрузке информации");
+            errorMessage.setText("Ошибка при загрузке информации"); // TODO: translate
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

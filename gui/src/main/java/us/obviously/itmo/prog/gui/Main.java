@@ -1,12 +1,14 @@
 package us.obviously.itmo.prog.gui;
 
 import javafx.application.Application;
+import javafx.scene.control.Tab;
 import javafx.stage.Stage;
 import us.obviously.itmo.prog.client.Client;
 import us.obviously.itmo.prog.client.RemoteDataCollection;
 import us.obviously.itmo.prog.client.manager.Management;
 import us.obviously.itmo.prog.common.model.Person;
 import us.obviously.itmo.prog.common.model.StudyGroup;
+import us.obviously.itmo.prog.gui.controllers.TableViewEnum;
 import us.obviously.itmo.prog.gui.views.ViewsManager;
 
 import java.io.IOException;
@@ -26,6 +28,7 @@ public class Main extends Application {
     public static boolean filterByAdmin = false;
     public static Person adminFilter = new Person();
     public static String searchText = "";
+    public static TableViewEnum viewTable = TableViewEnum.STUDY_GROUP;
 
     public static void main(String[] args) {
         launch();

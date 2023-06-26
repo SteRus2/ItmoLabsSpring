@@ -14,8 +14,6 @@
     </padding>
     <ScrollPane maxHeight="600">
         <VBox>
-
-
             <Label fx:id="titleText" text="Группы"/>
             <TableView fx:id="tableView"/>
             <Text fx:id="errorMessage" fill="#F00"/>

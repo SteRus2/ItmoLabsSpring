@@ -75,6 +75,8 @@ public class ResourceBundle_ru extends ListResourceBundle {
             {"tool.update.delete.success.title", "Успешно удалено"},
             {"tool.update.delete.success.message", "Пожалуйста"},
 
+            {"tool.read.cancel", "Я всё, спасибо"},
+
             {"tool.filterByAdmin.submit", "Спасибо"},
             {"tool.filterByAdmin.cancel", "Отмена, спасибо"},
             {"tool.filterByAdmin.delete", "Больше не нужен, спасибо"},
@@ -147,7 +149,11 @@ public class ResourceBundle_ru extends ListResourceBundle {
             {"admin.hairColor.null", "Не указан"},
             {"admin.nationality.null", "Не указан"},
 
-            {"files.executeScript", "Исполнить скрипт"}
+            {"files.executeScript", "Исполнить скрипт"},
+
+            {"tables.studyGroup", "Группы"},
+            {"tables.studyGroupGroupByName", "Группы с групп баем"},
+            {"tables.semester", "Семестры"},
     };
 
     public Object[][] getContents() {

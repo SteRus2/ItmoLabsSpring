@@ -75,14 +75,19 @@ public class StudyGroupTableController implements Initializable, Translatable {
                             && event.getClickCount() == 2) {
 
                         StudyGroup clickedRow = row.getItem();
-                        if (clickedRow.getOwnerId() != Main.client.getId()) {
-                            return;
-                        }
                         var stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        try {
-                            ViewsManager.showUpdateToolView(stage, clickedRow);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                        if (clickedRow.getOwnerId() != Main.client.getId()) {
+                            try {
+                                ViewsManager.showReadToolView(stage, clickedRow);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        } else {
+                            try {
+                                ViewsManager.showUpdateToolView(stage, clickedRow);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                 });
@@ -119,12 +124,14 @@ public class StudyGroupTableController implements Initializable, Translatable {
 
     private void loadStudyGroups() {
         try {
-            if (Main.filterByAdmin) {
-                List<StudyGroup> groups = Main.manager.getDataCollection().filterGreaterThanGroupAdmin(Main.adminFilter);
-                table.updateStudyGroups(groups);
-            } else {
-                Map<Integer, StudyGroup> groups = Main.manager.getDataCollection().getData();
-                table.updateStudyGroups(groups);
+            if (Main.viewTable == TableViewEnum.STUDY_GROUP) {
+                if (Main.filterByAdmin) {
+                    List<StudyGroup> groups = Main.manager.getDataCollection().filterGreaterThanGroupAdmin(Main.adminFilter);
+                    table.updateStudyGroups(groups);
+                } else {
+                    Map<Integer, StudyGroup> groups = Main.manager.getDataCollection().getData();
+                    table.updateStudyGroups(groups);
+                }
             }
             sleep(1000);
             loadStudyGroups();

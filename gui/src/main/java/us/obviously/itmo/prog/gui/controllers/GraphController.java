@@ -100,16 +100,22 @@ public class GraphController implements Initializable, Translatable {
                 circle.setCenterX(mapX(group.getCoordinates().getX(), axes));
                 circle.setCenterY(mapY(group.getCoordinates().getY(), axes));
 
-                if (group.getOwnerId() == Main.client.getId()) {
-                    circle.setOnMouseClicked(event -> {
-                        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                circle.setOnMouseClicked(event -> {
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    if (group.getOwnerId() == Main.client.getId()) {
                         try {
                             ViewsManager.showUpdateToolView(stage, group);
                         } catch (IOException e) {
                             throw new RuntimeException(e); // TOOD: show error
                         }
-                    });
-                }
+                    } else {
+                        try {
+                            ViewsManager.showReadToolView(stage, group);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e); // TOOD: show error
+                        }
+                    }
+                });
 
 
                 double studentsPercent = (studentCount - minStudents) / (maxStudents * 1.0);

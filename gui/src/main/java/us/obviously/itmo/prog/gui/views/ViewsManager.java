@@ -8,6 +8,7 @@ import us.obviously.itmo.prog.common.model.StudyGroup;
 import us.obviously.itmo.prog.gui.Main;
 import us.obviously.itmo.prog.gui.controllers.Translatable;
 import us.obviously.itmo.prog.gui.i18n.Internalization;
+import us.obviously.itmo.prog.gui.tools.controllers.ReadController;
 import us.obviously.itmo.prog.gui.tools.controllers.UpdateController;
 
 import java.io.IOException;
@@ -52,6 +53,11 @@ public class ViewsManager {
 
     public static void showUpdateToolView(Stage stage, StudyGroup studyGroup) throws IOException {
         UpdateController controller = showView(stage, "Update", "views/tools/update-view.fxml", "styles/fonts.css", "assets/icon.png");
+        controller.setStudyGroup(studyGroup);
+    }
+
+    public static void showReadToolView(Stage stage, StudyGroup studyGroup) throws IOException {
+        ReadController controller = showView(stage, "Read", "views/tools/read-view.fxml", "styles/fonts.css", "assets/icon.png");
         controller.setStudyGroup(studyGroup);
     }
 

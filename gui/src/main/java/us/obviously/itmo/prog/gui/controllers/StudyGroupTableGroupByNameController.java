@@ -30,6 +30,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.lang.Thread.sleep;
+
 public class StudyGroupTableGroupByNameController implements Initializable, Translatable {
 
     private final ExecutorService executorService;
@@ -90,27 +92,34 @@ public class StudyGroupTableGroupByNameController implements Initializable, Tran
     }
 
     private void loadStudyGroups() {
+
         try {
-            Map<String, List<StudyGroup>> groupsMap = Main.manager.getDataCollection().groupCountingByName();
-            Platform.runLater(() -> {
-                try {
-                    groupsMap.forEach((key, groups) -> {
-                        var tableView = new TableView<StudyGroup>();
-                        tableViews.add(tableView);
-                        var table = new StudyGroupTable(tableView);
-                        table.updateStudyGroups(groups);
-                        tableViewsLayout.getChildren().add(tableView);
-                    });
-//                tableViews.forEach(tableView ->
-//                            tableViewsLayout.getChildren().add(tableView);
-//                );
-                } catch (Exception e) {
-                    e.printStackTrace(System.out);
-                }
-            });
+            if (Main.viewTable == TableViewEnum.STUDY_GROUP_GROUP_BY_NAME) {
+                Map<String, List<StudyGroup>> groupsMap = Main.manager.getDataCollection().groupCountingByName();
+                Platform.runLater(() -> {
+                    try {
+                        groupsMap.forEach((key, groups) -> {
+                            var tableView = new TableView<StudyGroup>();
+                            tableViews.add(tableView);
+                            var table = new StudyGroupTable(tableView);
+                            table.updateStudyGroups(groups);
+                            tableViewsLayout.getChildren().add(tableView);
+                        });
+                        //                tableViews.forEach(tableView ->
+                        //                            tableViewsLayout.getChildren().add(tableView);
+                        //                );
+                    } catch (Exception e) {
+                        e.printStackTrace(System.out);
+                    }
+                });
+            }
+            sleep(1000);
+            loadStudyGroups();
         } catch (BadRequestException e) {
             System.out.println(e.getMessage());
             errorMessage.setText("Ошибка при загрузке информации");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
